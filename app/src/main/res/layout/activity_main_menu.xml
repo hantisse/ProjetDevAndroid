@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".MainMenuActivity"
+    android:orientation="vertical"
+    android:layout_gravity="center">
+
+    <Button
+        android:id="@+id/newdeckbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Deck"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/decksbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Decks"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/optionsbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Options"/>
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+</LinearLayout>
