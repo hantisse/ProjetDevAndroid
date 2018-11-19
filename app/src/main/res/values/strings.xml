@@ -1,5 +1,9 @@
 <resources>
-    <string name="app_name">ProjetDevAndroid</string>*
+    <string name="app_name">MTG Deck Builder</string>
     <string name="deckName_title">Nom du deck</string>
+    <string name="nofilter">Pas de filtre</string>
+    <string name="filter_cmc">Filtrer par cmc</string>
+    <string name="filter_type">Filtrer par type</string>
+    <string name="filtre__title">Filtres</string>
 
 </resources>
