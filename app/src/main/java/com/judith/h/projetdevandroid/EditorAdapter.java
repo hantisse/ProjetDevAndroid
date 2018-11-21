@@ -24,7 +24,7 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
             return fragment;
         }
         else if(i==0){
-            Fragment fragment = new EditorFragment(new String[]{"Salade","Tomate"});
+            Fragment fragment = new EditorFragment();
             Bundle args = new Bundle();
             // Our object is just an integer
             args.putInt(EditorFragment.ARG_OBJECT, i + 1);
@@ -32,7 +32,7 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
             return fragment;
         }
         else{
-            Fragment fragment = new EditorFragment(new String[]{"Pomme","Poire"});
+            Fragment fragment = new EditorFragment();
             Bundle args = new Bundle();
             // Our object is just an integer
             args.putInt(EditorFragment.ARG_OBJECT, i + 1);

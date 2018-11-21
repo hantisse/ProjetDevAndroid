@@ -2,26 +2,30 @@ package com.judith.h.projetdevandroid;
 
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Filter {
     private String name;
-    private List<String> cardList;
-    private ListView listView;
-    private boolean isExpanded;
+    private String[] cardList;
+    private boolean isExpanded = false;
 
-    public Filter(String title, List<String> cards, ListView listView) {
+    public Filter(String name, String[] cards) {
         this.name = name;
         this.cardList = cards;
-        this.listView = listView;
-
     }
 
-    public List<String> getFilterCardList(){
+
+    public String[] getFilterCardList(){
         return cardList;
     }
+
 
     public String getFilterName(){
         return name;
     }
+
+    public boolean isExpanded(){ return isExpanded; }
+
+    public void setExpanded(boolean b){ isExpanded = b ; }
 }

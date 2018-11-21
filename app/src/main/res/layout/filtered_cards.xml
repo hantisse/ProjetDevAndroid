@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
-    android:id="@+id/filtered_list"
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="TEXT">
+    android:orientation="vertical">
 
-</TextView>
+    <TextView
+        android:id="@+id/filter_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="FILTER"
+        android:background="#FF0080"/>
+
+    <ListView
+        android:id="@+id/filtered_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+
+</LinearLayout>
