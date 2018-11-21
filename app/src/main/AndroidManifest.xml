@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DeckEditor"></activity>
+        <activity android:name=".DeckListActivity"></activity>
     </application>
 
 </manifest>
