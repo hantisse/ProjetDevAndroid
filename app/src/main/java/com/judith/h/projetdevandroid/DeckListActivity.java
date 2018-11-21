@@ -4,30 +4,44 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-public class MainMenuActivity extends Activity {
+public class DeckListActivity extends Activity {
+
+    private RecyclerView deckList;
+    private RecyclerView.Adapter deckAdapter;
+    private RecyclerView.LayoutManager deckLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_deck_list);
 
-        setContentView(R.layout.activity_main_menu);
 
-        Button newDeck_button = (Button)findViewById(R.id.newdeckbutton);
+        deckList = (RecyclerView) findViewById(R.id.deckList);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        deckList.setHasFixedSize(true);
+
+        // use a linear layout manager
+        deckLayoutManager = new LinearLayoutManager(this);
+        deckList.setLayoutManager(deckLayoutManager);
+
+        // specify an adapter (see also next example)
+        deckAdapter = new DeckAdapter(new String[]{"Judith", "est","une", "super", "patate"});
+        deckList.setAdapter(deckAdapter);
+
+        Button newDeck_button = (Button)findViewById(R.id.newDeckButton2);
 
         newDeck_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,15 +85,5 @@ public class MainMenuActivity extends Activity {
             }
         });
 
-        Button deckList_button = (Button)findViewById(R.id.decksbutton);
-        deckList_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(),DeckListActivity.class);
-                startActivity(intent);
-            }
-        });
     }
-
-
 }
