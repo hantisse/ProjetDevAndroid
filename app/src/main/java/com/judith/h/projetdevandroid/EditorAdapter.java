@@ -23,8 +23,16 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
             fragment.setArguments(args);
             return fragment;
         }
+        else if(i==0){
+            Fragment fragment = new EditorFragment(new String[]{"Salade","Tomate"});
+            Bundle args = new Bundle();
+            // Our object is just an integer
+            args.putInt(EditorFragment.ARG_OBJECT, i + 1);
+            fragment.setArguments(args);
+            return fragment;
+        }
         else{
-            Fragment fragment = new EditorFragment();
+            Fragment fragment = new EditorFragment(new String[]{"Pomme","Poire"});
             Bundle args = new Bundle();
             // Our object is just an integer
             args.putInt(EditorFragment.ARG_OBJECT, i + 1);
