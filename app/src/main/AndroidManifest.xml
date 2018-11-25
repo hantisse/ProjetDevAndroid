@@ -16,8 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DeckEditor"></activity>
-        <activity android:name=".DeckListActivity"></activity>
+        <activity android:name=".DeckEditor" />
+        <activity android:name=".DeckListActivity" />
+        <activity android:name=".CardActivity"></activity>
     </application>
 
 </manifest>

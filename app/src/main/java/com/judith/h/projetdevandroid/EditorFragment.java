@@ -45,8 +45,8 @@ public class EditorFragment extends Fragment {
 
         // specify an adapter (see also next example)
 
-        Filter filter1 = new Filter("POMMES", new String[]{"CardF1.1", "CardF1.2"});
-        Filter filter2 = new Filter("POIRES", new String[]{"CardF2.1", "CardF2.2"});
+        Filter filter1 = new Filter("FILTRE1");
+        Filter filter2 = new Filter("FILTRE2");
         Filter[] filters = new Filter[]{filter1, filter2};
         mAdapter = new EditorRecyclerAdapter(filters);
         mRecyclerView.setAdapter(mAdapter);
