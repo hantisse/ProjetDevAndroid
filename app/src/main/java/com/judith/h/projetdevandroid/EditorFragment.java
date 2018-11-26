@@ -1,6 +1,7 @@
 package com.judith.h.projetdevandroid;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,9 +30,15 @@ public class EditorFragment extends Fragment {
         // properly.
         View rootView = inflater.inflate(
                 R.layout.fragment_collection_object, container, false);
-        Bundle args = getArguments();
-        ((TextView) rootView.findViewById(R.id.text1)).setText(
-                Integer.toString(args.getInt(ARG_OBJECT)));
+
+        rootView.findViewById(R.id.add_card_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), AddCardActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
         mRecyclerView = (RecyclerView)rootView.findViewById(R.id.editor_recycler_view);
 

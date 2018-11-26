@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DecksDataBaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
+
     private static final String DATABASE_TABLE_NAME = "DecksTable";
     private static final String PKEY_DECK = "pkey_deck";
     private static final String NAME = "name";

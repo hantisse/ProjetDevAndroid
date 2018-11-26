@@ -19,7 +19,7 @@ public class DeckFragment extends Fragment {
         View rootView = inflater.inflate(
                 R.layout.fragment_collection_object, container, false);
         Bundle args = getArguments();
-        ((TextView) rootView.findViewById(R.id.text1)).setText(
+        ((TextView) rootView.findViewById(R.id.deckTitle)).setText(
                 Integer.toString(args.getInt(ARG_OBJECT)));
         return rootView;
     }

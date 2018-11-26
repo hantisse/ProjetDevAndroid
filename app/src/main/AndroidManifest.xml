@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.judith.h.projetdevandroid">
 
+    <uses-permission
+        android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,7 +21,8 @@
         </activity>
         <activity android:name=".DeckEditor" />
         <activity android:name=".DeckListActivity" />
-        <activity android:name=".CardActivity"></activity>
+        <activity android:name=".CardActivity" />
+        <activity android:name=".AddCardActivity"></activity>
     </application>
 
 </manifest>

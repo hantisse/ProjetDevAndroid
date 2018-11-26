@@ -18,9 +18,7 @@ public class StatsFragment extends Fragment {
         // properly.
         View rootView = inflater.inflate(
                 R.layout.fragment_collection_object, container, false);
-        Bundle args = getArguments();
-        ((TextView) rootView.findViewById(R.id.text1)).setText(
-                Integer.toString(args.getInt(ARG_OBJECT)));
+        rootView.findViewById(R.id.add_card_button).setVisibility(View.GONE);
         return rootView;
     }
 }
