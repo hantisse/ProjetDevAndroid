@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -65,6 +66,24 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
 
     @Override
     public void onCardAdded() {
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        Log.i("JH", "toast");
+        Bundle bundle = data.getExtras();
+        StringBuilder sb = new StringBuilder();
+        if(bundle != null){
+            for(String key : bundle.keySet()){
+                sb.append(bundle.get(key));
+            }
+
+            Log.i("JH", sb.toString());
+
+        }
+
+        Log.i("JH", "***");
+
 
     }
 }
