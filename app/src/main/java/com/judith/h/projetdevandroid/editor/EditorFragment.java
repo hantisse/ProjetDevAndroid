@@ -1,6 +1,8 @@
-package com.judith.h.projetdevandroid;
+package com.judith.h.projetdevandroid.editor;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,9 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import java.util.List;
+import com.judith.h.projetdevandroid.R;
 
 @SuppressLint("ValidFragment")
 public class EditorFragment extends Fragment {
@@ -19,19 +20,36 @@ public class EditorFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private OnEditorFragmentUpdatedListener mCallback;
+
     public EditorFragment(){
+    }
+
+    public interface OnEditorFragmentUpdatedListener {
+        public void onCardAdded();
+    }
+
+    public void setOnEditorFragmentUpdatedListener(Activity activity) {
+        mCallback = (OnEditorFragmentUpdatedListener)activity;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        // The last two arguments ensure LayoutParams are inflated
-        // properly.
+
+        setOnEditorFragmentUpdatedListener((DeckEditor)getActivity());
+
         View rootView = inflater.inflate(
                 R.layout.fragment_collection_object, container, false);
-        Bundle args = getArguments();
-        ((TextView) rootView.findViewById(R.id.text1)).setText(
-                Integer.toString(args.getInt(ARG_OBJECT)));
+
+        rootView.findViewById(R.id.add_card_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), AddCardActivity.class);
+                startActivityForResult(intent, 4); //request code 4 : cartes à ajouter au deck
+
+            }
+        });
 
         mRecyclerView = (RecyclerView)rootView.findViewById(R.id.editor_recycler_view);
 
@@ -52,5 +70,9 @@ public class EditorFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
+    }
+
+    public void updateCardList(){
+        //faire qqchose avec mAdapter
     }
 }

@@ -1,4 +1,4 @@
-package com.judith.h.projetdevandroid;
+package com.judith.h.projetdevandroid.editor;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.judith.h.projetdevandroid.R;
 
 public class StatsFragment extends Fragment {
 
@@ -18,9 +20,7 @@ public class StatsFragment extends Fragment {
         // properly.
         View rootView = inflater.inflate(
                 R.layout.fragment_collection_object, container, false);
-        Bundle args = getArguments();
-        ((TextView) rootView.findViewById(R.id.text1)).setText(
-                Integer.toString(args.getInt(ARG_OBJECT)));
+        rootView.findViewById(R.id.add_card_button).setVisibility(View.GONE);
         return rootView;
     }
 }

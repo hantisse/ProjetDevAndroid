@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.judith.h.projetdevandroid.editor.DeckEditor;
+
 public class DeckListActivity extends Activity {
 
     private RecyclerView deckList;

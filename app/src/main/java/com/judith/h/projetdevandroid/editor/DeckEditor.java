@@ -1,4 +1,4 @@
-package com.judith.h.projetdevandroid;
+package com.judith.h.projetdevandroid.editor;
 
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
@@ -7,17 +7,18 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.judith.h.projetdevandroid.Deck;
+import com.judith.h.projetdevandroid.R;
 
-public class DeckEditor extends FragmentActivity {
+
+public class DeckEditor extends FragmentActivity implements EditorFragment.OnEditorFragmentUpdatedListener {
 
     EditorAdapter adapter;
     ViewPager pager;
+    Deck deck;
 
     private DrawerLayout filter_drawer;
 
@@ -59,6 +60,11 @@ public class DeckEditor extends FragmentActivity {
         tabLayout.setupWithViewPager(pager);
 
 
+
+    }
+
+    @Override
+    public void onCardAdded() {
 
     }
 }

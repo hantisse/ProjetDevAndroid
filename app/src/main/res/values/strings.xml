@@ -8,5 +8,6 @@
     <string name="new_deck">Nouveau Deck</string>
     <string name="update">Modifier</string>
     <string name="delete">Supprimer</string>
-
+    <string name="search">Search</string>
+    <string name="add_">Add...</string>
 </resources>
