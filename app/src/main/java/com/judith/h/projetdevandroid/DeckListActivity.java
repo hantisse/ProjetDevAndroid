@@ -9,8 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -38,7 +36,7 @@ public class DeckListActivity extends Activity {
         deckList.setLayoutManager(deckLayoutManager);
 
         // specify an adapter (see also next example)
-        deckAdapter = new DeckAdapter(new String[]{"Judith", "est","une", "super", "patate"});
+        deckAdapter = new DeckRecyclerAdapter(new String[]{"Judith", "est","une", "super", "patate"});
         deckList.setAdapter(deckAdapter);
 
         Button newDeck_button = (Button)findViewById(R.id.newDeckButton2);
