@@ -19,10 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DeckEditor" />
+        <activity android:name=".editor.DeckEditor" />
         <activity android:name=".DeckListActivity" />
-        <activity android:name=".CardActivity" />
-        <activity android:name=".AddCardActivity"></activity>
+        <activity android:name=".editor.CardActivity" />
+        <activity android:name=".editor.AddCardActivity"></activity>
     </application>
 
 </manifest>

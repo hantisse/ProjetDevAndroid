@@ -1,4 +1,4 @@
-package com.judith.h.projetdevandroid;
+package com.judith.h.projetdevandroid.editor;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.judith.h.projetdevandroid.R;
 
 
 public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAdapter.FilterViewHolder>{
@@ -92,6 +94,8 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     EditorRecyclerAdapter(Filter[] filters) {
         this.filters = filters;
     }
+
+
 
     // Create new views (invoked by the layout manager)
     @Override

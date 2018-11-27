@@ -1,6 +1,8 @@
-package com.judith.h.projetdevandroid;
+package com.judith.h.projetdevandroid.editor;
 
 import android.widget.ArrayAdapter;
+
+import com.judith.h.projetdevandroid.Card;
 
 import java.util.ArrayList;
 

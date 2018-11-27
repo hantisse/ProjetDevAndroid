@@ -1,4 +1,4 @@
-package com.judith.h.projetdevandroid;
+package com.judith.h.projetdevandroid.editor;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

@@ -1,8 +1,13 @@
-package com.judith.h.projetdevandroid;
+package com.judith.h.projetdevandroid.editor;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
+
+import com.judith.h.projetdevandroid.R;
+import com.judith.h.projetdevandroid.editor.AddCardActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,7 +80,19 @@ public class AsyncScryfallJSONData extends AsyncTask<String, Void, JSONObject> {
             e.printStackTrace();
             Log.i("JH", "PAS BON**");
         }
-        ((TextView) activity.findViewById(R.id.card_name_found)).setText(name);
+        TextView cardNameFound = (TextView) activity.findViewById(R.id.card_name_found);
+        cardNameFound.setText(name);
+        /*
+        cardNameFound.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                activity.setResult(4, intent);
+
+            }
+        });
+        */
+
     }
 
     protected String readStream(InputStream is) throws IOException {
