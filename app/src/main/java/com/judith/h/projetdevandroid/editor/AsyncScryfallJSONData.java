@@ -2,10 +2,12 @@ package com.judith.h.projetdevandroid.editor;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.judith.h.projetdevandroid.Card;
 import com.judith.h.projetdevandroid.R;
 import com.judith.h.projetdevandroid.editor.AddCardActivity;
 
@@ -17,12 +19,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
-public class AsyncScryfallJSONData extends AsyncTask<String, Void, JSONObject> {
+public class AsyncScryfallJSONData extends AsyncTask<String, Void, JSONObject> implements View.OnClickListener {
     private AddCardActivity activity;
+    private ArrayList<Card> addedCards = new ArrayList<Card>();
 
     public AsyncScryfallJSONData(AddCardActivity activity){
         this.activity = activity;
@@ -69,29 +74,48 @@ public class AsyncScryfallJSONData extends AsyncTask<String, Void, JSONObject> {
 
     @Override
     protected void onPostExecute(JSONObject j) {
+        String scryfallID = "";
         String name = "Not Found";
+        String type_line = "";
+        int cmc = -1;
+        String manaCost = "";
+        String imgURL = "";
+        String descr = "";
+        String color = "";
         Log.i("JH", "json : " + j);
         try {
             name = j.getString("name");
+            scryfallID = j.getString("id");
+            type_line = j.getString("type_line");
+            cmc = j.getInt("cmc");
+            color =  j.getString("color_identity");
+            Log.i("JH", "string : " + color.toString());
+            manaCost = j.getString("mana_cost");
+            JSONObject imgUris = j.getJSONObject("image_uris");
+            imgURL = imgUris.getString("border_crop");
+            descr = j.getString("oracle_text");
+
         } catch(NullPointerException e){
             Log.i("JH", "Null pointer");
         }
         catch (JSONException e) {
             e.printStackTrace();
-            Log.i("JH", "PAS BON**");
+            Log.i("JH", "PAS BON");
         }
         TextView cardNameFound = (TextView) activity.findViewById(R.id.card_name_found);
         cardNameFound.setText(name);
-        /*
+
+        //Modifier :
+        final Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line));
+        card.setImgUrl(imgURL);
+
         cardNameFound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                activity.setResult(4, intent);
-
+                addedCards.add(card);
             }
         });
-        */
+
 
     }
 
@@ -105,5 +129,23 @@ public class AsyncScryfallJSONData extends AsyncTask<String, Void, JSONObject> {
         return sb.toString();
     }
 
+    @Override
+    public void onClick(View v){
 
+    }
+
+    private ArrayList<String> readTypeLine(String typeLine){
+        ArrayList<String> types = new ArrayList<>();
+        String[] typesArray = typeLine.split(" ");
+        for(String s : typesArray){
+            if (s !="—"){
+                types.add(s);
+            }
+        }
+        return types;
+    }
+
+    public ArrayList<Card> getAddedCards() {
+        return addedCards;
+    }
 }

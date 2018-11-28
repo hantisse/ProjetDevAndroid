@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.judith.h.projetdevandroid.R;
 
@@ -46,7 +48,7 @@ public class EditorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), AddCardActivity.class);
-                startActivityForResult(intent, 4); //request code 4 : cartes à ajouter au deck
+                getActivity().startActivityForResult(intent, 4); //request code 4 : cartes à ajouter au deck
 
             }
         });
@@ -75,4 +77,5 @@ public class EditorFragment extends Fragment {
     public void updateCardList(){
         //faire qqchose avec mAdapter
     }
+
 }
