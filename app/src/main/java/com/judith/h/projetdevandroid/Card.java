@@ -11,8 +11,7 @@ public class Card implements Serializable {
     private ArrayList<String> cardTypes;
     private String imgUrl;
     private String manaCost;
-    private String color;
-    private String description;
+    private String colorIdentity;
 
     public Card(){}
 
@@ -21,7 +20,7 @@ public class Card implements Serializable {
         this.scryfallID = scryfallID;
         this.cmc = cmc;
         this.manaCost = manaCost;
-        this.color = color;
+        this.colorIdentity = color;
         this.cardTypes = cardTypes;
     }
 
@@ -29,9 +28,6 @@ public class Card implements Serializable {
         imgUrl = url;
     }
 
-    public void setDescription(String desc){
-        description = description;
-    }
     public String getName() {
         return name;
     }
@@ -64,8 +60,8 @@ public class Card implements Serializable {
         return manaCost;
     }
 
-    public String getColor() {
-        return color;
+    public String getColorIdentity() {
+        return colorIdentity;
     }
 
     public void setScryfallID(String scryfallID) {
@@ -80,7 +76,7 @@ public class Card implements Serializable {
         this.manaCost = manaCost;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setColorIdentity(String color) {
+        this.colorIdentity = color;
     }
 }

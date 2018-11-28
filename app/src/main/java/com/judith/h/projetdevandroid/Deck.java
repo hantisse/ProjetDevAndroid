@@ -1,11 +1,13 @@
 package com.judith.h.projetdevandroid;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Deck {
     private String deckName;
     private ArrayList<Card> main;
     private ArrayList<Card> side;
+    private HashMap<Card,Integer> cardMultiplicities;
 
     public Deck(String deckName){
         this.deckName = deckName;
@@ -15,6 +17,7 @@ public class Deck {
         this.deckName = deckName;
         this.main = main;
         this.side = side;
+        cardMultiplicities = new HashMap<>();
     }
     public ArrayList<Card> getMain() {
         return main;

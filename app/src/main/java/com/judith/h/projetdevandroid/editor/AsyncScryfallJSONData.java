@@ -88,10 +88,11 @@ public class AsyncScryfallJSONData extends AsyncTask<String, Void, JSONObject> i
             scryfallID = j.getString("id");
             type_line = j.getString("type_line");
             cmc = j.getInt("cmc");
-            color =  j.getString("colors");
+            color =  j.getString("color_identity");
+            Log.i("JH", "string : " + color.toString());
             manaCost = j.getString("mana_cost");
             JSONObject imgUris = j.getJSONObject("image_uris");
-            imgURL = imgUris.getString("art_crop");
+            imgURL = imgUris.getString("border_crop");
             descr = j.getString("oracle_text");
 
         } catch(NullPointerException e){
@@ -107,8 +108,6 @@ public class AsyncScryfallJSONData extends AsyncTask<String, Void, JSONObject> i
         //Modifier :
         final Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line));
         card.setImgUrl(imgURL);
-        card.setDescription(descr);
-
 
         cardNameFound.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +134,7 @@ public class AsyncScryfallJSONData extends AsyncTask<String, Void, JSONObject> i
 
     }
 
-    public ArrayList<String> readTypeLine(String typeLine){
+    private ArrayList<String> readTypeLine(String typeLine){
         ArrayList<String> types = new ArrayList<>();
         String[] typesArray = typeLine.split(" ");
         for(String s : typesArray){
