@@ -38,7 +38,7 @@ public class DeckListActivity extends Activity {
         deckList.setLayoutManager(deckLayoutManager);
 
         // specify an adapter (see also next example)
-        deckAdapter = new DeckAdapter(new String[]{"Judith", "est","une", "super", "patate"});
+        deckAdapter = new DeckRecyclerAdapter(new String[]{"Judith", "est","une", "super", "patate"});
         deckList.setAdapter(deckAdapter);
 
         Button newDeck_button = (Button)findViewById(R.id.newDeckButton2);
