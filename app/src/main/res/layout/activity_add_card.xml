@@ -26,10 +26,10 @@
             android:text="@string/search" />
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/card_name_found"
+    <ListView
+        android:id="@+id/cards_found"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TEXT"/>
+        />
 
 </LinearLayout>

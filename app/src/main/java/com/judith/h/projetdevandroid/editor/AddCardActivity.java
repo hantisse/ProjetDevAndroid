@@ -17,7 +17,7 @@ import com.judith.h.projetdevandroid.R;
 import java.io.Serializable;
 
 public class AddCardActivity extends Activity implements View.OnClickListener {
-    AsyncScryfallJSONData task = null;
+    AsyncScryfallJSONSearch task = new AsyncScryfallJSONSearch(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,22 +38,18 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         EditText cardSearched = findViewById(R.id.search_bar);
-        String url = "https://api.scryfall.com/cards/named?fuzzy=" + cardSearched.getText();
-
-        task = new AsyncScryfallJSONData(this);
+        String url = "https://api.scryfall.com/cards/autocomplete?q=" + cardSearched.getText();
         task.execute(url);
     }
 
     @Override
     public void onBackPressed(){
-        Log.i("JH", "back");
         Intent intent = new Intent();
-        intent.putExtra("added_cards", task.getAddedCards());
-        Log.i("JH", "bug putextra");
-        setResult(1, intent);
-        Log.i("JH", "bug setResult");
-        finish();
-        Log.i("JH", "bug finish");
+        if(!task.getTask().getAddedCards().isEmpty()) {
+            intent.putExtra("added_cards", task.getTask().getAddedCards());
+            setResult(1, intent);
+            finish();
+        } else{ setResult(0, intent);}
 
         super.onBackPressed();
     }

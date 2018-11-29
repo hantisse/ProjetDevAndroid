@@ -3,6 +3,7 @@ package com.judith.h.projetdevandroid.editor;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -65,25 +66,28 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
     }
 
     @Override
+    public void onAttachFragment(Fragment fragment) {
+        if (fragment instanceof EditorFragment) {
+            EditorFragment editorFragment = (EditorFragment) fragment;
+            editorFragment.setOnEditorFragmentUpdatedListener(this);
+            Log.i("JH", "attach fragment");
+        }
+    }
+
+    @Override
     public void onCardAdded() {
 
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         Log.i("JH", "toast");
-        Bundle bundle = data.getExtras();
-        StringBuilder sb = new StringBuilder();
-        if(bundle != null){
-            for(String key : bundle.keySet()){
-                sb.append(bundle.get(key));
+        if(resultCode == 1){
+            Bundle bundle = data.getExtras();
+            StringBuilder sb = new StringBuilder();
+            if(bundle != null){
+                bundle.get("added_cards");
             }
-
-            Log.i("JH", sb.toString());
-
         }
-
-        Log.i("JH", "***");
-
 
     }
 }
