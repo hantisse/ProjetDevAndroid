@@ -1,9 +1,10 @@
 package com.judith.h.projetdevandroid;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Deck {
+public class Deck implements Serializable {
 
     private int DeckId;
     private String deckName;

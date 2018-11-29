@@ -12,17 +12,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.judith.h.projetdevandroid.Card;
+import com.judith.h.projetdevandroid.Deck;
 import com.judith.h.projetdevandroid.R;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AddCardActivity extends Activity implements View.OnClickListener {
-    AsyncScryfallJSONSearch task = new AsyncScryfallJSONSearch(this);
-
+    private AsyncScryfallJSONSearch task = new AsyncScryfallJSONSearch(this);
+    private ArrayList<String> addedCardsIds;
+    private Deck deck;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_card);
+
+        Intent intent = getIntent();
+        deck = (Deck)intent.getExtras().get("deck");
+        addedCardsIds = new ArrayList<>();
 
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
                 != PackageManager.PERMISSION_GRANTED ){
@@ -44,13 +53,28 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onBackPressed(){
+
         Intent intent = new Intent();
-        if(!task.getTask().getAddedCards().isEmpty()) {
-            intent.putExtra("added_cards", task.getTask().getAddedCards());
+        if(!addedCardsIds.isEmpty()) {
+            intent.putExtra("added_cards", addedCardsIds);
             setResult(1, intent);
             finish();
         } else{ setResult(0, intent);}
 
+        finish();
         super.onBackPressed();
     }
+
+    public AsyncScryfallJSONSearch getTask() {
+        return task;
+    }
+
+    public ArrayList<String> getAddedCardsIds() {
+        return addedCardsIds;
+    }
+
+    public Deck getDeck(){
+        return deck;
+    }
+
 }

@@ -74,7 +74,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
             + " INTEGER, " + KEY_CARD_ID + " INTEGER, " + KEY_CARD_MULTIPLICITY + " INTEGER, "
             + KEY_DECK_PART + " TEXT " + ")";
 
-    DecksDataBaseHelper(Context context){
+    public DecksDataBaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -101,35 +101,47 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    /*
-     * Creating a Card
+    /**
+     * Vérifie si la carte n'existe pas déja dans la ddb, sinon la crée
+     * @param card qui n'a pas encore d'id
+     * @return id dans la db de la carte ajouter (à associer à la carte)
      */
     public long createCard(Card card) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(KEY_CARD_ID, card.getCardId());
-        values.put(KEY_CARD_NAME, card.getName());
-        values.put(KEY_CARD_SCRYFALL_ID, card.getScryfallID());
-        values.put(KEY_CARD_CMC, card.getCmc());
-        ArrayList<String> cardTypes = card.getCardTypes();
-        String cardTypesToString = "";
-        for (String cardtype : cardTypes){
-            cardTypesToString += cardtype + ";";
+        Cursor c = db.query(TABLE_CARDS, new String[]{KEY_CARD_ID}, KEY_CARD_SCRYFALL_ID + " = ?",new String[]{card.getScryfallID()},null, null,null);
+
+        if(c.moveToFirst()){
+            long card_id =  c.getLong(c.getColumnIndex(KEY_CARD_ID));
+            card.setCardId((int)card_id);
+            return card_id;
+        } else{
+            ContentValues values = new ContentValues();
+            values.put(KEY_CARD_NAME, card.getName());
+            values.put(KEY_CARD_SCRYFALL_ID, card.getScryfallID());
+            values.put(KEY_CARD_CMC, card.getCmc());
+            ArrayList<String> cardTypes = card.getCardTypes();
+            String cardTypesToString = "";
+            for (String cardtype : cardTypes){
+                cardTypesToString += cardtype + ";";
+            }
+            values.put(KEY_CARD_TYPES, cardTypesToString);
+            values.put(KEY_CARD_IMAGE_URL, card.getImgUrl());
+            values.put(KEY_CARD_MANA_COST, card.getManaCost());
+            values.put(KEY_CARD_COLOR_IDENTITY, card.getColorIdentity());
+
+            // insert row
+            long card_id = db.insert(TABLE_CARDS, null, values);
+            card.setCardId((int)card_id);
+            return card_id;
         }
-        values.put(KEY_CARD_TYPES, cardTypesToString);
-        values.put(KEY_CARD_IMAGE_URL, card.getImgUrl());
-        values.put(KEY_CARD_MANA_COST, card.getManaCost());
-        values.put(KEY_CARD_COLOR_IDENTITY, card.getColorIdentity());
 
-        // insert row
-        long card_id = db.insert(TABLE_CARDS, null, values);
-
-        return card_id;
     }
 
-    /*
-     * get single card
+    /**
+     *
+     * @param card_id
+     * @return renvoi null si pas de carte avec cet id dans la database
      */
     public Card getCard(long card_id) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -141,33 +153,29 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery(selectQuery, null);
 
-        if (c != null)
-            c.moveToFirst();
-
-        Card card = new Card();
-        card.setCardId(c.getInt(c.getColumnIndex(KEY_CARD_ID)));
-        card.setName((c.getString(c.getColumnIndex(KEY_CARD_NAME))));
-        card.setScryfallID(c.getString(c.getColumnIndex(KEY_CARD_SCRYFALL_ID)));
-        card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
-        String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
-        ArrayList<String> cardTypes = new ArrayList<>();
-        for (String s:cardTypesToString.split(";")){
-            cardTypes.add(s);
+        Card card = null;
+        if (c != null){
+            card.setCardId(c.getInt(c.getColumnIndex(KEY_CARD_ID)));
+            card.setName((c.getString(c.getColumnIndex(KEY_CARD_NAME))));
+            card.setScryfallID(c.getString(c.getColumnIndex(KEY_CARD_SCRYFALL_ID)));
+            card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
+            String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
+            ArrayList<String> cardTypes = new ArrayList<>(Arrays.asList(cardTypesToString.split(";")));
+            card.setCardTypes(cardTypes);
+            card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
+            card.setManaCost((c.getString(c.getColumnIndex(KEY_CARD_MANA_COST))));
+            card.setColorIdentity((c.getString(c.getColumnIndex(KEY_CARD_COLOR_IDENTITY))));
         }
-        card.setCardTypes(cardTypes);
-        card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
-        card.setManaCost((c.getString(c.getColumnIndex(KEY_CARD_MANA_COST))));
-        card.setColorIdentity((c.getString(c.getColumnIndex(KEY_CARD_COLOR_IDENTITY))));
-
 
         return card;
     }
 
-    /*
-     * getting all cards
-     * */
+    /**
+     *
+     * @return liste de toutes les cartes
+     */
     public List<Card> getAllCards() {
-        List<Card> todos = new ArrayList<Card>();
+        List<Card> cards = new ArrayList<Card>();
         String selectQuery = "SELECT  * FROM " + TABLE_CARDS;
 
         Log.e(LOG, selectQuery);
@@ -185,34 +193,31 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
                 String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
                 ArrayList<String> cardTypes = new ArrayList<>(Arrays.asList(cardTypesToString.split(";")));
-                /*
-                for (String s:cardTypesToString.split(";")){
-                    cardTypes.add(s);
-                }
-                */
                 card.setCardTypes(cardTypes);
                 card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
                 card.setManaCost((c.getString(c.getColumnIndex(KEY_CARD_MANA_COST))));
                 card.setColorIdentity((c.getString(c.getColumnIndex(KEY_CARD_COLOR_IDENTITY))));
 
                 // adding to card list
-                todos.add(card);
+                cards.add(card);
             } while (c.moveToNext());
         }
 
-        return todos;
+        return cards;
     }
 
-    /*
-     * getting all cards in main part of a deck
-     * */
+    /**
+     *
+     * @param deck_id id du deck à chercher
+     * @return liste vide si il n'y a pas de cartes dans le main ; null si il n'y a pas de deck avec cet id dans la ddb
+     */
     public List<Card> getAllMainCardsByDeck(long deck_id) {
         List<Card> cards = new ArrayList<Card>();
 
         String selectQuery = "SELECT  * FROM " + TABLE_CARDS + " tc, "
-                + TABLE_DECKS + " td, " + TABLE_CARD_DECK + " tcd WHERE tcd."
+                + TABLE_CARD_DECK + " tcd WHERE tcd."
                 + KEY_DECK_PART + " = 'main'" + " AND tcd." + KEY_DECK_ID
-                + " = " + "td." + KEY_DECK_ID + " AND tcd." + KEY_CARD_ID + " = "
+                + " = " + deck_id + " AND tcd." + KEY_CARD_ID + " = "
                 + "tc." + KEY_CARD_ID;
 
         Log.e(LOG, selectQuery);
@@ -230,11 +235,6 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
                 String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
                 ArrayList<String> cardTypes = new ArrayList<>(Arrays.asList(cardTypesToString.split(";")));
-                /*
-                for (String s:cardTypesToString.split(";")){
-                    cardTypes.add(s);
-                }
-                */
                 card.setCardTypes(cardTypes);
                 card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
                 card.setManaCost((c.getString(c.getColumnIndex(KEY_CARD_MANA_COST))));
@@ -243,22 +243,25 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 // adding to card list
                 cards.add(card);
             } while (c.moveToNext());
-        }
+        } else cards = null;
 
         return cards;
     }
 
-    /*
-     * getting all cards in main part of a deck
-     * */
+    /**
+     *
+     * @param deck_id id du deck
+     * @return liste vide si il n'y a pas de cartes dans le side ; null si il n'y a pas de deck avec cet id
+     */
     public List<Card> getAllSideCardsByDeck(long deck_id) {
         List<Card> cards = new ArrayList<>();
 
         String selectQuery = "SELECT  * FROM " + TABLE_CARDS + " tc, "
-                + TABLE_DECKS + " td, " + TABLE_CARD_DECK + " tcd WHERE tcd."
+                + TABLE_CARD_DECK + " tcd WHERE tcd."
                 + KEY_DECK_PART + " = 'side'" + " AND tcd." + KEY_DECK_ID
-                + " = " + "td." + KEY_DECK_ID + " AND tcd." + KEY_CARD_ID + " = "
+                + " = " + deck_id + " AND tcd." + KEY_CARD_ID + " = "
                 + "tc." + KEY_CARD_ID;
+
 
         Log.e(LOG, selectQuery);
 
@@ -275,11 +278,6 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
                 String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
                 ArrayList<String> cardTypes = new ArrayList<>(Arrays.asList(cardTypesToString.split(";")));
-                /*
-                for (String s:cardTypesToString.split(";")){
-                    cardTypes.add(s);
-                }
-                */
                 card.setCardTypes(cardTypes);
                 card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
                 card.setManaCost((c.getString(c.getColumnIndex(KEY_CARD_MANA_COST))));
@@ -288,13 +286,18 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 // adding to card list
                 cards.add(card);
             } while (c.moveToNext());
-        }
 
+            c.close();
+        } else cards = null;
+
+        db.close();
         return cards;
     }
 
-    /*
-     * Updating a card
+    /**
+     *
+     * @param card carte à mettre à jour, carte doit avoir un id dans la ddb
+     * @return 0 si il y a un pb
      */
     public int updateCard(Card card) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -314,8 +317,11 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         values.put(KEY_CARD_COLOR_IDENTITY, card.getColorIdentity());
 
         // updating row
-        return db.update(TABLE_CARDS, values, KEY_CARD_ID + " = ?",
+        int result = db.update(TABLE_CARDS, values, KEY_CARD_ID + " = ?",
                 new String[] { String.valueOf(card.getCardId()) });
+
+        db.close();
+        return result;
     }
 
     /*
@@ -327,8 +333,10 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 new String[] { String.valueOf(card_id) });
     }
 
-    /*
-     * Creating tag
+    /**
+     *
+     * @param deck deck avec un nom
+     * @return l'id du deck créé dans la ddb
      */
     public long createDeck(Deck deck) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -339,11 +347,16 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         values.put(KEY_DECK_CREATED_AT, currentTime.getTime());
 
         // insert row
-        return db.insert(TABLE_DECKS, null, values);
+        long deck_id = db.insert(TABLE_DECKS, null, values);
+        db.close();
+
+        deck.setDeckId((int)deck_id);
+        return deck_id;
     }
 
-     /*
-     *  Getting all decks
+    /**
+     *
+     * @return liste de decks
      */
     public List<Deck> getAllDeckss() {
         List<Deck> decks = new ArrayList<Deck>();
@@ -371,8 +384,10 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         return decks;
     }
 
-    /*
-     * Updating a deck
+    /**
+     *
+     * @param deck deck quelconque
+     * @return 0 si pb;
      */
     public int updateDeckName(Deck deck) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -381,14 +396,26 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         values.put(KEY_DECK_NAME, deck.getDeckName());
 
         // updating row
-        return db.update(TABLE_DECKS, values, KEY_DECK_ID + " = ?",
+        int result = db.update(TABLE_DECKS, values, KEY_DECK_ID + " = ?",
                 new String[] { String.valueOf(deck.getDeckId()) });
+
+        db.close();
+        return result;
     }
 
+    /**
+     *
+     * @param deck deck qui est déjà dans la ddb
+     * @param card carte qui est déjà dans la ddb
+     * @param deckPart la partie du deck ("main" ou "side")
+     */
     public void addCardInDeck(Deck deck, Card card, String deckPart){
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c = db.query(TABLE_CARD_DECK, new String[]{KEY_CARD_MULTIPLICITY}, KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ?" ,new String[]{String.valueOf(card.getScryfallID()), String.valueOf(deck.getDeckId())}, null, null, null );
+        Cursor c = db.query(TABLE_CARD_DECK, new String[]{KEY_CARD_MULTIPLICITY},
+                KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ? AND " + KEY_DECK_PART + " = ?" ,
+                new String[]{String.valueOf(card.getScryfallID()), String.valueOf(deck.getDeckId()), deckPart},
+                null, null, null );
         if (c.moveToFirst()) {
             int mult = c.getInt(c.getColumnIndex(KEY_CARD_MULTIPLICITY));
             ContentValues contentValues = new ContentValues();
@@ -406,6 +433,10 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     *
+     * @param deck qui est dans la database (donc a déjà un id de ddb)
+     */
     public void deckUpdateContent(Deck deck){
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Card> main = new ArrayList<>();
@@ -413,8 +444,9 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         HashMap<Card, Integer> mainMult = new HashMap<>();
         HashMap<Card, Integer> sideMult = new HashMap<>();
 
-        String query = "SELECT " + "tc." + KEY_CARD_ID + ", " + KEY_CARD_MULTIPLICITY + ", " +  KEY_DECK_PART + " FROM " + TABLE_CARD_DECK + " tcd JOIN " + TABLE_CARDS + " tc WHERE tcb."
-                + KEY_DECK_ID + " = " + deck.getDeckId();
+        String query = "SELECT " + "tc." + KEY_CARD_ID + ", " + KEY_CARD_MULTIPLICITY + ", " +  KEY_DECK_PART
+                + " FROM " + TABLE_CARD_DECK + " tcd, " + TABLE_CARDS + " tc"
+                + " WHERE tcb." + KEY_DECK_ID + " = " + deck.getDeckId();
 
         Cursor c = db.rawQuery(query, null);
 

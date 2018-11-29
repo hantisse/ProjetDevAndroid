@@ -1,6 +1,7 @@
 package com.judith.h.projetdevandroid.editor;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,8 +13,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.judith.h.projetdevandroid.Card;
 import com.judith.h.projetdevandroid.Deck;
+import com.judith.h.projetdevandroid.DecksDataBaseHelper;
 import com.judith.h.projetdevandroid.R;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class DeckEditor extends FragmentActivity implements EditorFragment.OnEditorFragmentUpdatedListener {
@@ -21,6 +27,7 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
     EditorAdapter adapter;
     ViewPager pager;
     Deck deck;
+    DecksDataBaseHelper handler;
 
     private DrawerLayout filter_drawer;
 
@@ -31,6 +38,10 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
 
         Intent intent = getIntent();
         String deck_name = intent.getStringExtra("deck_name");
+        deck = new Deck(deck_name);
+
+        handler = new DecksDataBaseHelper(this);
+        handler.createDeck(deck);
 
         TextView deckName = (TextView)findViewById(R.id.deckName);
         deckName.setText(deck_name);
@@ -55,7 +66,7 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
                     }
                 });
 
-        adapter = new EditorAdapter(getSupportFragmentManager());
+        adapter = new EditorAdapter(getSupportFragmentManager(), deck);
         pager = (ViewPager)findViewById(R.id.pager);
         pager.setAdapter(adapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -80,13 +91,24 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        Log.i("JH", "toast");
         if(resultCode == 1){
             Bundle bundle = data.getExtras();
-            StringBuilder sb = new StringBuilder();
+            ArrayList<String> addedCards;
             if(bundle != null){
-                bundle.get("added_cards");
+                addedCards = (ArrayList<String>) bundle.get("added_cards");
+                Log.i("JH", "added_card OK" + addedCards);
+
+                for(String card : addedCards){
+
+                    //update affichage
+
+                }
+
             }
+
+
+
+
         }
 
     }
