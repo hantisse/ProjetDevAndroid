@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AddCardActivity extends Activity implements View.OnClickListener {
-    private AsyncScryfallJSONSearch task = new AsyncScryfallJSONSearch(this);
     private ArrayList<String> addedCardsIds;
     private Deck deck;
     @Override
@@ -46,6 +45,7 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        AsyncScryfallJSONSearch task = new AsyncScryfallJSONSearch(this);
         EditText cardSearched = findViewById(R.id.search_bar);
         String url = "https://api.scryfall.com/cards/autocomplete?q=" + cardSearched.getText();
         task.execute(url);
@@ -56,6 +56,7 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
 
         Intent intent = new Intent();
         if(!addedCardsIds.isEmpty()) {
+            Log.i("JH", addedCardsIds.toString());
             intent.putExtra("added_cards", addedCardsIds);
             setResult(1, intent);
             finish();
@@ -63,10 +64,6 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
 
         finish();
         super.onBackPressed();
-    }
-
-    public AsyncScryfallJSONSearch getTask() {
-        return task;
     }
 
     public ArrayList<String> getAddedCardsIds() {

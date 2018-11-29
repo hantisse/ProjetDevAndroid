@@ -69,8 +69,8 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
             Log.i("JH", "PAS BON");
         }
         Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line));
-        if(!activity.getAddedCardsIds().contains(name)){
-            handler.createCard(card);
+        long card_id = handler.createCard(card);
+        if(!activity.getAddedCardsIds().contains(String.valueOf(card_id))){
             activity.getAddedCardsIds().add(String.valueOf(card.getCardId()));
         };
         handler.addCardInDeck(activity.getDeck(), card, "main");

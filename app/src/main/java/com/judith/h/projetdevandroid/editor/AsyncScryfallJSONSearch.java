@@ -17,11 +17,9 @@ import org.json.JSONObject;
 public class AsyncScryfallJSONSearch extends AsyncScryfall {
 
     private AddCardActivity activity;
-    private AsyncScryfallJSONData task;
 
     public AsyncScryfallJSONSearch(AddCardActivity activity){
         this.activity = activity;
-        this.task = new AsyncScryfallJSONData(activity);
     }
 
     @Override
@@ -46,7 +44,7 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
         catch (JSONException e) {
             e.printStackTrace();
         }
-        /*
+
         Button search_button = activity.findViewById(R.id.add_card_button_ac);
         final EditText search_bar = activity.findViewById(R.id.search_bar);
 
@@ -55,14 +53,15 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
             public void onClick(View v) {
                 String url = "https://api.scryfall.com/cards/autocomplete?q=" + search_bar.getText();
                 Log.i("JH", "clic sur search");
-                activity.task = this.onPostExecute();
+                new AsyncScryfallJSONSearch(activity).execute(url);
             }
         });
-        */
+
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AsyncScryfallJSONData task = new AsyncScryfallJSONData(activity);;
                 String url = "https://api.scryfall.com/cards/named?fuzzy=" + lv.getAdapter().getItem(position);;
                 Log.i("JH", url);
                 task.execute(url);
@@ -70,10 +69,5 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
         });
 
     }
-
-    public AsyncScryfallJSONData getTask(){
-        return task;
-    }
-
 
 }
