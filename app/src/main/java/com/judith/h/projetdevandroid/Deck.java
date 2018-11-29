@@ -9,7 +9,10 @@ public class Deck {
     private String deckName;
     private ArrayList<Card> main;
     private ArrayList<Card> side;
-    private HashMap<Card,Integer> cardMultiplicities;
+    private HashMap<Card,Integer> mainMultiplicities;
+    private HashMap<Card,Integer> sideMultiplicities;
+
+    public Deck(){}
 
     public Deck(String deckName){
         this.deckName = deckName;
@@ -19,7 +22,7 @@ public class Deck {
         this.deckName = deckName;
         this.main = main;
         this.side = side;
-        cardMultiplicities = new HashMap<>();
+        mainMultiplicities = new HashMap<>();
     }
     public ArrayList<Card> getMain() {
         return main;
@@ -35,5 +38,45 @@ public class Deck {
 
     public void addSide(Card card){
         side.add(card);
+    }
+
+    public String getDeckName(){
+        return deckName;
+    }
+
+    public void setDeckName(String name){
+        deckName = name;
+    }
+
+    public int getDeckId() {
+        return DeckId;
+    }
+
+    public void setDeckId(int deckId) {
+        DeckId = deckId;
+    }
+
+    public HashMap<Card, Integer> getMainMultiplicities() {
+        return mainMultiplicities;
+    }
+
+    public void setMainMultiplicities(HashMap<Card, Integer> mainMultiplicities) {
+        this.mainMultiplicities = mainMultiplicities;
+    }
+
+    public void setMain(ArrayList<Card> main) {
+        this.main = main;
+    }
+
+    public void setSide(ArrayList<Card> side) {
+        this.side = side;
+    }
+
+    public HashMap<Card, Integer> getSideMultiplicities() {
+        return sideMultiplicities;
+    }
+
+    public void setSideMultiplicities(HashMap<Card, Integer> sideMultiplicities) {
+        this.sideMultiplicities = sideMultiplicities;
     }
 }
