@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Deck {
+
+    private int DeckId;
     private String deckName;
     private ArrayList<Card> main;
     private ArrayList<Card> side;

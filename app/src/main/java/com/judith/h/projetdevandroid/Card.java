@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class Card implements Serializable {
 
+    private int CardId;
     private String name;
     private String scryfallID;
     private int cmc;
@@ -22,6 +23,14 @@ public class Card implements Serializable {
         this.manaCost = manaCost;
         this.colorIdentity = color;
         this.cardTypes = cardTypes;
+    }
+
+    public int getCardId() {
+        return this.CardId;
+    }
+
+    public void setCardId(int id) {
+        this.CardId = id;
     }
 
     public void setImgUrl(String url){
