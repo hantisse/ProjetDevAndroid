@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.judith.h.projetdevandroid.Card;
@@ -24,52 +26,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class AsyncScryfallJSONData extends AsyncTask<String, Void, JSONObject> implements View.OnClickListener {
+public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClickListener {
     private AddCardActivity activity;
-    private ArrayList<Card> addedCards = new ArrayList<Card>();
+    private HashMap<Card,Integer> addedCards = new HashMap<>();
+    private HashMap<String, Card> cardNames = new HashMap<>();
 
     public AsyncScryfallJSONData(AddCardActivity activity){
         this.activity = activity;
-    }
-
-    @Override
-    protected JSONObject doInBackground(String... strings) {
-
-        JSONObject json = null;
-        URL url = null;
-        HttpURLConnection urlConnection = null;
-        String result = null;
-        try {
-            url = new URL(strings[0]);
-            urlConnection = (HttpURLConnection) url.openConnection(); // Open
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream()); // Stream
-            result = readStream(in); // Read stream
-        } catch (MalformedURLException e) {
-            Log.i("JH", "exception1");
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.i("JH", "exception2");
-            e.printStackTrace();
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-                Log.i("JH", "result : " + result);
-            }
-            try {
-                json = new JSONObject(result);
-            } catch(NullPointerException e){
-                Log.i("JH", "Null pointer");
-            } catch (JSONException e) {
-                Log.i("JH", "exception");
-                e.printStackTrace();
-            }
-
-
-            return json; // returns the result
-
-        }
-
     }
 
     @Override
@@ -102,31 +67,23 @@ public class AsyncScryfallJSONData extends AsyncTask<String, Void, JSONObject> i
             e.printStackTrace();
             Log.i("JH", "PAS BON");
         }
-        TextView cardNameFound = (TextView) activity.findViewById(R.id.card_name_found);
-        cardNameFound.setText(name);
 
-        //Modifier :
-        final Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line));
-        card.setImgUrl(imgURL);
-
-        cardNameFound.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addedCards.add(card);
+        if(addedCards.containsKey(name)) {
+            Integer count = addedCards.get(cardNames.get(name));
+            if (count != null) {
+                addedCards.put(cardNames.get(name),count + 1);
+                Log.i("JH", name + count );
+            } else {
+                addedCards.put(cardNames.get(name),1);
             }
-        });
-
-
-    }
-
-    protected String readStream(InputStream is) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        BufferedReader r = new BufferedReader(new InputStreamReader(is),1000);
-        for (String line = r.readLine(); line != null; line =r.readLine()){
-            sb.append(line);
+        } else {
+            Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line));
+            card.setImgUrl(imgURL);
+            cardNames.put(name, card);
+            addedCards.put(card, 1);
         }
-        is.close();
-        return sb.toString();
+
+
     }
 
     @Override
@@ -145,7 +102,7 @@ public class AsyncScryfallJSONData extends AsyncTask<String, Void, JSONObject> i
         return types;
     }
 
-    public ArrayList<Card> getAddedCards() {
+    public HashMap<Card,Integer> getAddedCards() {
         return addedCards;
     }
 }

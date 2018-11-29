@@ -31,6 +31,10 @@ public class EditorFragment extends Fragment {
         public void onCardAdded();
     }
 
+    public void setOnEditorFragmentUpdated(OnEditorFragmentUpdatedListener mCallback){
+        this.mCallback = mCallback;
+    }
+
     public void setOnEditorFragmentUpdatedListener(Activity activity) {
         mCallback = (OnEditorFragmentUpdatedListener)activity;
     }
