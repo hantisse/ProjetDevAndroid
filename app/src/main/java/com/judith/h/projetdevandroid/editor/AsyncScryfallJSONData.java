@@ -46,7 +46,6 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
         int cmc = -1;
         String manaCost = "";
         String imgURL = "";
-        String descr = "";
         String color = "";
         Log.i("JH", "json : " + j);
         try {
@@ -59,7 +58,6 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
             manaCost = j.getString("mana_cost");
             JSONObject imgUris = j.getJSONObject("image_uris");
             imgURL = imgUris.getString("border_crop");
-            descr = j.getString("oracle_text");
 
         } catch(NullPointerException e){
             Log.i("JH", "Null pointer");
@@ -69,6 +67,7 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
             Log.i("JH", "PAS BON");
         }
         Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line));
+        card.setImgUrl(imgURL);
         long card_id = handler.createCard(card);
         if(!activity.getAddedCardsIds().contains(String.valueOf(card_id))){
             activity.getAddedCardsIds().add(String.valueOf(card.getCardId()));

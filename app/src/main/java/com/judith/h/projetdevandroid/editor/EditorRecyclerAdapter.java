@@ -66,8 +66,8 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
                     Toast.makeText(view.getContext(),"Pressed " + filterListView.getAdapter().getItem(position),Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(view.getContext(), CardActivity.class);
                     intent.putExtra("cardName",(String)filterListView.getAdapter().getItem(position));
-                    intent.putExtra("card_id","9");//filter.getCardIdByCardName((String)filterListView.getAdapter().getItem(position)));
-                    Log.i("JH", (String)filterListView.getAdapter().getItem(position));
+                    intent.putExtra("card_id",filter.getCardIdByCardName((String)filterListView.getAdapter().getItem(position)));
+                    Log.i("JH", "recycler : id : " + filter.getCardIdByCardName((String)filterListView.getAdapter().getItem(position)));
                     view.getContext().startActivity(intent);
                 }
             });

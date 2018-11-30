@@ -107,14 +107,14 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
      * @return id dans la db de la carte ajouter (à associer à la carte)
      */
     public long createCard(Card card) {
+        long card_id;
         SQLiteDatabase db = this.getWritableDatabase();
-
         Cursor c = db.query(TABLE_CARDS, new String[]{KEY_CARD_ID}, KEY_CARD_SCRYFALL_ID + " = ?",new String[]{card.getScryfallID()},null, null,null);
 
         if(c.moveToFirst()){
-            long card_id =  c.getLong(c.getColumnIndex(KEY_CARD_ID));
+            card_id =  c.getLong(c.getColumnIndex(KEY_CARD_ID));
+            this.updateCard(card);
             card.setCardId((int)card_id);
-            return card_id;
         } else{
             ContentValues values = new ContentValues();
             values.put(KEY_CARD_NAME, card.getName());
@@ -131,10 +131,13 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
             values.put(KEY_CARD_COLOR_IDENTITY, card.getColorIdentity());
 
             // insert row
-            long card_id = db.insert(TABLE_CARDS, null, values);
+            card_id = db.insert(TABLE_CARDS, null, values);
             card.setCardId((int)card_id);
-            return card_id;
         }
+
+        c.close();
+        db.close();
+        return card_id;
 
     }
 
@@ -167,7 +170,8 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
             card.setManaCost((c.getString(c.getColumnIndex(KEY_CARD_MANA_COST))));
             card.setColorIdentity((c.getString(c.getColumnIndex(KEY_CARD_COLOR_IDENTITY))));
         }
-
+        c.close();
+        db.close();
         return card;
     }
 
@@ -203,7 +207,8 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 cards.add(card);
             } while (c.moveToNext());
         }
-
+        c.close();
+        db.close();
         return cards;
     }
 
@@ -245,7 +250,8 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 cards.add(card);
             } while (c.moveToNext());
         }
-
+        c.close();
+        db.close();
         return cards;
     }
 
@@ -288,9 +294,8 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 cards.add(card);
             } while (c.moveToNext());
 
-            c.close();
         }
-
+        c.close();
         db.close();
         return cards;
     }
@@ -332,6 +337,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_CARDS, KEY_CARD_ID + " = ?",
                 new String[] { String.valueOf(card_id) });
+        db.close();
     }
 
     /**
@@ -415,14 +421,15 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.query(TABLE_CARD_DECK, new String[]{KEY_CARD_MULTIPLICITY},
                 KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ? AND " + KEY_DECK_PART + " = ?" ,
-                new String[]{String.valueOf(card.getScryfallID()), String.valueOf(deck.getDeckId()), deckPart},
+                new String[]{String.valueOf(card.getCardId()), String.valueOf(deck.getDeckId()), deckPart},
                 null, null, null );
         if (c.moveToFirst()) {
             int mult = c.getInt(c.getColumnIndex(KEY_CARD_MULTIPLICITY));
             ContentValues contentValues = new ContentValues();
-            contentValues.put(KEY_CARD_MULTIPLICITY, mult + 1);
-            db.update(TABLE_CARD_DECK, contentValues, KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ?", new String[]{String.valueOf(card.getScryfallID()), String.valueOf(deck.getDeckId())});
-            c.close();
+            mult++;
+            Log.i("JH", "dbHelper : " + mult );
+            contentValues.put(KEY_CARD_MULTIPLICITY, mult);
+            db.update(TABLE_CARD_DECK, contentValues, KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ?", new String[]{String.valueOf(card.getCardId()), String.valueOf(deck.getDeckId())});
         } else {
             ContentValues contentValues = new ContentValues();
             contentValues.put(KEY_DECK_ID, deck.getDeckId());
@@ -431,6 +438,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
             contentValues.put(KEY_DECK_PART, deckPart);
             db.insert(TABLE_CARD_DECK, null ,contentValues );
         }
+        c.close();
         db.close();
     }
 
@@ -486,7 +494,8 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
 
             } while(c.moveToNext());
         }
-
+        db.close();
+        c.close();
         deck.setMain(main);
         deck.setSide(side);
         deck.setMainMultiplicities(mainMult);

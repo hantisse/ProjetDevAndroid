@@ -12,6 +12,7 @@ public class Filter {
 
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
+        lvAdapter.clear();
         for(Card card : cards){
             lvAdapter.add(card.getName());
         }
@@ -51,8 +52,6 @@ public class Filter {
 
     public void setLvAdapter(ArrayAdapter<String> adapter){
         lvAdapter = adapter;
-
-
     }
 
     public ArrayList<Card> getCards() {
