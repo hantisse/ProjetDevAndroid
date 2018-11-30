@@ -16,9 +16,9 @@ public class CardActivity extends Activity {
         setContentView(R.layout.activity_card);
 
         Intent intent = getIntent();
+        String cardId = intent.getStringExtra("card_id");
 
-
-        TextView tv = findViewById(R.id.card_name);
-        tv.setText(intent.getStringExtra("cardName"));
+        AsyncBitmapDownloader task = new AsyncBitmapDownloader(this);
+        task.execute(cardId);
     }
 }

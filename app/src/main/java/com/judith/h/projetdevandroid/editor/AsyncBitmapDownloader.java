@@ -28,13 +28,13 @@ public class AsyncBitmapDownloader extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... strings) {
         String id = strings[0];
-        DecksDataBaseHelper dataBaseHelper = new DecksDataBaseHelper();
-        Card card = dataBaseHelper.getCard(Long.parseLong(id) );
+        DecksDataBaseHelper dataBaseHelper = new DecksDataBaseHelper(cardActivity);
+        Card card = dataBaseHelper.getCard(Long.parseLong(id));
         URL url = null;
         HttpURLConnection urlConnection = null;
         Bitmap bm = null;
         try {
-            url = new URL(strings[0]);
+            url = new URL(card.getImgUrl());
             Log.i("CIO", "Downloading " + url);
             urlConnection = (HttpURLConnection) url.openConnection(); // Open
             InputStream in = new BufferedInputStream(urlConnection.getInputStream()); // Stream
