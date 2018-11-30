@@ -155,6 +155,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
 
         Card card = null;
         if (c != null){
+            card = new Card();
             card.setCardId(c.getInt(c.getColumnIndex(KEY_CARD_ID)));
             card.setName((c.getString(c.getColumnIndex(KEY_CARD_NAME))));
             card.setScryfallID(c.getString(c.getColumnIndex(KEY_CARD_SCRYFALL_ID)));

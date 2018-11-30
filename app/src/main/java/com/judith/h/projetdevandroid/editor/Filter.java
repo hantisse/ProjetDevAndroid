@@ -1,5 +1,6 @@
 package com.judith.h.projetdevandroid.editor;
 
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.judith.h.projetdevandroid.Card;
@@ -63,6 +64,7 @@ public class Filter {
         for(Card card : cards){
             if (card.getName() == name){
                 id = String.valueOf(card.getCardId());
+                Log.i("JH", id);
             }
         }
         return id;
