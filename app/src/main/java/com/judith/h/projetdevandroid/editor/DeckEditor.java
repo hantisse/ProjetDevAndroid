@@ -100,7 +100,7 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
 
                 for(String card : addedCards){
 
-                    //update affichage
+                    adapter.getMain().getmAdapter().notifyDataSetChanged();
 
                 }
 

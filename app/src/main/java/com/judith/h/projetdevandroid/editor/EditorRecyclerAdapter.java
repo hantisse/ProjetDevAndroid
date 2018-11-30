@@ -12,11 +12,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.judith.h.projetdevandroid.Card;
+import com.judith.h.projetdevandroid.Deck;
+import com.judith.h.projetdevandroid.DecksDataBaseHelper;
 import com.judith.h.projetdevandroid.R;
+
+import java.util.ArrayList;
 
 
 public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAdapter.FilterViewHolder>{
     private Filter[] filters;
+    private Deck deck;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -34,7 +40,7 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
             filterListView = v.findViewById(R.id.filtered_list);
         }
 
-        private void bind(Filter filter){
+        private void bind(final Filter filter){
             boolean isExpanded = filter.isExpanded();
 
             filterListView.setVisibility(isExpanded ? View.VISIBLE: View.GONE);
@@ -42,16 +48,15 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
             filterName.setText(filter.getFilterName());
 
             if(filter.getLvAdapter() == null){
+
                 filter.setLvAdapter( new ArrayAdapter<String>(
                         filterListView.getContext(), R.layout.card_list_item ));
 
-                //Pour les tests
-                for (int k = 0; k<10; k++){
-                    filter.getLvAdapter().add(filter.getFilterName() + " Card " + k);
-                }
-
-
             }
+            DecksDataBaseHelper handler = new DecksDataBaseHelper(mView.getContext());
+            ArrayList<Card> cards = (ArrayList<Card>) handler.getAllMainCardsByDeck(deck.getDeckId());
+            filter.setCards(cards);
+
             updateListElementsTotalHeight(filter.getLvAdapter(), filterListView);
             filterListView.setAdapter(filter.getLvAdapter());
 
@@ -61,6 +66,7 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
                     Toast.makeText(view.getContext(),"Pressed " + filterListView.getAdapter().getItem(position),Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(view.getContext(), CardActivity.class);
                     intent.putExtra("cardName",(String)filterListView.getAdapter().getItem(position));
+                    intent.putExtra("card_id",filter.getCardIdByCardName((String)filterListView.getAdapter().getItem(position)));
                     view.getContext().startActivity(intent);
                 }
             });
@@ -91,8 +97,9 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    EditorRecyclerAdapter(Filter[] filters) {
+    EditorRecyclerAdapter(Deck deck, Filter[] filters) {
         this.filters = filters;
+        this.deck = deck;
     }
 
 

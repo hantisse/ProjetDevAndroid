@@ -8,6 +8,14 @@ import java.util.ArrayList;
 
 public class Filter {
     private String name;
+
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+        for(Card card : cards){
+            lvAdapter.add(card.getName());
+        }
+    }
+
     private ArrayList<Card> cards;
     private ArrayAdapter<String> lvAdapter = null;
     private boolean isExpanded = false;
@@ -42,10 +50,22 @@ public class Filter {
 
     public void setLvAdapter(ArrayAdapter<String> adapter){
         lvAdapter = adapter;
-//
-//        for(Card card : cards){
-//            lvAdapter.add(card.getName());
-//        }
+
+
+    }
+
+    public ArrayList<Card> getCards() {
+        return cards;
+    }
+
+    public String getCardIdByCardName(String name){
+        String id = "";
+        for(Card card : cards){
+            if (card.getName() == name){
+                id = String.valueOf(card.getCardId());
+            }
+        }
+        return id;
     }
 
 }
