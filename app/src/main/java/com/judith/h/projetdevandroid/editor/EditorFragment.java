@@ -13,7 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.judith.h.projetdevandroid.Deck;
 import com.judith.h.projetdevandroid.R;
+
+import java.io.Serializable;
 
 @SuppressLint("ValidFragment")
 public class EditorFragment extends Fragment {
@@ -21,10 +24,12 @@ public class EditorFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private Deck deck;
 
     private OnEditorFragmentUpdatedListener mCallback;
 
-    public EditorFragment(){
+    public EditorFragment(Deck deck){
+        this.deck = deck;
     }
 
     public interface OnEditorFragmentUpdatedListener {
@@ -52,6 +57,7 @@ public class EditorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), AddCardActivity.class);
+                intent.putExtra("deck", (Serializable) deck);
                 getActivity().startActivityForResult(intent, 4); //request code 4 : cartes à ajouter au deck
 
             }

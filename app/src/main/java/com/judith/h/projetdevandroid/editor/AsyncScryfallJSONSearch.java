@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import com.judith.h.projetdevandroid.R;
 
@@ -36,9 +38,7 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
 
             for(int i = 0; i<ja.length();i++){
                 adapter.add(ja.getString(i));
-                Log.i("JH", "" +i);
-
-            }
+                }
 
         } catch(NullPointerException e){
             Log.i("JH", "Null pointer");
@@ -46,6 +46,19 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
         catch (JSONException e) {
             e.printStackTrace();
         }
+        /*
+        Button search_button = activity.findViewById(R.id.add_card_button_ac);
+        final EditText search_bar = activity.findViewById(R.id.search_bar);
+
+        search_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://api.scryfall.com/cards/autocomplete?q=" + search_bar.getText();
+                Log.i("JH", "clic sur search");
+                activity.task = this.onPostExecute();
+            }
+        });
+        */
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

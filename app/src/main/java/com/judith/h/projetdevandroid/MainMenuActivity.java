@@ -26,9 +26,6 @@ public class MainMenuActivity extends Activity {
 
         setContentView(R.layout.activity_main_menu);
 
-        DecksDataBaseHelper handler = new DecksDataBaseHelper(this);
-        SQLiteDatabase db = handler.getReadableDatabase();
-
         Button newDeck_button = (Button)findViewById(R.id.newdeckbutton);
 
         newDeck_button.setOnClickListener(new View.OnClickListener() {

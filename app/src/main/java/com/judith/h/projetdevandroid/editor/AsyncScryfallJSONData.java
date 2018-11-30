@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.judith.h.projetdevandroid.Card;
+import com.judith.h.projetdevandroid.DecksDataBaseHelper;
 import com.judith.h.projetdevandroid.R;
 import com.judith.h.projetdevandroid.editor.AddCardActivity;
 
@@ -30,11 +31,11 @@ import java.util.HashMap;
 
 public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClickListener {
     private AddCardActivity activity;
-    private HashMap<Card,Integer> addedCards = new HashMap<>();
-    private HashMap<String, Card> cardNames = new HashMap<>();
+    private DecksDataBaseHelper handler;
 
     public AsyncScryfallJSONData(AddCardActivity activity){
         this.activity = activity;
+        handler = new DecksDataBaseHelper(activity);
     }
 
     @Override
@@ -67,22 +68,12 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
             e.printStackTrace();
             Log.i("JH", "PAS BON");
         }
-
-        if(addedCards.containsKey(name)) {
-            Integer count = addedCards.get(cardNames.get(name));
-            if (count != null) {
-                addedCards.put(cardNames.get(name),count + 1);
-                Log.i("JH", name + count );
-            } else {
-                addedCards.put(cardNames.get(name),1);
-            }
-        } else {
-            Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line));
-            card.setImgUrl(imgURL);
-            cardNames.put(name, card);
-            addedCards.put(card, 1);
-        }
-
+        Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line));
+        if(!activity.getAddedCardsIds().contains(name)){
+            handler.createCard(card);
+            activity.getAddedCardsIds().add(String.valueOf(card.getCardId()));
+        };
+        handler.addCardInDeck(activity.getDeck(), card, "main");
 
     }
 
@@ -102,7 +93,4 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
         return types;
     }
 
-    public HashMap<Card,Integer> getAddedCards() {
-        return addedCards;
-    }
 }
