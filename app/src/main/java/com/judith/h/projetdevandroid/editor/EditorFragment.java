@@ -22,6 +22,11 @@ import java.io.Serializable;
 public class EditorFragment extends Fragment {
     public static final String ARG_OBJECT = "object";
     private RecyclerView mRecyclerView;
+
+    public RecyclerView.Adapter getmAdapter() {
+        return mAdapter;
+    }
+
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Deck deck;
@@ -75,10 +80,9 @@ public class EditorFragment extends Fragment {
 
         // specify an adapter (see also next example)
 
-        Filter filter1 = new Filter("FILTRE1");
-        Filter filter2 = new Filter("FILTRE2");
-        Filter[] filters = new Filter[]{filter1, filter2};
-        mAdapter = new EditorRecyclerAdapter(filters);
+        Filter filter1 = new Filter("DEFAULT");
+        Filter[] filters = new Filter[]{filter1};
+        mAdapter = new EditorRecyclerAdapter(deck,filters);
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;

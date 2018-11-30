@@ -11,6 +11,9 @@ import com.judith.h.projetdevandroid.Deck;
 public class EditorAdapter extends FragmentStatePagerAdapter {
     private Deck deck;
 
+    private EditorFragment main;
+    private EditorFragment side;
+
     public EditorAdapter(FragmentManager fm, Deck deck) {
         super(fm);
         this.deck = deck;
@@ -28,20 +31,20 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
             return fragment;
         }
         else if(i==0){
-            Fragment fragment = new EditorFragment(deck);
+            main = new EditorFragment(deck);
             Bundle args = new Bundle();
             // Our object is just an integer
             args.putInt(EditorFragment.ARG_OBJECT, i + 1);
-            fragment.setArguments(args);
-            return fragment;
+            main.setArguments(args);
+            return main;
         }
         else{
-            Fragment fragment = new EditorFragment(deck);
+            side = new EditorFragment(deck);
             Bundle args = new Bundle();
             // Our object is just an integer
             args.putInt(EditorFragment.ARG_OBJECT, i + 1);
-            fragment.setArguments(args);
-            return fragment;
+            side.setArguments(args);
+            return side;
         }
     }
 
@@ -63,5 +66,31 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
 
         return title;
     }
+
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
+
+    public EditorFragment getMain() {
+        return main;
+    }
+
+    public void setMain(EditorFragment main) {
+        this.main = main;
+    }
+
+    public EditorFragment getSide() {
+        return side;
+    }
+
+    public void setSide(EditorFragment side) {
+        this.side = side;
+    }
+
 }
 

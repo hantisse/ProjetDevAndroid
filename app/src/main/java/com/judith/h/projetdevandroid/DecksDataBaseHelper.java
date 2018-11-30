@@ -209,7 +209,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
     /**
      *
      * @param deck_id id du deck à chercher
-     * @return liste vide si il n'y a pas de cartes dans le main ; null si il n'y a pas de deck avec cet id dans la ddb
+     * @return liste vide si il n'y a pas de cartes dans le main
      */
     public List<Card> getAllMainCardsByDeck(long deck_id) {
         List<Card> cards = new ArrayList<Card>();
@@ -243,7 +243,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 // adding to card list
                 cards.add(card);
             } while (c.moveToNext());
-        } else cards = null;
+        }
 
         return cards;
     }
@@ -251,7 +251,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
     /**
      *
      * @param deck_id id du deck
-     * @return liste vide si il n'y a pas de cartes dans le side ; null si il n'y a pas de deck avec cet id
+     * @return liste vide si il n'y a pas de cartes dans le side
      */
     public List<Card> getAllSideCardsByDeck(long deck_id) {
         List<Card> cards = new ArrayList<>();
@@ -288,7 +288,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
             } while (c.moveToNext());
 
             c.close();
-        } else cards = null;
+        }
 
         db.close();
         return cards;
