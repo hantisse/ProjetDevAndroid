@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.judith.h.projetdevandroid.Card;
+import com.judith.h.projetdevandroid.DecksDataBaseHelper;
 import com.judith.h.projetdevandroid.R;
 
 public class CardActivity extends Activity {
+
+    Card card;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +24,12 @@ public class CardActivity extends Activity {
         String cardId = intent.getStringExtra("card_id");
         Log.i("CARIBOU", "****" + cardId);
 
+        DecksDataBaseHelper dataBaseHelper = new DecksDataBaseHelper(this);
+        card = dataBaseHelper.getCard(Long.parseLong(cardId));
+
+        String url = card.getImgUrl();
+
         AsyncBitmapDownloader task = new AsyncBitmapDownloader(this);
-        task.execute(cardId);
+        task.execute(url);
     }
 }
