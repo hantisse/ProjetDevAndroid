@@ -365,7 +365,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
      *
      * @return liste de decks
      */
-    public List<Deck> getAllDeckss() {
+    public List<Deck> getAllDecks() {
         List<Deck> decks = new ArrayList<Deck>();
         String selectQuery = "SELECT * FROM " + TABLE_DECKS;
 
@@ -462,7 +462,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         if(c.moveToFirst()){
             do {
                 //si carte dans le main
-               if(c.getString(c.getColumnIndex(KEY_DECK_PART)) == "main"){
+               if(c.getString(c.getColumnIndex(KEY_DECK_PART)).equals("main")){
                    Card card = this.getCard(c.getLong(c.getColumnIndex(KEY_CARD_ID)));
                    //on regarde si la carte est dans le main deck
                    for(Card card1 : main){
@@ -477,7 +477,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                    } else{
                        mainMult.put(card, 1);
                    }
-               }else if(c.getString(c.getColumnIndex(KEY_DECK_PART)) == "side"){
+               }else if(c.getString(c.getColumnIndex(KEY_DECK_PART)).equals("side")){
                    Card card = this.getCard(c.getLong(c.getColumnIndex(KEY_CARD_ID)));
                    for(Card card1 : side){
                        if(card1.getName().equals(card.getName())){

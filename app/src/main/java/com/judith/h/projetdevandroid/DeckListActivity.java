@@ -21,6 +21,7 @@ public class DeckListActivity extends Activity {
     private RecyclerView deckList;
     private RecyclerView.Adapter deckAdapter;
     private RecyclerView.LayoutManager deckLayoutManager;
+    private ArrayList<Deck> decks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class DeckListActivity extends Activity {
         deckList.setLayoutManager(deckLayoutManager);
 
         DecksDataBaseHelper handler = new DecksDataBaseHelper(this);
-        ArrayList<Deck> decks = (ArrayList<Deck>) handler.getAllDeckss();
+        decks = (ArrayList<Deck>) handler.getAllDecks();
 
         deckAdapter = new DeckRecyclerAdapter(decks);
         deckList.setAdapter(deckAdapter);
