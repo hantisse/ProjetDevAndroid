@@ -17,11 +17,13 @@ import com.judith.h.projetdevandroid.Deck;
 import com.judith.h.projetdevandroid.DecksDataBaseHelper;
 import com.judith.h.projetdevandroid.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Set;
 
 
 public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAdapter.FilterViewHolder>{
-    private Filter[] filters;
+    private ArrayList<Filter> filters;
     private Deck deck;
     private String deckPart;
 
@@ -49,7 +51,6 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
             filterName.setText(filter.getFilterName());
 
             if(filter.getLvAdapter() == null){
-
                 filter.setLvAdapter( new ArrayAdapter<String>(
                         filterListView.getContext(), R.layout.card_list_item ));
             }
@@ -102,11 +103,15 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    EditorRecyclerAdapter(Deck deck, Filter[] filters, String deckPart) {
-        this.filters = filters;
+    EditorRecyclerAdapter(Deck deck, String deckPart, ArrayList<Filter> filters) {
         this.deck = deck;
         this.deckPart = deckPart;
+        this.filters = filters;
+        this.filters.add(new Filter("Default"));
+
+
     }
+
 
     // Create new views (invoked by the layout manager)
     @Override
@@ -123,7 +128,7 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     @Override
     public void onBindViewHolder(final FilterViewHolder holder, int position) {
 
-        Filter filter = filters[position];
+        Filter filter = filters.get(position);
 
        holder.bind(filter);
         // - get element from your dataset at this position
@@ -133,8 +138,8 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean expanded = filters[holder.getAdapterPosition()].isExpanded();
-                filters[holder.getAdapterPosition()].setExpanded(!expanded);
+                boolean expanded = filters.get(holder.getAdapterPosition()).isExpanded();
+                filters.get(holder.getAdapterPosition()).setExpanded(!expanded);
                 notifyItemChanged(holder.getAdapterPosition());
 
             }
@@ -146,7 +151,7 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return filters.length;
+        return filters.size();
     }
 
 

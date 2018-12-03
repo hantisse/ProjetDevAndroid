@@ -31,8 +31,11 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_add_card);
 
         Intent intent = getIntent();
-        deck = (Deck)intent.getExtras().get("deck_add");
-        deckPart = intent.getStringExtra("deck_part");
+        if(intent.getExtras()!=null){
+            deck = (Deck)intent.getExtras().get("deck_add");
+            deckPart = intent.getStringExtra("deck_part");
+        }
+
         addedCards = new ArrayList<>();
 
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)

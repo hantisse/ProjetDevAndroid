@@ -83,12 +83,26 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
 
     private ArrayList<String> readTypeLine(String typeLine){
         ArrayList<String> types = new ArrayList<>();
-        String[] typesArray = typeLine.split(" ");
-        for(String s : typesArray){
-            if (s !="—"){
-                types.add(s);
+        String[] typesArray = typeLine.split(" — ");
+        StringBuilder sb = new StringBuilder();
+
+        String[] stringSplit = typesArray[0].split(" ");
+        //TODO traiter les cartes à deux cotés
+        if (stringSplit[0].equals("Legendary")){
+            for(int k = 1; k <stringSplit.length; k++){
+                sb.append(stringSplit[k]);
+            }
+        } else {
+            for(int k = 0; k < stringSplit.length; k++){
+                sb.append(stringSplit[k]);
             }
         }
+
+        types.add(sb.toString());
+        if(typesArray.length == 2){
+            types.add(typesArray[1]);
+        }
+
         return types;
     }
 

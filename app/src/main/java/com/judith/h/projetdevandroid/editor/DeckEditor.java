@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class DeckEditor extends FragmentActivity implements EditorFragment.OnEditorFragmentUpdatedListener {
+public class DeckEditor extends FragmentActivity {
 
     EditorAdapter adapter;
     ViewPager pager;
@@ -104,33 +104,16 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(pager);
 
-
-
     }
 
-    @Override
-    public void onAttachFragment(Fragment fragment) {
-        if (fragment instanceof EditorFragment) {
-            EditorFragment editorFragment = (EditorFragment) fragment;
-            editorFragment.setOnEditorFragmentUpdatedListener(this);
-            Log.i("JH", "attach fragment");
-        }
-    }
-
-    @Override
-    public void onCardAdded() {
-
-    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(resultCode == 1){
             Bundle bundle = data.getExtras();
             ArrayList<Card> deckCards;
             if((bundle != null)){
-                String deckPart = (String) data.getStringExtra("deck_part");
-
+                String deckPart = data.getStringExtra("deck_part");
                 deckCards = (ArrayList<Card>) bundle.get("added_cards");
-                adapter.getMain().getmAdapter().notifyDataSetChanged();
                 if(deckPart.equals("main")){
                     for(Card card : deckCards){
                         if(!deck.getMainMultiplicities().containsKey(card)){
@@ -142,9 +125,8 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
                             int count = deck.getMainMultiplicities().get(card);
                             deck.getMainMultiplicities().put(card, count+1);
                         }
-                        Log.i("JH", "card : " + card.getName());
-                        Log.i("JH", "main : " + deck.getMain().size());
                     }
+                    adapter.getMain().getmAdapter().notifyDataSetChanged();
                 } else if(deckPart.equals("side")){
                     Log.i("JH", "ajout dans le side");
 
@@ -157,9 +139,11 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
                             int count = deck.getSideMultiplicities().get(card);
                             deck.getSideMultiplicities().put(card, count+1);
                         }
-                        Log.i("JH", "card : " + card.getName());
+
                     }
+                    adapter.getSide().getmAdapter().notifyDataSetChanged();
                 }
+
             }
         }
     }

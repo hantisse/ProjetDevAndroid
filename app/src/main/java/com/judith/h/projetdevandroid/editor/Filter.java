@@ -68,4 +68,9 @@ public class Filter {
         return id;
     }
 
+    public void addCard(Card card){
+        cards.add(card);
+        lvAdapter.add(card.getName());
+    }
+
 }

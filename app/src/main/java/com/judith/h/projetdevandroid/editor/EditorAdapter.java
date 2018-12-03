@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import com.judith.h.projetdevandroid.Deck;
 
@@ -32,18 +33,12 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
         }
         else if(i==0){
             main = new EditorFragment(deck, "main");
-            Bundle args = new Bundle();
-            // Our object is just an integer
-            args.putInt(EditorFragment.ARG_OBJECT, i + 1);
-            main.setArguments(args);
+            Log.i("JH", main.toString());
             return main;
         }
         else{
             side = new EditorFragment(deck, "side");
-            Bundle args = new Bundle();
-            // Our object is just an integer
-            args.putInt(EditorFragment.ARG_OBJECT, i + 1);
-            side.setArguments(args);
+            Log.i("JH", side.toString());
             return side;
         }
     }
