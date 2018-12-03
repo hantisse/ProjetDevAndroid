@@ -11,6 +11,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.judith.h.projetdevandroid.Card;
@@ -29,7 +31,8 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
     ViewPager pager;
     Deck deck;
     DecksDataBaseHelper handler;
-
+    ArrayList<Card> cardAddedMain;
+    ArrayList<Card> cardAddedSide;
     private DrawerLayout filter_drawer;
 
     @Override
@@ -38,6 +41,7 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
         setContentView(R.layout.activity_deck_editor);
         Intent intent = getIntent();
         String deck_name = intent.getStringExtra("deck_name");
+        handler = new DecksDataBaseHelper(this);
         if(intent.getExtras() != null){
             try{
                 deck = (Deck)intent.getExtras().get("deck");
@@ -45,14 +49,27 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
 
             } catch (NullPointerException e){
                 deck = new Deck(deck_name);
-                handler = new DecksDataBaseHelper(this);
                 handler.createDeck(deck);
             }
         }
 
-
+        cardAddedMain = new ArrayList<>();
+        cardAddedSide = new ArrayList<>();
 
         TextView deckName = findViewById(R.id.deckName);
+        Button saveButton = findViewById(R.id.save_deck_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (Card card : cardAddedMain){
+                    handler.addCardInDeck(deck, card, "main");
+                }
+                for (Card card : cardAddedSide){
+                    handler.addCardInDeck(deck, card, "side");
+                }
+            }
+        });
+
         deckName.setText(deck_name);
 
         for(Card c : deck.getMain()){
@@ -119,6 +136,7 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
                         if(!deck.getMainMultiplicities().containsKey(card)){
                             deck.getMainMultiplicities().put(card,1);
                             deck.getMain().add(card);
+                            cardAddedMain.add(card);
 
                         } else {
                             int count = deck.getMainMultiplicities().get(card);
@@ -128,10 +146,13 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
                         Log.i("JH", "main : " + deck.getMain().size());
                     }
                 } else if(deckPart.equals("side")){
+                    Log.i("JH", "ajout dans le side");
+
                     for(Card card : deckCards){
                         if(!deck.getSideMultiplicities().containsKey(card)){
                             deck.getSideMultiplicities().put(card,1);
-                            deck.getMain().add(card);
+                            deck.getSide().add(card);
+                            cardAddedSide.add(card);
                         } else {
                             int count = deck.getSideMultiplicities().get(card);
                             deck.getSideMultiplicities().put(card, count+1);

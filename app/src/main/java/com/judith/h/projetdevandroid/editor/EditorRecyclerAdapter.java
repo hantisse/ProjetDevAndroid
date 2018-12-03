@@ -53,8 +53,12 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
                 filter.setLvAdapter( new ArrayAdapter<String>(
                         filterListView.getContext(), R.layout.card_list_item ));
             }
+            if(deckPart.equals("side")){
+                filter.setCards(deck.getSide());
+            } else {
+                filter.setCards(deck.getMain());
+            }
 
-            filter.setCards(deck.getMain());
             filterListView.setAdapter(filter.getLvAdapter());
 
 
@@ -103,8 +107,6 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
         this.deck = deck;
         this.deckPart = deckPart;
     }
-
-
 
     // Create new views (invoked by the layout manager)
     @Override
