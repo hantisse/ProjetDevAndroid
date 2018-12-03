@@ -30,11 +30,13 @@ public class EditorFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Deck deck;
+    private String deckPart;
 
     private OnEditorFragmentUpdatedListener mCallback;
 
-    public EditorFragment(Deck deck){
+    public EditorFragment(Deck deck, String deckPart){
         this.deck = deck;
+        this.deckPart = deckPart;
     }
 
     public interface OnEditorFragmentUpdatedListener {
@@ -63,6 +65,7 @@ public class EditorFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), AddCardActivity.class);
                 intent.putExtra("deck_add", (Serializable) deck);
+                intent.putExtra("deck_part", deckPart);
                 getActivity().startActivityForResult(intent, 4); //request code 4 : cartes à ajouter au deck
 
             }
@@ -82,7 +85,7 @@ public class EditorFragment extends Fragment {
 
         Filter filter1 = new Filter("DEFAULT");
         Filter[] filters = new Filter[]{filter1};
-        mAdapter = new EditorRecyclerAdapter(deck,filters);
+        mAdapter = new EditorRecyclerAdapter(deck,filters,deckPart);
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;

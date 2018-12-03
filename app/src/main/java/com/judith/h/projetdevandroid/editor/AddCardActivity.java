@@ -21,8 +21,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AddCardActivity extends Activity implements View.OnClickListener {
-    private ArrayList<String> addedCardsIds;
+    private ArrayList<Card> addedCards;
     private Deck deck;
+    private String deckPart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +32,8 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
 
         Intent intent = getIntent();
         deck = (Deck)intent.getExtras().get("deck_add");
-        addedCardsIds = new ArrayList<>();
+        deckPart = intent.getStringExtra("deck_part");
+        addedCards = new ArrayList<>();
 
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
                 != PackageManager.PERMISSION_GRANTED ){
@@ -55,9 +58,9 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
     public void onBackPressed(){
 
         Intent intent = new Intent();
-        if(!addedCardsIds.isEmpty()) {
-            Log.i("JH", addedCardsIds.toString());
-            intent.putExtra("added_cards", addedCardsIds);
+        if(!addedCards.isEmpty()) {
+            intent.putExtra("added_cards", addedCards);
+            intent.putExtra("deck_part", deckPart);
             setResult(1, intent);
             finish();
         } else{ setResult(0, intent);}
@@ -66,8 +69,8 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
         super.onBackPressed();
     }
 
-    public ArrayList<String> getAddedCardsIds() {
-        return addedCardsIds;
+    public ArrayList<Card> getAddedCards() {
+        return addedCards;
     }
 
     public Deck getDeck(){

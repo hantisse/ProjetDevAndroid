@@ -31,7 +31,7 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
             return fragment;
         }
         else if(i==0){
-            main = new EditorFragment(deck);
+            main = new EditorFragment(deck, "main");
             Bundle args = new Bundle();
             // Our object is just an integer
             args.putInt(EditorFragment.ARG_OBJECT, i + 1);
@@ -39,7 +39,7 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
             return main;
         }
         else{
-            side = new EditorFragment(deck);
+            side = new EditorFragment(deck, "side");
             Bundle args = new Bundle();
             // Our object is just an integer
             args.putInt(EditorFragment.ARG_OBJECT, i + 1);
