@@ -27,6 +27,10 @@ public class CardActivity extends Activity {
         DecksDataBaseHelper dataBaseHelper = new DecksDataBaseHelper(this);
         card = dataBaseHelper.getCard(Long.parseLong(cardId));
 
+        String name = card.getName();
+        TextView title = findViewById(R.id.cardtitle);
+        title.setText(name);
+
         String url = card.getImgUrl();
 
         AsyncBitmapDownloader task = new AsyncBitmapDownloader(this);
