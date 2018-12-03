@@ -62,7 +62,7 @@ public class EditorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), AddCardActivity.class);
-                intent.putExtra("deck", (Serializable) deck);
+                intent.putExtra("deck_add", (Serializable) deck);
                 getActivity().startActivityForResult(intent, 4); //request code 4 : cartes à ajouter au deck
 
             }

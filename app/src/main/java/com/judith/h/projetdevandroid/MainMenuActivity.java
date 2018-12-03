@@ -31,7 +31,6 @@ public class MainMenuActivity extends Activity {
         newDeck_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
 
                 LayoutInflater layoutInflater = LayoutInflater.from(v.getContext());
@@ -45,15 +44,11 @@ public class MainMenuActivity extends Activity {
                 builder.setCancelable(false).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-
                         dialog.dismiss();
                         String deckName = input.getText().toString();
                         Intent intent = new Intent(v.getContext(),DeckEditor.class);
                         intent.putExtra("deck_name", deckName);
                         startActivity(intent);
-
-
-
                     }
                 });
 

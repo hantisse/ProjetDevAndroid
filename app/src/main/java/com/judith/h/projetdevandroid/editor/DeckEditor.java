@@ -38,16 +38,27 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
 
         Intent intent = getIntent();
         String deck_name = intent.getStringExtra("deck_name");
-        deck = new Deck(deck_name);
+        try{
+            deck = (Deck)intent.getExtras().get("deck");
+            deck_name = deck.getDeckName();
 
-        handler = new DecksDataBaseHelper(this);
-        handler.createDeck(deck);
+        } catch (NullPointerException e){
+            deck = new Deck(deck_name);
+            handler = new DecksDataBaseHelper(this);
+            handler.createDeck(deck);
+        }
 
-        TextView deckName = (TextView)findViewById(R.id.deckName);
+        TextView deckName = findViewById(R.id.deckName);
         deckName.setText(deck_name);
 
+        for(Card c : deck.getMain()){
+            Log.i("JH", "DeckEditor : "  + c.getName());
+        }
 
-        filter_drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+
+
+
+        filter_drawer = findViewById(R.id.drawer_layout);
 
         NavigationView navView = (NavigationView)findViewById(R.id.nav_filter);
         navView.setNavigationItemSelectedListener(
@@ -105,10 +116,6 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
                 }
 
             }
-
-
-
-
         }
 
     }

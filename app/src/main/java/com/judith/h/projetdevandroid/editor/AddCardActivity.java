@@ -29,7 +29,7 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_add_card);
 
         Intent intent = getIntent();
-        deck = (Deck)intent.getExtras().get("deck");
+        deck = (Deck)intent.getExtras().get("deck_add");
         addedCardsIds = new ArrayList<>();
 
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)

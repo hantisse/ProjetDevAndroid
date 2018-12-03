@@ -14,6 +14,8 @@ import android.widget.EditText;
 
 import com.judith.h.projetdevandroid.editor.DeckEditor;
 
+import java.util.ArrayList;
+
 public class DeckListActivity extends Activity {
 
     private RecyclerView deckList;
@@ -37,8 +39,10 @@ public class DeckListActivity extends Activity {
         deckLayoutManager = new LinearLayoutManager(this);
         deckList.setLayoutManager(deckLayoutManager);
 
-        // specify an adapter (see also next example)
-        deckAdapter = new DeckRecyclerAdapter(new String[]{"Judith", "est","une", "super", "patate"});
+        DecksDataBaseHelper handler = new DecksDataBaseHelper(this);
+        ArrayList<Deck> decks = (ArrayList<Deck>) handler.getAllDeckss();
+
+        deckAdapter = new DeckRecyclerAdapter(decks);
         deckList.setAdapter(deckAdapter);
 
         Button newDeck_button = (Button)findViewById(R.id.newDeckButton2);

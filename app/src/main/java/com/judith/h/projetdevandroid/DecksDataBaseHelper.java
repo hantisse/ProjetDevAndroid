@@ -180,7 +180,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
      * @return liste de toutes les cartes
      */
     public List<Card> getAllCards() {
-        List<Card> cards = new ArrayList<Card>();
+        List<Card> cards = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_CARDS;
 
         Log.e(LOG, selectQuery);
@@ -218,7 +218,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
      * @return liste vide si il n'y a pas de cartes dans le main
      */
     public List<Card> getAllMainCardsByDeck(long deck_id) {
-        List<Card> cards = new ArrayList<Card>();
+        List<Card> cards = new ArrayList<>();
 
         String selectQuery = "SELECT  * FROM " + TABLE_CARDS + " tc, "
                 + TABLE_CARD_DECK + " tcd WHERE tcd."
@@ -367,7 +367,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
      */
     public List<Deck> getAllDeckss() {
         List<Deck> decks = new ArrayList<Deck>();
-        String selectQuery = "SELECT  * FROM " + TABLE_DECKS;
+        String selectQuery = "SELECT * FROM " + TABLE_DECKS;
 
         Log.e(LOG, selectQuery);
 
@@ -455,7 +455,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
 
         String query = "SELECT " + "tc." + KEY_CARD_ID + ", " + KEY_CARD_MULTIPLICITY + ", " +  KEY_DECK_PART
                 + " FROM " + TABLE_CARD_DECK + " tcd, " + TABLE_CARDS + " tc"
-                + " WHERE tcb." + KEY_DECK_ID + " = " + deck.getDeckId();
+                + " WHERE tcd." + KEY_DECK_ID + " = " + deck.getDeckId();
 
         Cursor c = db.rawQuery(query, null);
 
@@ -466,7 +466,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                    Card card = this.getCard(c.getLong(c.getColumnIndex(KEY_CARD_ID)));
                    //on regarde si la carte est dans le main deck
                    for(Card card1 : main){
-                       if(card1.getName() == card.getName()){
+                       if(card1.getName().equals(card.getName())){
                            card = card1;
                        }
                    }
@@ -480,7 +480,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                }else if(c.getString(c.getColumnIndex(KEY_DECK_PART)) == "side"){
                    Card card = this.getCard(c.getLong(c.getColumnIndex(KEY_CARD_ID)));
                    for(Card card1 : side){
-                       if(card1.getName() == card.getName()){
+                       if(card1.getName().equals(card.getName())){
                            card = card1;
                        }
                    }

@@ -13,10 +13,14 @@ public class Deck implements Serializable {
     private HashMap<Card,Integer> mainMultiplicities;
     private HashMap<Card,Integer> sideMultiplicities;
 
-    public Deck(){}
+    public Deck(){ deckName = "sans_nom";}
 
     public Deck(String deckName){
         this.deckName = deckName;
+        main = new ArrayList<>();
+        side = new ArrayList<>();
+        mainMultiplicities = new HashMap<>();
+        sideMultiplicities = new HashMap<>();
     }
 
     public Deck(String deckName, ArrayList<Card> main, ArrayList<Card> side){
@@ -24,6 +28,7 @@ public class Deck implements Serializable {
         this.main = main;
         this.side = side;
         mainMultiplicities = new HashMap<>();
+        sideMultiplicities = new HashMap<>();
     }
     public ArrayList<Card> getMain() {
         return main;

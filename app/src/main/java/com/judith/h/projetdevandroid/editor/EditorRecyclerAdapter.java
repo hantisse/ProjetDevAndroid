@@ -54,7 +54,7 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
 
             }
             DecksDataBaseHelper handler = new DecksDataBaseHelper(mView.getContext());
-            ArrayList<Card> cards = (ArrayList<Card>) handler.getAllMainCardsByDeck(deck.getDeckId());
+            ArrayList<Card> cards = deck.getMain();//(ArrayList<Card>) handler.getAllMainCardsByDeck(deck.getDeckId()); //TODO ajouter les cartes dynamiquement dans deck pour appeller getMain()
             filter.setCards(cards);
 
             updateListElementsTotalHeight(filter.getLvAdapter(), filterListView);
