@@ -9,15 +9,6 @@ import java.util.ArrayList;
 
 public class Filter {
     private String name;
-
-    public void setCards(ArrayList<Card> cards) {
-        this.cards = cards;
-        lvAdapter.clear();
-        for(Card card : cards){
-            lvAdapter.add(card.getName());
-        }
-    }
-
     private ArrayList<Card> cards;
     private ArrayAdapter<String> lvAdapter = null;
     private boolean isExpanded = false;
@@ -56,6 +47,14 @@ public class Filter {
 
     public ArrayList<Card> getCards() {
         return cards;
+    }
+
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+        lvAdapter.clear();
+        for(Card card : cards){
+            lvAdapter.add(card.getName());
+        }
     }
 
     public String getCardIdByCardName(String name){

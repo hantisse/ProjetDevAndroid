@@ -64,15 +64,15 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
         }
         catch (JSONException e) {
             e.printStackTrace();
-            Log.i("JH", "PAS BON");
         }
         Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line));
         card.setImgUrl(imgURL);
-        long card_id = handler.createCard(card);
-        if(!activity.getAddedCardsIds().contains(String.valueOf(card_id))){
-            activity.getAddedCardsIds().add(String.valueOf(card.getCardId()));
+        handler.createCard(card);
+        if(!activity.getAddedCards().contains(card)){
+            activity.getAddedCards().add(card);
         };
-        handler.addCardInDeck(activity.getDeck(), card, "main");
+
+        //handler.addCardInDeck(activity.getDeck(), card, "main");
 
     }
 

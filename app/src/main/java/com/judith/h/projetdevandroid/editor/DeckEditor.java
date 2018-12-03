@@ -18,6 +18,7 @@ import com.judith.h.projetdevandroid.Deck;
 import com.judith.h.projetdevandroid.DecksDataBaseHelper;
 import com.judith.h.projetdevandroid.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,24 +36,27 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deck_editor);
-
         Intent intent = getIntent();
         String deck_name = intent.getStringExtra("deck_name");
-        try{
-            deck = (Deck)intent.getExtras().get("deck");
-            deck_name = deck.getDeckName();
+        if(intent.getExtras() != null){
+            try{
+                deck = (Deck)intent.getExtras().get("deck");
+                deck_name = deck.getDeckName();
 
-        } catch (NullPointerException e){
-            deck = new Deck(deck_name);
-            handler = new DecksDataBaseHelper(this);
-            handler.createDeck(deck);
+            } catch (NullPointerException e){
+                deck = new Deck(deck_name);
+                handler = new DecksDataBaseHelper(this);
+                handler.createDeck(deck);
+            }
         }
+
+
 
         TextView deckName = findViewById(R.id.deckName);
         deckName.setText(deck_name);
 
         for(Card c : deck.getMain()){
-            Log.i("JH", "DeckEditor : "  + c.getName());
+            Log.i("JH", "DeckEditor : "  + deck.getMain().size());
         }
 
 
@@ -104,20 +108,39 @@ public class DeckEditor extends FragmentActivity implements EditorFragment.OnEdi
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(resultCode == 1){
             Bundle bundle = data.getExtras();
-            ArrayList<String> addedCards;
-            if(bundle != null){
-                addedCards = (ArrayList<String>) bundle.get("added_cards");
-                Log.i("JH", "added_card OK" + addedCards);
+            ArrayList<Card> deckCards;
+            if((bundle != null)){
+                String deckPart = (String) data.getStringExtra("deck_part");
 
-                for(String card : addedCards){
+                deckCards = (ArrayList<Card>) bundle.get("added_cards");
+                adapter.getMain().getmAdapter().notifyDataSetChanged();
+                if(deckPart.equals("main")){
+                    for(Card card : deckCards){
+                        if(!deck.getMainMultiplicities().containsKey(card)){
+                            deck.getMainMultiplicities().put(card,1);
+                            deck.getMain().add(card);
 
-                    adapter.getMain().getmAdapter().notifyDataSetChanged();
-
+                        } else {
+                            int count = deck.getMainMultiplicities().get(card);
+                            deck.getMainMultiplicities().put(card, count+1);
+                        }
+                        Log.i("JH", "card : " + card.getName());
+                        Log.i("JH", "main : " + deck.getMain().size());
+                    }
+                } else if(deckPart.equals("side")){
+                    for(Card card : deckCards){
+                        if(!deck.getSideMultiplicities().containsKey(card)){
+                            deck.getSideMultiplicities().put(card,1);
+                            deck.getMain().add(card);
+                        } else {
+                            int count = deck.getSideMultiplicities().get(card);
+                            deck.getSideMultiplicities().put(card, count+1);
+                        }
+                        Log.i("JH", "card : " + card.getName());
+                    }
                 }
-
             }
         }
-
     }
 }
 

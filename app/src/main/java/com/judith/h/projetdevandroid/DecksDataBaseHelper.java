@@ -378,9 +378,8 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             do {
                 Deck deck = new Deck();
-                deck.setDeckId(c.getInt((c.getColumnIndex(KEY_DECK_ID))));
+                deck.setDeckId(c.getInt(c.getColumnIndex(KEY_DECK_ID)));
                 deck.setDeckName(c.getString(c.getColumnIndex(KEY_DECK_NAME)));
-
                 this.deckUpdateContent(deck);
                 // adding to tags list
                 decks.add(deck);
@@ -455,10 +454,10 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
 
         String query = "SELECT " + "tc." + KEY_CARD_ID + ", " + KEY_CARD_MULTIPLICITY + ", " +  KEY_DECK_PART
                 + " FROM " + TABLE_CARD_DECK + " tcd, " + TABLE_CARDS + " tc"
-                + " WHERE tcd." + KEY_DECK_ID + " = " + deck.getDeckId();
+                + " WHERE tc." + KEY_CARD_ID + " = tcd." + KEY_CARD_ID +" AND tcd." + KEY_DECK_ID + " = ?";
 
-        Cursor c = db.rawQuery(query, null);
-
+        Cursor c = db.rawQuery(query, new String[]{String.valueOf(deck.getDeckId())});
+        Log.i("JH" , "db deckid : " + deck.getDeckId());
         if(c.moveToFirst()){
             do {
                 //si carte dans le main
@@ -497,6 +496,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         db.close();
         c.close();
         deck.setMain(main);
+        Log.i("JH", "db :" + deck.getMain().size());
         deck.setSide(side);
         deck.setMainMultiplicities(mainMult);
         deck.setSideMultiplicities(sideMult);

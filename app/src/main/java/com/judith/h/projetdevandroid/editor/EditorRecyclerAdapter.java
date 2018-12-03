@@ -23,6 +23,7 @@ import java.util.ArrayList;
 public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAdapter.FilterViewHolder>{
     private Filter[] filters;
     private Deck deck;
+    private String deckPart;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -51,14 +52,13 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
 
                 filter.setLvAdapter( new ArrayAdapter<String>(
                         filterListView.getContext(), R.layout.card_list_item ));
-
             }
-            DecksDataBaseHelper handler = new DecksDataBaseHelper(mView.getContext());
-            ArrayList<Card> cards = deck.getMain();//(ArrayList<Card>) handler.getAllMainCardsByDeck(deck.getDeckId()); //TODO ajouter les cartes dynamiquement dans deck pour appeller getMain()
-            filter.setCards(cards);
+
+            filter.setCards(deck.getMain());
+            filterListView.setAdapter(filter.getLvAdapter());
+
 
             updateListElementsTotalHeight(filter.getLvAdapter(), filterListView);
-            filterListView.setAdapter(filter.getLvAdapter());
 
             filterListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -98,9 +98,10 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    EditorRecyclerAdapter(Deck deck, Filter[] filters) {
+    EditorRecyclerAdapter(Deck deck, Filter[] filters, String deckPart) {
         this.filters = filters;
         this.deck = deck;
+        this.deckPart = deckPart;
     }
 
 
@@ -132,9 +133,6 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
             public void onClick(View v) {
                 boolean expanded = filters[holder.getAdapterPosition()].isExpanded();
                 filters[holder.getAdapterPosition()].setExpanded(!expanded);
-
-                Log.i("JH", filters[holder.getAdapterPosition()].getFilterName());
-
                 notifyItemChanged(holder.getAdapterPosition());
 
             }
