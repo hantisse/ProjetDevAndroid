@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapter.MyViewHolder> {
     private ArrayList<Deck> deckDataset;
+    private View lastClickedDeck;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -62,15 +63,27 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
             }
         });
         final Button deleteDeckButton = holder.mView.findViewById(R.id.deckDeleteButton);
-
-        //TODO Penser à mettre un on click listener pour les boutons updateButton et deleteDeckButton
+        deleteDeckButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int deckId = deckDataset.get(holder.getAdapterPosition()).getDeckId();
+                DecksDataBaseHelper decksDataBaseHelper = new DecksDataBaseHelper(v.getContext());
+                decksDataBaseHelper.deleteDeck(deckId);
+                deckDataset.remove(holder.getAdapterPosition());
+                notifyDataSetChanged();
+            }
+        });
 
         TextView tv =  holder.mView.findViewById(R.id.deckTitle);
         tv.setText(deckDataset.get(position).getDeckName());
         tv.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-
+               if ((lastClickedDeck != null) && (holder.mView != lastClickedDeck)){
+                   lastClickedDeck.findViewById(R.id.deckDeleteButton).setVisibility(View.GONE);
+                   lastClickedDeck.findViewById(R.id.deckUpdateButton).setVisibility(View.GONE);
+               }
+               setLastClickedDeck(holder.mView);
                if (updateButton.getVisibility() == View.GONE){
                    updateButton.setVisibility(View.VISIBLE);
                    deleteDeckButton.setVisibility(View.VISIBLE);
@@ -82,6 +95,14 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
            }
        });
 
+    }
+
+    public View getLastClickedDeck(){
+        return this.lastClickedDeck;
+    }
+
+    public void setLastClickedDeck(View lastClickedDeck){
+        this.lastClickedDeck = lastClickedDeck;
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -504,6 +504,16 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-
+    /*
+     * Deleting a deck
+     */
+    public void deleteDeck(long deck_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_DECKS, KEY_DECK_ID + " = ?",
+                new String[] { String.valueOf(deck_id) });
+        db.delete(TABLE_CARD_DECK, KEY_DECK_ID + " = ?",
+                new String[] { String.valueOf(deck_id) });
+        db.close();
+    }
 
 }
