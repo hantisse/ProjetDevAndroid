@@ -26,6 +26,8 @@ import java.util.HashMap;
 
 
 public class DeckEditor extends FragmentActivity {
+    public static final int ADD_CARD_REQUEST_CODE = 4;
+    public static final int ADD_CARD_RESULT_CODE = 1;
 
     EditorAdapter adapter;
     ViewPager pager;
@@ -62,10 +64,10 @@ public class DeckEditor extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 for (Card card : cardAddedMain){
-                    handler.addCardInDeck(deck, card, "main");
+                    handler.addCardInDeck(deck, card,deck.getMainMultiplicities().get(card), "main");
                 }
                 for (Card card : cardAddedSide){
-                    handler.addCardInDeck(deck, card, "side");
+                    handler.addCardInDeck(deck, card, deck.getSideMultiplicities().get(card), "side");
                 }
             }
         });
@@ -108,38 +110,54 @@ public class DeckEditor extends FragmentActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(resultCode == 1){
+        if(resultCode == ADD_CARD_RESULT_CODE){
             Bundle bundle = data.getExtras();
-            ArrayList<Card> deckCards;
+            HashMap<Card, Integer> deckCards;
             if((bundle != null)){
                 String deckPart = data.getStringExtra("deck_part");
-                deckCards = (ArrayList<Card>) bundle.get("added_cards");
+                deckCards = (HashMap<Card, Integer>) bundle.get("added_cards");
                 if(deckPart.equals("main")){
-                    for(Card card : deckCards){
-                        if(!deck.getMainMultiplicities().containsKey(card)){
-                            deck.getMainMultiplicities().put(card,1);
+                    for(Card card : deckCards.keySet()){
+                        Card cardInDeck = null;
+                        boolean inDeck = false;
+                        for(Card card1 : deck.getMainMultiplicities().keySet()){
+                            if(card1.getCardId() == card.getCardId()){
+                                inDeck = true;
+                                cardInDeck = card1;
+                            }
+                        }
+                        if(!inDeck){
+                            deck.getMainMultiplicities().put(card,deckCards.get(card));
                             deck.getMain().add(card);
                             cardAddedMain.add(card);
-
                         } else {
-                            int count = deck.getMainMultiplicities().get(card);
-                            deck.getMainMultiplicities().put(card, count+1);
+                            int count = deck.getMainMultiplicities().get(cardInDeck);
+                            deck.getMainMultiplicities().put(cardInDeck, count + deckCards.get(card));
+                            cardAddedMain.add(cardInDeck);
                         }
                     }
                     adapter.getMain().getmAdapter().notifyDataSetChanged();
                 } else if(deckPart.equals("side")){
                     Log.i("JH", "ajout dans le side");
 
-                    for(Card card : deckCards){
-                        if(!deck.getSideMultiplicities().containsKey(card)){
-                            deck.getSideMultiplicities().put(card,1);
+                    for(Card card : deckCards.keySet()){
+                        Card cardInDeck = null;
+                        boolean inDeck = false;
+                        for(Card card1 : deck.getSideMultiplicities().keySet()){
+                            if(card1.getCardId() == card.getCardId()){
+                                inDeck = true;
+                                cardInDeck = card1;
+                            }
+                        }
+                        if(!inDeck){
+                            deck.getSideMultiplicities().put(card,deckCards.get(card));
                             deck.getSide().add(card);
                             cardAddedSide.add(card);
                         } else {
-                            int count = deck.getSideMultiplicities().get(card);
-                            deck.getSideMultiplicities().put(card, count+1);
+                            int count = deck.getSideMultiplicities().get(cardInDeck);
+                            deck.getSideMultiplicities().put(cardInDeck, count + deckCards.get(card));
+                            cardAddedSide.add(cardInDeck);
                         }
-
                     }
                     adapter.getSide().getmAdapter().notifyDataSetChanged();
                 }

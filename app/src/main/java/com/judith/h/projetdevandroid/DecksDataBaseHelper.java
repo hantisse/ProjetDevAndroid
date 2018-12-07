@@ -415,7 +415,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
      * @param card carte qui est déjà dans la ddb
      * @param deckPart la partie du deck ("main" ou "side")
      */
-    public void addCardInDeck(Deck deck, Card card, String deckPart){
+    public void addCardInDeck(Deck deck, Card card,int nbr, String deckPart){
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.query(TABLE_CARD_DECK, new String[]{KEY_CARD_MULTIPLICITY},
@@ -423,17 +423,18 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(card.getCardId()), String.valueOf(deck.getDeckId()), deckPart},
                 null, null, null );
         if (c.moveToFirst()) {
-            int mult = c.getInt(c.getColumnIndex(KEY_CARD_MULTIPLICITY));
             ContentValues contentValues = new ContentValues();
-            mult++;
-            Log.i("JH", "dbHelper : " + mult );
-            contentValues.put(KEY_CARD_MULTIPLICITY, mult);
+//            int mult = c.getInt(c.getColumnIndex(KEY_CARD_MULTIPLICITY));
+//            mult++;
+//            Log.i("JH", "dbHelper : " + mult );
+//            contentValues.put(KEY_CARD_MULTIPLICITY, mult);
+            contentValues.put(KEY_CARD_MULTIPLICITY, nbr);
             db.update(TABLE_CARD_DECK, contentValues, KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ?", new String[]{String.valueOf(card.getCardId()), String.valueOf(deck.getDeckId())});
         } else {
             ContentValues contentValues = new ContentValues();
             contentValues.put(KEY_DECK_ID, deck.getDeckId());
             contentValues.put(KEY_CARD_ID, card.getCardId());
-            contentValues.put(KEY_CARD_MULTIPLICITY, 1);
+            contentValues.put(KEY_CARD_MULTIPLICITY, nbr);
             contentValues.put(KEY_DECK_PART, deckPart);
             db.insert(TABLE_CARD_DECK, null ,contentValues );
         }
@@ -489,7 +490,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                    } else{
                        sideMult.put(card, 1);
                    }
-               };
+               }
 
             } while(c.moveToNext());
         }

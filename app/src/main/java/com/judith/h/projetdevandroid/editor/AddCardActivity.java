@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AddCardActivity extends Activity implements View.OnClickListener {
-    private ArrayList<Card> addedCards;
+    private HashMap<Card, Integer> addedCards;
     private Deck deck;
     private String deckPart;
 
@@ -36,7 +36,7 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
             deckPart = intent.getStringExtra("deck_part");
         }
 
-        addedCards = new ArrayList<>();
+        addedCards = new HashMap<>();
 
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
                 != PackageManager.PERMISSION_GRANTED ){
@@ -72,7 +72,7 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
         super.onBackPressed();
     }
 
-    public ArrayList<Card> getAddedCards() {
+    public HashMap<Card, Integer> getAddedCards() {
         return addedCards;
     }
 

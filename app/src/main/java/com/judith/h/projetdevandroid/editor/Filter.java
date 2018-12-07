@@ -28,9 +28,6 @@ public class Filter {
 
     public ArrayList<String> getFilterCardNames(){
         ArrayList<String> s = new ArrayList<>();
-        for (Card card : cards){
-            s.add(card.getName());
-        }
         return s;
     }
 
