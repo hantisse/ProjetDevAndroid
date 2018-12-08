@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">MTG Deck Builder</string>
+    <string name="deckName_title">Nom du deck</string>
+    <string name="nofilter">Pas de filtre</string>
+    <string name="filter_cmc">Filtrer par cmc</string>
+    <string name="filter_type">Filtrer par type</string>
+    <string name="filtre__title">Filtres</string>
+    <string name="new_deck">Nouveau Deck</string>
+    <string name="update">Modifier</string>
+    <string name="delete">Supprimer</string>
+    <string name="search">Recherche</string>
+    <string name="add_">Ajouter...</string>
+    <string name="save_deck">Sauvegarder</string>
+    <string name="credits_button">Crédits</string>
+    <string name="switch_language">Changer vers l\'Anglais</string>
+</resources>
