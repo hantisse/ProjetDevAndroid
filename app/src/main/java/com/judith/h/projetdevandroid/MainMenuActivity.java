@@ -73,6 +73,15 @@ public class MainMenuActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+        Button options_button = (Button) findViewById(R.id.optionsbutton);
+        options_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(),OptionsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
