@@ -466,12 +466,9 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                        }
                    }
                    main.add(card) ;
-                   //on incrémente la mutiplicité de la carte
-                   if(mainMult.containsKey(card)) {
-                       mainMult.put(card, mainMult.get(card) + 1);
-                   } else{
-                       mainMult.put(card, 1);
-                   }
+
+                   int mult = c.getInt(c.getColumnIndex(KEY_CARD_MULTIPLICITY));
+                   mainMult.put(card, mult);
                }else if(c.getString(c.getColumnIndex(KEY_DECK_PART)).equals("side")){
                    Card card = this.getCard(c.getLong(c.getColumnIndex(KEY_CARD_ID)));
                    for(Card card1 : side){
@@ -480,11 +477,8 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                        }
                    }
                    side.add(card) ;
-                   if(sideMult.containsKey(card)) {
-                       sideMult.put(card, sideMult.get(card) + 1);
-                   } else{
-                       sideMult.put(card, 1);
-                   }
+                   int mult = c.getInt(c.getColumnIndex(KEY_CARD_MULTIPLICITY));
+                   sideMult.put(card, mult);
                }
 
             } while(c.moveToNext());

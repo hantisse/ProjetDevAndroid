@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.judith.h.projetdevandroid.Card;
 import com.judith.h.projetdevandroid.Deck;
 import com.judith.h.projetdevandroid.R;
 
@@ -20,6 +21,9 @@ import java.util.ArrayList;
 
 public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAdapter.FilterViewHolder>{
     private ArrayList<Filter> activeFilters;
+    private Deck deck;
+    private String deckPart;
+    private EditorFragment fragment;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -48,7 +52,11 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
                 filter.setLvAdapter( new ArrayAdapter<String>(
                         filterListView.getContext(), R.layout.card_list_item ));
             }
-            filter.setCardsInAdapter();
+            if(deckPart.equals("side")){
+                filter.setCardsInAdapter(deck.getSideMultiplicities());
+            } else {
+                filter.setCardsInAdapter(deck.getMainMultiplicities());
+            }
 
             filterListView.setAdapter(filter.getLvAdapter());
 
@@ -59,9 +67,18 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Toast.makeText(view.getContext(),"Pressed " + filterListView.getAdapter().getItem(position),Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(view.getContext(), CardActivity.class);
-                    intent.putExtra("cardName",(String)filterListView.getAdapter().getItem(position));
-                    intent.putExtra("card_id",filter.getCardIdByCardName((String)filterListView.getAdapter().getItem(position)));
-                    view.getContext().startActivity(intent);
+                    intent.putExtra("card",filter.getCardByCardName((String)filterListView.getAdapter().getItem(position)));
+                    if(deckPart.equals("side")){
+                        //recupère la multiplicité de la carte
+                        Log.i("JH", "mult : " + deck.getSideMultiplicities().get(filter.getCardByCardName((String)filterListView.getAdapter().getItem(position))));
+                        intent.putExtra("card_multiplicity", deck.getSideMultiplicities().get(filter.getCardByCardName((String)filterListView.getAdapter().getItem(position))));
+                    } else {
+                        Card card = filter.getCardByCardName((String)filterListView.getAdapter().getItem(position));
+                        intent.putExtra("card_multiplicity", deck.getMainMultiplicities().get(card));
+
+                    }
+                    intent.putExtra("deck_part", deckPart);
+                    fragment.getActivity().startActivityForResult(intent, DeckEditor.CHANGE_CARD_MULT_REQUEST_CODE);
                 }
             });
         }
@@ -90,8 +107,12 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    EditorRecyclerAdapter(ArrayList<Filter> activeFilters) {
-        this.activeFilters = activeFilters;
+    EditorRecyclerAdapter(EditorFragment fragment, Deck deck,String deckPart, ArrayList<Filter> activeFilters) {
+
+         this.fragment = fragment;
+         this.deck = deck;
+         this.deckPart = deckPart;
+         this.activeFilters = activeFilters;
 
     }
 

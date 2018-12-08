@@ -64,7 +64,7 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
         if(!addedCards.isEmpty()) {
             intent.putExtra("added_cards", addedCards);
             intent.putExtra("deck_part", deckPart);
-            setResult(1, intent);
+            setResult(DeckEditor.ADD_CARD_RESULT_CODE, intent);
             finish();
         } else{ setResult(0, intent);}
 

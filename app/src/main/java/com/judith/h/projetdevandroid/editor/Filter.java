@@ -4,8 +4,10 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.judith.h.projetdevandroid.Card;
+import com.judith.h.projetdevandroid.Deck;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Filter {
     private String name;
@@ -50,22 +52,22 @@ public class Filter {
         this.cards = cards;
     }
 
-    public void setCardsInAdapter(){
+    public void setCardsInAdapter(HashMap<Card, Integer> multiplicities){
         if(lvAdapter != null){
             lvAdapter.clear();
             for(Card card : cards){
-                lvAdapter.add(card.getName());
+                lvAdapter.add(card.getName() + " x " + multiplicities.get(card) );
             }
         }
     }
-    public String getCardIdByCardName(String name){
-        String id = "";
-        for(Card card : cards){
-            if (card.getName() == name){
-                id = String.valueOf(card.getCardId());
+    public Card getCardByCardName(String name){
+        Card card = null;
+        for(Card c : cards){
+            if (c.getName().equals(name.split(" x ")[0])){
+                card = c;
             }
         }
-        return id;
+        return card;
     }
 
     public void addCard(Card card){

@@ -49,7 +49,7 @@ public class EditorFragment extends Fragment {
             } else {
                 defaultFilter.setCards(deck.getMain());
             }
-        mAdapter = new EditorRecyclerAdapter(activeFilters);
+        mAdapter = new EditorRecyclerAdapter(this, deck, deckPart, activeFilters);
     }
 
     @Override
@@ -65,7 +65,6 @@ public class EditorFragment extends Fragment {
                 intent.putExtra("deck_add", deck);
                 intent.putExtra("deck_part", deckPart);
                 getActivity().startActivityForResult(intent, DeckEditor.ADD_CARD_REQUEST_CODE);
-
             }
         });
 
@@ -79,53 +78,38 @@ public class EditorFragment extends Fragment {
 
     public void calculateTypeFilters(Deck deck){
         ArrayList<Card> cards;
+        HashMap<Card, Integer> multiplicities;
         if(deckPart.equals("main")){
             cards = deck.getMain();
+            multiplicities = deck.getMainMultiplicities();
         }else {
             cards = deck.getSide();
+            multiplicities = deck.getSideMultiplicities();
         }
         resetActiveFilters();
         for(Card card : cards){
             String type = card.getCardTypes().get(0);
-            if(!filterNames.containsKey(type)){
-                Filter filter = new Filter(type);
-                filter.addCard(card);
-                filterNames.put(type,filter);
-                filters.put(filter, true);
-                addInOrder(activeFilters, filter);
-            }else {
-                filterNames.get(type).addCard(card);
-                if(!filters.get(filterNames.get(type))){
-                    filters.put(filterNames.get(type), true);
-//                    activeFilters.add(filterNames.get(type));
-                    addInOrder(activeFilters, filterNames.get(type));
-                }
+            if(multiplicities.get(card)>0){
+                filterAddCard(type, card);
             }
         }
     }
 
     public void calculateCMCFilters(Deck deck){
         ArrayList<Card> cards;
+        HashMap<Card, Integer> multiplicities;
         if(deckPart.equals("main")){
             cards = deck.getMain();
+            multiplicities = deck.getMainMultiplicities();
         }else {
             cards = deck.getSide();
+            multiplicities = deck.getSideMultiplicities();
         }
         resetActiveFilters();
         for(Card card : cards){
             String cmc = String.valueOf(card.getCmc());
-            if(!filterNames.containsKey(cmc)){
-                Filter filter = new Filter(cmc);
-                filter.addCard(card);
-                filterNames.put(cmc,filter);
-                filters.put(filter, true);
-                addInOrder(activeFilters, filter);
-            }else {
-                filterNames.get(cmc).addCard(card);
-                if(!filters.get(filterNames.get(cmc))){
-                    filters.put(filterNames.get(cmc), true);
-                    addInOrder(activeFilters, filterNames.get(cmc));
-                }
+            if(multiplicities.get(card)>0){
+                filterAddCard(cmc, card);
             }
         }
 
@@ -133,28 +117,20 @@ public class EditorFragment extends Fragment {
 
     public void calculateColorIdentityFilters(Deck deck){
         ArrayList<Card> cards;
+        HashMap<Card, Integer> multiplicities;
         if(deckPart.equals("main")){
             cards = deck.getMain();
+            multiplicities = deck.getMainMultiplicities();
         }else {
             cards = deck.getSide();
+            multiplicities = deck.getSideMultiplicities();
         }
         resetActiveFilters();
         for(Card card : cards){
             String colorIdentity = card.getColorIdentity();
-            if(!filterNames.containsKey(colorIdentity)){
-                Filter filter = new Filter(colorIdentity);
-                filter.addCard(card);
-                filterNames.put(colorIdentity,filter);
-                filters.put(filter, true);
-                addInOrder(activeFilters, filter);
-            }else {
-                filterNames.get(colorIdentity).addCard(card);
-                if(!filters.get(filterNames.get(colorIdentity))){
-                    filters.put(filterNames.get(colorIdentity), true);
-                    addInOrder(activeFilters, filterNames.get(colorIdentity));
-                }
+            if(multiplicities.get(card)>0){
+                filterAddCard(colorIdentity, card);
             }
-            Log.i("JH", "COLOR ID : "+ deckPart + " : " + filterNames.get(colorIdentity).getFilterName()+ " " + filterNames.get(colorIdentity).getCards().size());
         }
 
     }
@@ -164,15 +140,40 @@ public class EditorFragment extends Fragment {
             switch(filterType){
                 case "cmc":
                    String cmc = String.valueOf(card.getCmc());
-                   filterAddCard(cmc, card);
+                   if(deckPart.equals("side")) {
+                       if (deck.getSideMultiplicities().get(card) != 0) {
+                           filterAddCard(cmc, card);
+                       }
+                   }else {
+                       if(deck.getMainMultiplicities().get(card) != 0){
+                           filterAddCard(cmc, card);
+                       }
+                   }
                    break;
                 case "colorIdentity" :
                     String colorIdentity = card.getColorIdentity();
-                    filterAddCard(colorIdentity, card);
+                    if(deckPart.equals("side")) {
+                        if (deck.getSideMultiplicities().get(card) != 0) {
+                            filterAddCard(colorIdentity, card);
+                        }
+                    }else {
+                        if(deck.getMainMultiplicities().get(card) != 0){
+                            filterAddCard(colorIdentity, card);
+                        }
+                    }
                     break;
                 case "type" :
                     String type = card.getCardTypes().get(0);
-                    filterAddCard(type, card);
+                    if(deckPart.equals("side")) {
+                        if (deck.getSideMultiplicities().get(card) != 0) {
+                            filterAddCard(type, card);
+                        }
+                    }else {
+                        if(deck.getMainMultiplicities().get(card) != 0){
+                            filterAddCard(type, card);
+                        }
+                    }
+                    break;
 
             }
 
@@ -181,6 +182,19 @@ public class EditorFragment extends Fragment {
 
     public void setDefaultFilter(){
         resetActiveFilters();
+        ArrayList<Card> removedCards = new ArrayList<>();
+        for(Card card : filterNames.get("Default").getCards()){
+            if(deckPart.equals("side")){
+                if(deck.getSideMultiplicities().get(card) == 0 ){
+                    removedCards.add(card);
+                }
+            } else {
+                if(deck.getMainMultiplicities().get(card) == 0){
+                    removedCards.add(card);
+                }
+            }
+        }
+        filterNames.get("Default").getCards().removeAll(removedCards);
         activeFilters.add(filterNames.get("Default"));
         filters.put(filterNames.get("Default"), true);
     }
