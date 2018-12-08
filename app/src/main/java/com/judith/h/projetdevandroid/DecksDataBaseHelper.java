@@ -337,6 +337,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_CARDS, KEY_CARD_ID + " = ?",
                 new String[] { String.valueOf(card_id) });
+        db.delete(TABLE_CARD_DECK, KEY_CARD_ID + " =?", new String[]{String.valueOf(card_id)});
         db.close();
     }
 
@@ -381,7 +382,6 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 deck.setDeckId(c.getInt(c.getColumnIndex(KEY_DECK_ID)));
                 deck.setDeckName(c.getString(c.getColumnIndex(KEY_DECK_NAME)));
                 this.deckUpdateContent(deck);
-                // adding to tags list
                 decks.add(deck);
             } while (c.moveToNext());
         }
@@ -416,26 +416,31 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
      * @param deckPart la partie du deck ("main" ou "side")
      */
     public void addCardInDeck(Deck deck, Card card,int nbr, String deckPart){
-
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c = db.query(TABLE_CARD_DECK, new String[]{KEY_CARD_MULTIPLICITY},
-                KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ? AND " + KEY_DECK_PART + " = ?" ,
-                new String[]{String.valueOf(card.getCardId()), String.valueOf(deck.getDeckId()), deckPart},
-                null, null, null );
-        if (c.moveToFirst()) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(KEY_CARD_MULTIPLICITY, nbr);
-            db.update(TABLE_CARD_DECK, contentValues, KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ?", new String[]{String.valueOf(card.getCardId()), String.valueOf(deck.getDeckId())});
-        } else {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(KEY_DECK_ID, deck.getDeckId());
-            contentValues.put(KEY_CARD_ID, card.getCardId());
-            contentValues.put(KEY_CARD_MULTIPLICITY, nbr);
-            contentValues.put(KEY_DECK_PART, deckPart);
-            db.insert(TABLE_CARD_DECK, null ,contentValues );
+        if(nbr > 0){
+
+            Cursor c = db.query(TABLE_CARD_DECK, new String[]{KEY_CARD_MULTIPLICITY},
+                    KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ? AND " + KEY_DECK_PART + " = ?" ,
+                    new String[]{String.valueOf(card.getCardId()), String.valueOf(deck.getDeckId()), deckPart},
+                    null, null, null );
+            if (c.moveToFirst()) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(KEY_CARD_MULTIPLICITY, nbr);
+                db.update(TABLE_CARD_DECK, contentValues, KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ?", new String[]{String.valueOf(card.getCardId()), String.valueOf(deck.getDeckId())});
+            } else {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(KEY_DECK_ID, deck.getDeckId());
+                contentValues.put(KEY_CARD_ID, card.getCardId());
+                contentValues.put(KEY_CARD_MULTIPLICITY, nbr);
+                contentValues.put(KEY_DECK_PART, deckPart);
+                db.insert(TABLE_CARD_DECK, null ,contentValues );
+            }
+            c.close();
+            db.close();
+        } else if(nbr == 0){
+            db.delete(TABLE_CARD_DECK, KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ?", new String[]{String.valueOf(card.getCardId()), String.valueOf(deck.getDeckId())});
         }
-        c.close();
-        db.close();
+
     }
 
     /**

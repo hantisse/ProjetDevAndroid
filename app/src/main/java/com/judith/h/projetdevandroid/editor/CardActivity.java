@@ -19,6 +19,7 @@ public class CardActivity extends Activity {
     String deckPart;
     DecksDataBaseHelper handler;
     TextView cardmultiplicityTv;
+    boolean hasChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,9 @@ public class CardActivity extends Activity {
         lesscard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!hasChanged){
+                    hasChanged = true;
+                }
                 if (multiplicity > 0){
                     multiplicity -= 1;
                 }
@@ -57,6 +61,9 @@ public class CardActivity extends Activity {
         morecard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!hasChanged){
+                    hasChanged = true;
+                }
                 multiplicity += 1;
                 cardmultiplicityTv.setText(String.valueOf(multiplicity));
 
@@ -72,10 +79,15 @@ public class CardActivity extends Activity {
     @Override
     public void onBackPressed(){
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("deck_part", deckPart);
-        resultIntent.putExtra("card", card);
-        resultIntent.putExtra("card_multiplicity", multiplicity);
-        setResult(DeckEditor.CHANGE_CARD_MULT_RESULT_CODE, resultIntent);
+        if(hasChanged){
+            resultIntent.putExtra("deck_part", deckPart);
+            resultIntent.putExtra("card", card);
+            resultIntent.putExtra("card_multiplicity", multiplicity);
+            setResult(DeckEditor.CHANGE_CARD_MULT_RESULT_CODE, resultIntent);
+        } else {
+            setResult(DeckEditor.NO_CHANGE_RESULT_CODE, resultIntent);
+        }
+
         finish();
         super.onBackPressed();
     }

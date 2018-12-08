@@ -30,6 +30,7 @@ public class DeckEditor extends FragmentActivity {
     public static final int ADD_CARD_RESULT_CODE = 1;
     public static final int CHANGE_CARD_MULT_REQUEST_CODE = 5;
     public static final int CHANGE_CARD_MULT_RESULT_CODE = 2;
+    public static final int NO_CHANGE_RESULT_CODE = 3;
 
 
     EditorAdapter adapter;

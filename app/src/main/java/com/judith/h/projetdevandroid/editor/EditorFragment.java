@@ -43,7 +43,7 @@ public class EditorFragment extends Fragment {
         Filter defaultFilter = new Filter("Default");
         filters.put(defaultFilter, true);
         filterNames.put("Default", defaultFilter);
-        activeFilters.add(defaultFilter);
+        setDefaultFilter();
         if(deckPart.equals("side")){
                 defaultFilter.setCards(deck.getSide());
             } else {
