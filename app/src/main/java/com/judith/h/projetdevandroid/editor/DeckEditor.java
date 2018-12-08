@@ -150,7 +150,7 @@ public class DeckEditor extends FragmentActivity {
                     }
                     int selectedItemId = -1;
                     if(navView.getCheckedItem() != null ){
-                        navView.getCheckedItem().getItemId();
+                        selectedItemId = navView.getCheckedItem().getItemId();
                     }
                     switch(selectedItemId){
                         case R.id.nav_filter_cmc :
@@ -189,7 +189,7 @@ public class DeckEditor extends FragmentActivity {
                     }
                     int selectedItemId = -1;
                     if(navView.getCheckedItem() != null ){
-                        navView.getCheckedItem().getItemId();
+                        selectedItemId = navView.getCheckedItem().getItemId();
                     }
                     switch(selectedItemId){
                         case R.id.nav_filter_cmc :
