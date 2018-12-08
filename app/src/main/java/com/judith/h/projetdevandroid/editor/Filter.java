@@ -63,7 +63,6 @@ public class Filter {
         for(Card card : cards){
             if (card.getName() == name){
                 id = String.valueOf(card.getCardId());
-                Log.i("JH", id);
             }
         }
         return id;

@@ -124,7 +124,6 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
             String cardTypesToString = "";
             for (String cardtype : cardTypes){
                 cardTypesToString += cardtype + ";";
-                Log.i("JH", cardtype);
             }
             values.put(KEY_CARD_TYPES, cardTypesToString);
             values.put(KEY_CARD_IMAGE_URL, card.getImgUrl());
@@ -425,10 +424,6 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 null, null, null );
         if (c.moveToFirst()) {
             ContentValues contentValues = new ContentValues();
-//            int mult = c.getInt(c.getColumnIndex(KEY_CARD_MULTIPLICITY));
-//            mult++;
-//            Log.i("JH", "dbHelper : " + mult );
-//            contentValues.put(KEY_CARD_MULTIPLICITY, mult);
             contentValues.put(KEY_CARD_MULTIPLICITY, nbr);
             db.update(TABLE_CARD_DECK, contentValues, KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ?", new String[]{String.valueOf(card.getCardId()), String.valueOf(deck.getDeckId())});
         } else {
@@ -459,7 +454,6 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 + " WHERE tc." + KEY_CARD_ID + " = tcd." + KEY_CARD_ID +" AND tcd." + KEY_DECK_ID + " = ?";
 
         Cursor c = db.rawQuery(query, new String[]{String.valueOf(deck.getDeckId())});
-        Log.i("JH" , "db deckid : " + deck.getDeckId());
         if(c.moveToFirst()){
             do {
                 //si carte dans le main
@@ -498,7 +492,6 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         db.close();
         c.close();
         deck.setMain(main);
-        Log.i("JH", "db :" + deck.getMain().size());
         deck.setSide(side);
         deck.setMainMultiplicities(mainMult);
         deck.setSideMultiplicities(sideMult);

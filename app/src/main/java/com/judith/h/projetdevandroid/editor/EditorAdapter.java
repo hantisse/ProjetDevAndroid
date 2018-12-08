@@ -25,20 +25,14 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
 
         if(i==2){
             Fragment fragment = new StatsFragment();
-            Bundle args = new Bundle();
-            // Our object is just an integer
-            args.putInt(StatsFragment.ARG_OBJECT, i + 1);
-            fragment.setArguments(args);
             return fragment;
         }
         else if(i==0){
             main = new EditorFragment(deck, "main");
-            Log.i("JH", main.toString());
             return main;
         }
         else{
             side = new EditorFragment(deck, "side");
-            Log.i("JH", side.toString());
             return side;
         }
     }

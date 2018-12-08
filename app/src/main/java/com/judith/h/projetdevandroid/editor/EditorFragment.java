@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 @SuppressLint("ValidFragment")
 public class EditorFragment extends Fragment {
@@ -48,20 +49,18 @@ public class EditorFragment extends Fragment {
             } else {
                 defaultFilter.setCards(deck.getMain());
             }
-        mAdapter = new EditorRecyclerAdapter(deck,deckPart,activeFilters, this);
+        mAdapter = new EditorRecyclerAdapter(activeFilters);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(
                 R.layout.fragment_collection_object, container, false);
 
         rootView.findViewById(R.id.add_card_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("JH", this.toString());
                 Intent intent = new Intent(v.getContext(), AddCardActivity.class);
                 intent.putExtra("deck_add", deck);
                 intent.putExtra("deck_part", deckPart);
@@ -71,10 +70,9 @@ public class EditorFragment extends Fragment {
         });
 
         mRecyclerView = rootView.findViewById(R.id.editor_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mAdapter);
         mLayoutManager = new LinearLayoutManager(rootView.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
     }
@@ -94,16 +92,16 @@ public class EditorFragment extends Fragment {
                 filter.addCard(card);
                 filterNames.put(type,filter);
                 filters.put(filter, true);
-                activeFilters.add(filter);
+                addInOrder(activeFilters, filter);
             }else {
                 filterNames.get(type).addCard(card);
                 if(!filters.get(filterNames.get(type))){
                     filters.put(filterNames.get(type), true);
-                    activeFilters.add(filterNames.get(type));
+//                    activeFilters.add(filterNames.get(type));
+                    addInOrder(activeFilters, filterNames.get(type));
                 }
             }
         }
-
     }
 
     public void calculateCMCFilters(Deck deck){
@@ -121,12 +119,12 @@ public class EditorFragment extends Fragment {
                 filter.addCard(card);
                 filterNames.put(cmc,filter);
                 filters.put(filter, true);
-                activeFilters.add(filter);
+                addInOrder(activeFilters, filter);
             }else {
                 filterNames.get(cmc).addCard(card);
                 if(!filters.get(filterNames.get(cmc))){
                     filters.put(filterNames.get(cmc), true);
-                    activeFilters.add(filterNames.get(cmc));
+                    addInOrder(activeFilters, filterNames.get(cmc));
                 }
             }
         }
@@ -148,22 +146,59 @@ public class EditorFragment extends Fragment {
                 filter.addCard(card);
                 filterNames.put(colorIdentity,filter);
                 filters.put(filter, true);
-                activeFilters.add(filter);
+                addInOrder(activeFilters, filter);
             }else {
                 filterNames.get(colorIdentity).addCard(card);
                 if(!filters.get(filterNames.get(colorIdentity))){
                     filters.put(filterNames.get(colorIdentity), true);
-                    activeFilters.add(filterNames.get(colorIdentity));
+                    addInOrder(activeFilters, filterNames.get(colorIdentity));
                 }
             }
+            Log.i("JH", "COLOR ID : "+ deckPart + " : " + filterNames.get(colorIdentity).getFilterName()+ " " + filterNames.get(colorIdentity).getCards().size());
         }
 
+    }
+
+    public void updateFilterAfterCardsAdded(Set<Card> cards, String filterType){
+        for(Card card : cards){
+            switch(filterType){
+                case "cmc":
+                   String cmc = String.valueOf(card.getCmc());
+                   filterAddCard(cmc, card);
+                   break;
+                case "colorIdentity" :
+                    String colorIdentity = card.getColorIdentity();
+                    filterAddCard(colorIdentity, card);
+                    break;
+                case "type" :
+                    String type = card.getCardTypes().get(0);
+                    filterAddCard(type, card);
+
+            }
+
+        }
     }
 
     public void setDefaultFilter(){
         resetActiveFilters();
         activeFilters.add(filterNames.get("Default"));
         filters.put(filterNames.get("Default"), true);
+    }
+
+    private void filterAddCard(String filterName, Card card){
+        if(!filterNames.containsKey(filterName)){
+            Filter filter = new Filter(filterName);
+            filter.addCard(card);
+            filterNames.put(filterName,filter);
+            filters.put(filter, true);
+            addInOrder(activeFilters, filter);
+        }else {
+            filterNames.get(filterName).addCard(card);
+            if(!filters.get(filterNames.get(filterName))){
+                filters.put(filterNames.get(filterName), true);
+                addInOrder(activeFilters, filterNames.get(filterName));
+            }
+        }
     }
 
     public void resetActiveFilters(){
@@ -176,6 +211,14 @@ public class EditorFragment extends Fragment {
             }
         }
         activeFilters.clear();
+    }
+
+    private void addInOrder(ArrayList<Filter> activeFilters, Filter filter){
+        int k =0;
+        while(k<activeFilters.size() && filter.getFilterName().compareTo(activeFilters.get(k).getFilterName())>0){ //>0 car filtres rangés dans l'ordre inverse dans l'adapter
+            k++;
+        }
+        activeFilters.add(k,filter);
     }
 
     public RecyclerView.Adapter getmAdapter() {

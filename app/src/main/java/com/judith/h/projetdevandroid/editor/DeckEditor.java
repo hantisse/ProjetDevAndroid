@@ -36,6 +36,7 @@ public class DeckEditor extends FragmentActivity {
     ArrayList<Card> cardAddedMain;
     ArrayList<Card> cardAddedSide;
     private DrawerLayout filter_drawer;
+    NavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +76,11 @@ public class DeckEditor extends FragmentActivity {
         deckName.setText(deck_name);
 
         for(Card c : deck.getMain()){
-            Log.i("JH", "DeckEditor : "  + deck.getMain().size());
         }
-
-
-
 
         filter_drawer = findViewById(R.id.drawer_layout);
 
-        final NavigationView navView = (NavigationView)findViewById(R.id.nav_filter);
+        navView = (NavigationView)findViewById(R.id.nav_filter);
         navView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -108,13 +105,15 @@ public class DeckEditor extends FragmentActivity {
 
                         filter_drawer.closeDrawers();
                         adapter.getMain().getmAdapter().notifyDataSetChanged();
-                        adapter.getMain().getmAdapter().notifyDataSetChanged();
+                        adapter.getSide().getmAdapter().notifyDataSetChanged();
                         return true;
                     }
                 });
 
         adapter = new EditorAdapter(getSupportFragmentManager(), deck);
         pager = (ViewPager)findViewById(R.id.pager);
+        //pour que le pager cache les 2 fragments non visibles
+        pager.setOffscreenPageLimit(2);
         pager.setAdapter(adapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(pager);
@@ -149,10 +148,26 @@ public class DeckEditor extends FragmentActivity {
                             cardAddedMain.add(cardInDeck);
                         }
                     }
+                    int selectedItemId = -1;
+                    if(navView.getCheckedItem() != null ){
+                        navView.getCheckedItem().getItemId();
+                    }
+                    switch(selectedItemId){
+                        case R.id.nav_filter_cmc :
+                            adapter.getMain().updateFilterAfterCardsAdded(deckCards.keySet(), "cmc");
+                            break;
+                        case R.id.nav_filter_type :
+                            adapter.getMain().updateFilterAfterCardsAdded(deckCards.keySet(), "type");
+                            break;
+                        case R.id.nav_filter_color :
+                            adapter.getMain().updateFilterAfterCardsAdded(deckCards.keySet(), "colorIdentity");
+                            break;
+                        default:
+                            Log.i("JH", "pas de filtre sélzctionné");
+                            break;
+                    }
                     adapter.getMain().getmAdapter().notifyDataSetChanged();
                 } else if(deckPart.equals("side")){
-                    Log.i("JH", "ajout dans le side");
-
                     for(Card card : deckCards.keySet()){
                         Card cardInDeck = null;
                         boolean inDeck = false;
@@ -171,6 +186,24 @@ public class DeckEditor extends FragmentActivity {
                             deck.getSideMultiplicities().put(cardInDeck, count + deckCards.get(card));
                             cardAddedSide.add(cardInDeck);
                         }
+                    }
+                    int selectedItemId = -1;
+                    if(navView.getCheckedItem() != null ){
+                        navView.getCheckedItem().getItemId();
+                    }
+                    switch(selectedItemId){
+                        case R.id.nav_filter_cmc :
+                            adapter.getSide().updateFilterAfterCardsAdded(deckCards.keySet(), "cmc");
+                            break;
+                        case R.id.nav_filter_type :
+                            adapter.getSide().updateFilterAfterCardsAdded(deckCards.keySet(), "type");
+                            break;
+                        case R.id.nav_filter_color :
+                            adapter.getSide().updateFilterAfterCardsAdded(deckCards.keySet(), "colorIdentity");
+                            break;
+                        default:
+                            Log.i("JH", "pas de filtre sélectionné");
+                            break;
                     }
                     adapter.getSide().getmAdapter().notifyDataSetChanged();
                 }
