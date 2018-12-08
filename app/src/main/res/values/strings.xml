@@ -1,16 +1,17 @@
 <resources>
-<string name="app_name">MTG Deck Builder</string>
-<string name="deckName_title">Deck Name</string>
-<string name="nofilter">No filter</string>
-<string name="filter_cmc">Filter by cmc</string>
-<string name="filter_type">Filter by type</string>
-<string name="filtre__title">Filters</string>
-<string name="new_deck">New Deck</string>
-<string name="update">Update</string>
-<string name="delete">Delete</string>
-<string name="search">Search</string>
-<string name="add_">Add...</string>
-<string name="save_deck">Save</string>
-<string name="credits_button">Credits</string>
-<string name="switch_language">Switch to French</string>
+    <string name="app_name">MTG Deck Builder</string>
+    <string name="deckName_title">Deck Name</string>
+    <string name="nofilter">No filter</string>
+    <string name="filter_cmc">Filter by cmc</string>
+    <string name="filter_type">Filter by type</string>
+    <string name="filtre__title">Filters</string>
+    <string name="new_deck">New Deck</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    <string name="search">Search</string>
+    <string name="add_">Add...</string>
+    <string name="save_deck">Save</string>
+    <string name="credits_button">Credits</string>
+    <string name="switch_language">Switch to French</string>
+    <string name="filter_colorIdent">Filter by color identity</string>
 </resources>
