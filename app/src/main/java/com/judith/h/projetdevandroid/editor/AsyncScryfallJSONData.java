@@ -54,7 +54,6 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
             type_line = j.getString("type_line");
             cmc = j.getInt("cmc");
             color =  j.getString("color_identity");
-            Log.i("JH", "string : " + color.toString());
             manaCost = j.getString("mana_cost");
             JSONObject imgUris = j.getJSONObject("image_uris");
             imgURL = imgUris.getString("border_crop");

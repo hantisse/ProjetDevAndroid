@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 @SuppressLint("ValidFragment")
 public class EditorFragment extends Fragment {
@@ -28,83 +29,210 @@ public class EditorFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private Deck deck;
     private String deckPart;
-    private HashMap<String, Filter> FilterNames;
-    private ArrayList<Filter> filters;
+    private HashMap<String, Filter> filterNames;
+    private HashMap<Filter, Boolean> filters;
+    private ArrayList<Filter> activeFilters;
 
 
     public EditorFragment(Deck deck, String deckPart){
         this.deck = deck;
         this.deckPart = deckPart;
-        filters = new ArrayList<>();
-        mAdapter = new EditorRecyclerAdapter(deck,deckPart,filters);
-        FilterNames = new HashMap<>();
+        filters = new HashMap<>();
+        activeFilters = new ArrayList<>();
+        filterNames = new HashMap<>();
+        Filter defaultFilter = new Filter("Default");
+        filters.put(defaultFilter, true);
+        filterNames.put("Default", defaultFilter);
+        activeFilters.add(defaultFilter);
+        if(deckPart.equals("side")){
+                defaultFilter.setCards(deck.getSide());
+            } else {
+                defaultFilter.setCards(deck.getMain());
+            }
+        mAdapter = new EditorRecyclerAdapter(this, deck, deckPart, activeFilters);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(
                 R.layout.fragment_collection_object, container, false);
 
         rootView.findViewById(R.id.add_card_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("JH", this.toString());
                 Intent intent = new Intent(v.getContext(), AddCardActivity.class);
-                intent.putExtra("deck_add", (Serializable) deck);
+                intent.putExtra("deck_add", deck);
                 intent.putExtra("deck_part", deckPart);
-                getActivity().startActivityForResult(intent, 4); //request code 4 : cartes à ajouter au deck
-
+                getActivity().startActivityForResult(intent, DeckEditor.ADD_CARD_REQUEST_CODE);
             }
         });
 
-        mRecyclerView = (RecyclerView)rootView.findViewById(R.id.editor_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView = rootView.findViewById(R.id.editor_recycler_view);
+        mRecyclerView.setAdapter(mAdapter);
         mLayoutManager = new LinearLayoutManager(rootView.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
     }
 
-    private void calculateFilters(Deck deck){
+    public void calculateTypeFilters(Deck deck){
         ArrayList<Card> cards;
+        HashMap<Card, Integer> multiplicities;
         if(deckPart.equals("main")){
             cards = deck.getMain();
+            multiplicities = deck.getMainMultiplicities();
         }else {
             cards = deck.getSide();
+            multiplicities = deck.getSideMultiplicities();
         }
+        resetActiveFilters();
         for(Card card : cards){
             String type = card.getCardTypes().get(0);
-            if(!FilterNames.containsKey(type)){
-                Filter filter = new Filter(type);
-                filter.addCard(card);
-                FilterNames.put(type,filter);
-                filters.add(filter);
-            }else {
-                FilterNames.get(type).addCard(card);
+            if(multiplicities.get(card)>0){
+                filterAddCard(type, card);
             }
-            String colorIdentity = card.getColorIdentity();
-            if(!FilterNames.containsKey(colorIdentity)){
-                Filter filter = new Filter(colorIdentity);
-                filter.addCard(card);
-                FilterNames.put(colorIdentity,filter);
-                filters.add(filter);
-            }else {
-                FilterNames.get(colorIdentity).addCard(card);
-            }
+        }
+    }
+
+    public void calculateCMCFilters(Deck deck){
+        ArrayList<Card> cards;
+        HashMap<Card, Integer> multiplicities;
+        if(deckPart.equals("main")){
+            cards = deck.getMain();
+            multiplicities = deck.getMainMultiplicities();
+        }else {
+            cards = deck.getSide();
+            multiplicities = deck.getSideMultiplicities();
+        }
+        resetActiveFilters();
+        for(Card card : cards){
             String cmc = String.valueOf(card.getCmc());
-            if(!FilterNames.containsKey(cmc)){
-                Filter filter = new Filter(cmc);
-                filter.addCard(card);
-                FilterNames.put(cmc,filter);
-                filters.add(filter);
-            }else {
-                FilterNames.get(cmc).addCard(card);
+            if(multiplicities.get(card)>0){
+                filterAddCard(cmc, card);
             }
         }
 
+    }
+
+    public void calculateColorIdentityFilters(Deck deck){
+        ArrayList<Card> cards;
+        HashMap<Card, Integer> multiplicities;
+        if(deckPart.equals("main")){
+            cards = deck.getMain();
+            multiplicities = deck.getMainMultiplicities();
+        }else {
+            cards = deck.getSide();
+            multiplicities = deck.getSideMultiplicities();
+        }
+        resetActiveFilters();
+        for(Card card : cards){
+            String colorIdentity = card.getColorIdentity();
+            if(multiplicities.get(card)>0){
+                filterAddCard(colorIdentity, card);
+            }
+        }
+
+    }
+
+    public void updateFilterAfterCardsAdded(Set<Card> cards, String filterType){
+        for(Card card : cards){
+            switch(filterType){
+                case "cmc":
+                   String cmc = String.valueOf(card.getCmc());
+                   if(deckPart.equals("side")) {
+                       if (deck.getSideMultiplicities().get(card) != 0) {
+                           filterAddCard(cmc, card);
+                       }
+                   }else {
+                       if(deck.getMainMultiplicities().get(card) != 0){
+                           filterAddCard(cmc, card);
+                       }
+                   }
+                   break;
+                case "colorIdentity" :
+                    String colorIdentity = card.getColorIdentity();
+                    if(deckPart.equals("side")) {
+                        if (deck.getSideMultiplicities().get(card) != 0) {
+                            filterAddCard(colorIdentity, card);
+                        }
+                    }else {
+                        if(deck.getMainMultiplicities().get(card) != 0){
+                            filterAddCard(colorIdentity, card);
+                        }
+                    }
+                    break;
+                case "type" :
+                    String type = card.getCardTypes().get(0);
+                    if(deckPart.equals("side")) {
+                        if (deck.getSideMultiplicities().get(card) != 0) {
+                            filterAddCard(type, card);
+                        }
+                    }else {
+                        if(deck.getMainMultiplicities().get(card) != 0){
+                            filterAddCard(type, card);
+                        }
+                    }
+                    break;
+
+            }
+
+        }
+    }
+
+    public void setDefaultFilter(){
+        resetActiveFilters();
+        ArrayList<Card> removedCards = new ArrayList<>();
+        for(Card card : filterNames.get("Default").getCards()){
+            if(deckPart.equals("side")){
+                if(deck.getSideMultiplicities().get(card) == 0 ){
+                    removedCards.add(card);
+                }
+            } else {
+                if(deck.getMainMultiplicities().get(card) == 0){
+                    removedCards.add(card);
+                }
+            }
+        }
+        filterNames.get("Default").getCards().removeAll(removedCards);
+        activeFilters.add(filterNames.get("Default"));
+        filters.put(filterNames.get("Default"), true);
+    }
+
+    private void filterAddCard(String filterName, Card card){
+        if(!filterNames.containsKey(filterName)){
+            Filter filter = new Filter(filterName);
+            filter.addCard(card);
+            filterNames.put(filterName,filter);
+            filters.put(filter, true);
+            addInOrder(activeFilters, filter);
+        }else {
+            filterNames.get(filterName).addCard(card);
+            if(!filters.get(filterNames.get(filterName))){
+                filters.put(filterNames.get(filterName), true);
+                addInOrder(activeFilters, filterNames.get(filterName));
+            }
+        }
+    }
+
+    public void resetActiveFilters(){
+        for(Filter filter : filters.keySet()){
+            if(filters.get(filter)){
+                if( !filter.getFilterName().equals("Default")){
+                    filter.clearCards();
+                }
+                filters.put(filter,false);
+            }
+        }
+        activeFilters.clear();
+    }
+
+    private void addInOrder(ArrayList<Filter> activeFilters, Filter filter){
+        int k =0;
+        while(k<activeFilters.size() && filter.getFilterName().compareTo(activeFilters.get(k).getFilterName())>0){ //>0 car filtres rangés dans l'ordre inverse dans l'adapter
+            k++;
+        }
+        activeFilters.add(k,filter);
     }
 
     public RecyclerView.Adapter getmAdapter() {
