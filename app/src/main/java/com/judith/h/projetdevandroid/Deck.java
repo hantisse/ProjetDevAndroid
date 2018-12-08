@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Deck implements Serializable {
-
+    //TODO supprimer les arraylists:  inutile;
     private int DeckId;
     private String deckName;
     private ArrayList<Card> main;

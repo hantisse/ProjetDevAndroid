@@ -163,7 +163,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
             card.setName((c.getString(c.getColumnIndex(KEY_CARD_NAME))));
             card.setScryfallID(c.getString(c.getColumnIndex(KEY_CARD_SCRYFALL_ID)));
             card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
-            String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
+            String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_TYPES));
             ArrayList<String> cardTypes = new ArrayList<>(Arrays.asList(cardTypesToString.split(";")));
             card.setCardTypes(cardTypes);
             card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
@@ -196,7 +196,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 card.setName((c.getString(c.getColumnIndex(KEY_CARD_NAME))));
                 card.setScryfallID(c.getString(c.getColumnIndex(KEY_CARD_SCRYFALL_ID)));
                 card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
-                String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
+                String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_TYPES));
                 ArrayList<String> cardTypes = new ArrayList<>(Arrays.asList(cardTypesToString.split(";")));
                 card.setCardTypes(cardTypes);
                 card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
@@ -239,7 +239,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 card.setName((c.getString(c.getColumnIndex(KEY_CARD_NAME))));
                 card.setScryfallID(c.getString(c.getColumnIndex(KEY_CARD_SCRYFALL_ID)));
                 card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
-                String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
+                String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_TYPES));
                 ArrayList<String> cardTypes = new ArrayList<>(Arrays.asList(cardTypesToString.split(";")));
                 card.setCardTypes(cardTypes);
                 card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
@@ -283,7 +283,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 card.setName((c.getString(c.getColumnIndex(KEY_CARD_NAME))));
                 card.setScryfallID(c.getString(c.getColumnIndex(KEY_CARD_SCRYFALL_ID)));
                 card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
-                String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
+                String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_TYPES));
                 ArrayList<String> cardTypes = new ArrayList<>(Arrays.asList(cardTypesToString.split(";")));
                 card.setCardTypes(cardTypes);
                 card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
@@ -415,7 +415,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
      * @param card carte qui est déjà dans la ddb
      * @param deckPart la partie du deck ("main" ou "side")
      */
-    public void addCardInDeck(Deck deck, Card card, String deckPart){
+    public void addCardInDeck(Deck deck, Card card,int nbr, String deckPart){
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.query(TABLE_CARD_DECK, new String[]{KEY_CARD_MULTIPLICITY},
@@ -423,17 +423,14 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(card.getCardId()), String.valueOf(deck.getDeckId()), deckPart},
                 null, null, null );
         if (c.moveToFirst()) {
-            int mult = c.getInt(c.getColumnIndex(KEY_CARD_MULTIPLICITY));
             ContentValues contentValues = new ContentValues();
-            mult++;
-            Log.i("JH", "dbHelper : " + mult );
-            contentValues.put(KEY_CARD_MULTIPLICITY, mult);
+            contentValues.put(KEY_CARD_MULTIPLICITY, nbr);
             db.update(TABLE_CARD_DECK, contentValues, KEY_CARD_ID + " = ? AND " + KEY_DECK_ID + " = ?", new String[]{String.valueOf(card.getCardId()), String.valueOf(deck.getDeckId())});
         } else {
             ContentValues contentValues = new ContentValues();
             contentValues.put(KEY_DECK_ID, deck.getDeckId());
             contentValues.put(KEY_CARD_ID, card.getCardId());
-            contentValues.put(KEY_CARD_MULTIPLICITY, 1);
+            contentValues.put(KEY_CARD_MULTIPLICITY, nbr);
             contentValues.put(KEY_DECK_PART, deckPart);
             db.insert(TABLE_CARD_DECK, null ,contentValues );
         }
@@ -457,7 +454,6 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 + " WHERE tc." + KEY_CARD_ID + " = tcd." + KEY_CARD_ID +" AND tcd." + KEY_DECK_ID + " = ?";
 
         Cursor c = db.rawQuery(query, new String[]{String.valueOf(deck.getDeckId())});
-        Log.i("JH" , "db deckid : " + deck.getDeckId());
         if(c.moveToFirst()){
             do {
                 //si carte dans le main
@@ -470,12 +466,9 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                        }
                    }
                    main.add(card) ;
-                   //on incrémente la mutiplicité de la carte
-                   if(mainMult.containsKey(card)) {
-                       mainMult.put(card, mainMult.get(card) + 1);
-                   } else{
-                       mainMult.put(card, 1);
-                   }
+
+                   int mult = c.getInt(c.getColumnIndex(KEY_CARD_MULTIPLICITY));
+                   mainMult.put(card, mult);
                }else if(c.getString(c.getColumnIndex(KEY_DECK_PART)).equals("side")){
                    Card card = this.getCard(c.getLong(c.getColumnIndex(KEY_CARD_ID)));
                    for(Card card1 : side){
@@ -484,19 +477,15 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                        }
                    }
                    side.add(card) ;
-                   if(sideMult.containsKey(card)) {
-                       sideMult.put(card, sideMult.get(card) + 1);
-                   } else{
-                       sideMult.put(card, 1);
-                   }
-               };
+                   int mult = c.getInt(c.getColumnIndex(KEY_CARD_MULTIPLICITY));
+                   sideMult.put(card, mult);
+               }
 
             } while(c.moveToNext());
         }
         db.close();
         c.close();
         deck.setMain(main);
-        Log.i("JH", "db :" + deck.getMain().size());
         deck.setSide(side);
         deck.setMainMultiplicities(mainMult);
         deck.setSideMultiplicities(sideMult);

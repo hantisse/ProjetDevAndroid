@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import com.judith.h.projetdevandroid.Deck;
 
@@ -24,26 +25,14 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
 
         if(i==2){
             Fragment fragment = new StatsFragment();
-            Bundle args = new Bundle();
-            // Our object is just an integer
-            args.putInt(StatsFragment.ARG_OBJECT, i + 1);
-            fragment.setArguments(args);
             return fragment;
         }
         else if(i==0){
             main = new EditorFragment(deck, "main");
-            Bundle args = new Bundle();
-            // Our object is just an integer
-            args.putInt(EditorFragment.ARG_OBJECT, i + 1);
-            main.setArguments(args);
             return main;
         }
         else{
             side = new EditorFragment(deck, "side");
-            Bundle args = new Bundle();
-            // Our object is just an integer
-            args.putInt(EditorFragment.ARG_OBJECT, i + 1);
-            side.setArguments(args);
             return side;
         }
     }
@@ -67,6 +56,25 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
         return title;
     }
 
+    public void calculateCMCFilters(){
+        side.calculateCMCFilters(deck);
+        main.calculateCMCFilters(deck);
+    }
+
+    public void calculateTypeFilters(){
+        side.calculateTypeFilters(deck);
+        main.calculateTypeFilters(deck);
+    }
+
+    public void calculateColorIdentityFilters(){
+        side.calculateColorIdentityFilters(deck);
+        main.calculateColorIdentityFilters(deck);
+    }
+
+    public void setDefaultFilter(){
+        side.setDefaultFilter();
+        main.setDefaultFilter();
+    }
 
     public Deck getDeck() {
         return deck;
@@ -80,16 +88,8 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
         return main;
     }
 
-    public void setMain(EditorFragment main) {
-        this.main = main;
-    }
-
     public EditorFragment getSide() {
         return side;
-    }
-
-    public void setSide(EditorFragment side) {
-        this.side = side;
     }
 
 }

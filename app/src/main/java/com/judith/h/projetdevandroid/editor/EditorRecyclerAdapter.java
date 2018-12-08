@@ -14,16 +14,16 @@ import android.widget.Toast;
 
 import com.judith.h.projetdevandroid.Card;
 import com.judith.h.projetdevandroid.Deck;
-import com.judith.h.projetdevandroid.DecksDataBaseHelper;
 import com.judith.h.projetdevandroid.R;
 
 import java.util.ArrayList;
 
 
 public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAdapter.FilterViewHolder>{
-    private Filter[] filters;
+    private ArrayList<Filter> activeFilters;
     private Deck deck;
     private String deckPart;
+    private EditorFragment fragment;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -49,18 +49,16 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
             filterName.setText(filter.getFilterName());
 
             if(filter.getLvAdapter() == null){
-
                 filter.setLvAdapter( new ArrayAdapter<String>(
                         filterListView.getContext(), R.layout.card_list_item ));
             }
             if(deckPart.equals("side")){
-                filter.setCards(deck.getSide());
+                filter.setCardsInAdapter(deck.getSideMultiplicities());
             } else {
-                filter.setCards(deck.getMain());
+                filter.setCardsInAdapter(deck.getMainMultiplicities());
             }
 
             filterListView.setAdapter(filter.getLvAdapter());
-
 
             updateListElementsTotalHeight(filter.getLvAdapter(), filterListView);
 
@@ -69,10 +67,18 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Toast.makeText(view.getContext(),"Pressed " + filterListView.getAdapter().getItem(position),Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(view.getContext(), CardActivity.class);
-                    intent.putExtra("cardName",(String)filterListView.getAdapter().getItem(position));
-                    intent.putExtra("card_id",filter.getCardIdByCardName((String)filterListView.getAdapter().getItem(position)));
-                    Log.i("JH", "recycler : id : " + filter.getCardIdByCardName((String)filterListView.getAdapter().getItem(position)));
-                    view.getContext().startActivity(intent);
+                    intent.putExtra("card",filter.getCardByCardName((String)filterListView.getAdapter().getItem(position)));
+                    if(deckPart.equals("side")){
+                        //recupère la multiplicité de la carte
+                        Log.i("JH", "mult : " + deck.getSideMultiplicities().get(filter.getCardByCardName((String)filterListView.getAdapter().getItem(position))));
+                        intent.putExtra("card_multiplicity", deck.getSideMultiplicities().get(filter.getCardByCardName((String)filterListView.getAdapter().getItem(position))));
+                    } else {
+                        Card card = filter.getCardByCardName((String)filterListView.getAdapter().getItem(position));
+                        intent.putExtra("card_multiplicity", deck.getMainMultiplicities().get(card));
+
+                    }
+                    intent.putExtra("deck_part", deckPart);
+                    fragment.getActivity().startActivityForResult(intent, DeckEditor.CHANGE_CARD_MULT_REQUEST_CODE);
                 }
             });
         }
@@ -87,7 +93,6 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
 
                 totalHeight += mView.getMeasuredHeight();
-                Log.w("HEIGHT" + i, String.valueOf(totalHeight));
             }
 
             ViewGroup.LayoutParams params = lv.getLayoutParams();
@@ -102,11 +107,15 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    EditorRecyclerAdapter(Deck deck, Filter[] filters, String deckPart) {
-        this.filters = filters;
-        this.deck = deck;
-        this.deckPart = deckPart;
+    EditorRecyclerAdapter(EditorFragment fragment, Deck deck,String deckPart, ArrayList<Filter> activeFilters) {
+
+         this.fragment = fragment;
+         this.deck = deck;
+         this.deckPart = deckPart;
+         this.activeFilters = activeFilters;
+
     }
+
 
     // Create new views (invoked by the layout manager)
     @Override
@@ -122,19 +131,15 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final FilterViewHolder holder, int position) {
-
-        Filter filter = filters[position];
-
-       holder.bind(filter);
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
+        Filter filter = activeFilters.get(position);
+        holder.bind(filter);
         TextView tv = (TextView) holder.mView.findViewById(R.id.filter_name);
         tv.setText(filter.getFilterName());
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean expanded = filters[holder.getAdapterPosition()].isExpanded();
-                filters[holder.getAdapterPosition()].setExpanded(!expanded);
+                boolean expanded = activeFilters.get(holder.getAdapterPosition()).isExpanded();
+                activeFilters.get(holder.getAdapterPosition()).setExpanded(!expanded);
                 notifyItemChanged(holder.getAdapterPosition());
 
             }
@@ -143,10 +148,11 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
 
     }
 
+
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return filters.length;
+        return activeFilters.size();
     }
 
 

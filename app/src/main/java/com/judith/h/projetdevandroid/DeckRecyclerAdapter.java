@@ -54,7 +54,6 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
             @Override
             public void onClick(View v) {
                 for(Card c : deckDataset.get(holder.getAdapterPosition()).getMain()){
-                    Log.i("JH", "DeckEditor : "  + c.getName());
                 }
                 Intent intent = new Intent(v.getContext(),DeckEditor.class);
                 intent.putExtra("deck", deckDataset.get(holder.getAdapterPosition()));

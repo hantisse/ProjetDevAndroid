@@ -28,16 +28,11 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(lv.getContext(),
                 R.layout.card_search_list_element);
         lv.setAdapter(adapter);
-        Log.i("JH", "json : " + j);
-
         try {
             JSONArray ja = j.getJSONArray("data");
-            Log.i("JH", "****");
-
             for(int i = 0; i<ja.length();i++){
                 adapter.add(ja.getString(i));
                 }
-
         } catch(NullPointerException e){
             Log.i("JH", "Null pointer");
         }
@@ -52,7 +47,6 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
             @Override
             public void onClick(View v) {
                 String url = "https://api.scryfall.com/cards/autocomplete?q=" + search_bar.getText();
-                Log.i("JH", "clic sur search");
                 new AsyncScryfallJSONSearch(activity).execute(url);
             }
         });
@@ -63,7 +57,6 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AsyncScryfallJSONData task = new AsyncScryfallJSONData(activity);;
                 String url = "https://api.scryfall.com/cards/named?fuzzy=" + lv.getAdapter().getItem(position);;
-                Log.i("JH", url);
                 task.execute(url);
             }
         });
