@@ -5,9 +5,9 @@
     <string name="filter_cmc">Filtrer par cmc</string>
     <string name="filter_type">Filtrer par type</string>
     <string name="filtre__title">Filtres</string>
-    <string name="new_deck">Nouveau Deck</string>
+    <string name="new_deck">New Deck</string>
     <string name="update">Modifier</string>
-    <string name="delete">Supprimer</string>
+    <string name="delete">Delete</string>
     <string name="search">Search</string>
     <string name="add_">Add...</string>
     <string name="save_deck">Save</string>

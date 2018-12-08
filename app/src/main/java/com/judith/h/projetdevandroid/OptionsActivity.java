@@ -1,15 +1,12 @@
 package com.judith.h.projetdevandroid;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 public class OptionsActivity extends AppCompatActivity {
 
-    private String LanguageCode = "fr";
+    private String languageCode = "fr";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +18,7 @@ public class OptionsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Change Application level locale
-                LocaleHelper.setLocale(OptionsActivity.this, LanguageCode);
+                LocaleHelper.setLocale(OptionsActivity.this, languageCode);
 
                 //It is required to recreate the activity to reflect the change in UI.
                 recreate();
