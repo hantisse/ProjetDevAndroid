@@ -4,6 +4,7 @@
     <string name="nofilter">Pas de filtre</string>
     <string name="filter_cmc">Filtrer par cmc</string>
     <string name="filter_type">Filtrer par type</string>
+    <string name="filter_colorIdent">Filtrer par color identity</string>
     <string name="filtre__title">Filtres</string>
     <string name="new_deck">Nouveau Deck</string>
     <string name="update">Modifier</string>
