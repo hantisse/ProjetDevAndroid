@@ -62,6 +62,25 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
         return title;
     }
 
+    public void calculateCMCFilters(){
+        side.calculateCMCFilters(deck);
+        main.calculateCMCFilters(deck);
+    }
+
+    public void calculateTypeFilters(){
+        side.calculateTypeFilters(deck);
+        main.calculateTypeFilters(deck);
+    }
+
+    public void calculateColorIdentityFilters(){
+        side.calculateColorIdentityFilters(deck);
+        main.calculateColorIdentityFilters(deck);
+    }
+
+    public void setDefaultFilter(){
+        side.setDefaultFilter();
+        main.setDefaultFilter();
+    }
 
     public Deck getDeck() {
         return deck;
@@ -75,16 +94,8 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
         return main;
     }
 
-    public void setMain(EditorFragment main) {
-        this.main = main;
-    }
-
     public EditorFragment getSide() {
         return side;
-    }
-
-    public void setSide(EditorFragment side) {
-        this.side = side;
     }
 
 }

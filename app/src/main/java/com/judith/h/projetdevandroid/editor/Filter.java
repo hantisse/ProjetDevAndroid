@@ -11,15 +11,11 @@ public class Filter {
     private String name;
     private ArrayList<Card> cards;
     private ArrayAdapter<String> lvAdapter = null;
-    private boolean isExpanded = false;
+    private boolean isExpanded = true;
 
     public Filter(String name){
         this.name = name;
-    }
-
-    public Filter(String name, ArrayList<Card> cards) {
-        this.name = name;
-        this.cards = cards;
+        cards = new ArrayList<>();
     }
 
     public String getFilterName(){
@@ -46,14 +42,22 @@ public class Filter {
         return cards;
     }
 
+    /**
+     * Neceite que l'adapteur doit défini
+     * @param cards cartes dans le filtre
+     */
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
-        lvAdapter.clear();
-        for(Card card : cards){
-            lvAdapter.add(card.getName());
-        }
     }
 
+    public void setCardsInAdapter(){
+        if(lvAdapter != null){
+            lvAdapter.clear();
+            for(Card card : cards){
+                lvAdapter.add(card.getName());
+            }
+        }
+    }
     public String getCardIdByCardName(String name){
         String id = "";
         for(Card card : cards){
@@ -67,7 +71,16 @@ public class Filter {
 
     public void addCard(Card card){
         cards.add(card);
-        lvAdapter.add(card.getName());
+        if(lvAdapter != null) {
+            lvAdapter.add(card.getName());
+        }
+    }
+
+    public void clearCards(){
+        cards.clear();
+        if(lvAdapter != null){
+            lvAdapter.clear();
+        }
     }
 
 }

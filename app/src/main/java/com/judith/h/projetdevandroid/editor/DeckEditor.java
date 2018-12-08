@@ -83,7 +83,7 @@ public class DeckEditor extends FragmentActivity {
 
         filter_drawer = findViewById(R.id.drawer_layout);
 
-        NavigationView navView = (NavigationView)findViewById(R.id.nav_filter);
+        final NavigationView navView = (NavigationView)findViewById(R.id.nav_filter);
         navView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -91,11 +91,24 @@ public class DeckEditor extends FragmentActivity {
                         // set item as selected to persist highlight
                         menuItem.setChecked(true);
                         // close drawer when item is tapped
+                        switch(menuItem.getItemId()){
+                            case R.id.nav_filter_cmc :
+                                adapter.calculateCMCFilters();
+                                break;
+                            case R.id.nav_filter_type :
+                                adapter.calculateTypeFilters();
+                                break;
+                            case R.id.nav_filter_color :
+                                adapter.calculateColorIdentityFilters();
+                                break;
+                            case R.id.nav_filter_default :
+                                adapter.setDefaultFilter();
+                                break;
+                        }
+
                         filter_drawer.closeDrawers();
-
-                        // Add code here to update the UI based on the item selected
-                        // For example, swap UI fragments here
-
+                        adapter.getMain().getmAdapter().notifyDataSetChanged();
+                        adapter.getMain().getmAdapter().notifyDataSetChanged();
                         return true;
                     }
                 });

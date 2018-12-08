@@ -12,20 +12,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.judith.h.projetdevandroid.Card;
 import com.judith.h.projetdevandroid.Deck;
-import com.judith.h.projetdevandroid.DecksDataBaseHelper;
 import com.judith.h.projetdevandroid.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Set;
 
 
 public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAdapter.FilterViewHolder>{
-    private ArrayList<Filter> filters;
+    private ArrayList<Filter> activeFilters;
     private Deck deck;
     private String deckPart;
+    private EditorFragment fragment;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -55,13 +52,12 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
                         filterListView.getContext(), R.layout.card_list_item ));
             }
             if(deckPart.equals("side")){
-                filter.setCards(deck.getSide());
+                filter.setCardsInAdapter();
             } else {
-                filter.setCards(deck.getMain());
+                filter.setCardsInAdapter();
             }
 
             filterListView.setAdapter(filter.getLvAdapter());
-
 
             updateListElementsTotalHeight(filter.getLvAdapter(), filterListView);
 
@@ -103,12 +99,11 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    EditorRecyclerAdapter(Deck deck, String deckPart, ArrayList<Filter> filters) {
+    EditorRecyclerAdapter(Deck deck, String deckPart, ArrayList<Filter> activeFilters, EditorFragment fragment) {
         this.deck = deck;
         this.deckPart = deckPart;
-        this.filters = filters;
-        this.filters.add(new Filter("Default"));
-
+        this.activeFilters = activeFilters;
+        this.fragment = fragment;
 
     }
 
@@ -127,10 +122,9 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final FilterViewHolder holder, int position) {
+        Filter filter = activeFilters.get(position);
 
-        Filter filter = filters.get(position);
-
-       holder.bind(filter);
+        holder.bind(filter);
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         TextView tv = (TextView) holder.mView.findViewById(R.id.filter_name);
@@ -138,8 +132,8 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean expanded = filters.get(holder.getAdapterPosition()).isExpanded();
-                filters.get(holder.getAdapterPosition()).setExpanded(!expanded);
+                boolean expanded = activeFilters.get(holder.getAdapterPosition()).isExpanded();
+                activeFilters.get(holder.getAdapterPosition()).setExpanded(!expanded);
                 notifyItemChanged(holder.getAdapterPosition());
 
             }
@@ -148,10 +142,11 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
 
     }
 
+
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return filters.size();
+        return activeFilters.size();
     }
 
 

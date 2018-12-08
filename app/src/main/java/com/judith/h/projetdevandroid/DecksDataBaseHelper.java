@@ -124,6 +124,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
             String cardTypesToString = "";
             for (String cardtype : cardTypes){
                 cardTypesToString += cardtype + ";";
+                Log.i("JH", cardtype);
             }
             values.put(KEY_CARD_TYPES, cardTypesToString);
             values.put(KEY_CARD_IMAGE_URL, card.getImgUrl());
@@ -163,7 +164,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
             card.setName((c.getString(c.getColumnIndex(KEY_CARD_NAME))));
             card.setScryfallID(c.getString(c.getColumnIndex(KEY_CARD_SCRYFALL_ID)));
             card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
-            String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
+            String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_TYPES));
             ArrayList<String> cardTypes = new ArrayList<>(Arrays.asList(cardTypesToString.split(";")));
             card.setCardTypes(cardTypes);
             card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
@@ -196,7 +197,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 card.setName((c.getString(c.getColumnIndex(KEY_CARD_NAME))));
                 card.setScryfallID(c.getString(c.getColumnIndex(KEY_CARD_SCRYFALL_ID)));
                 card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
-                String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
+                String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_TYPES));
                 ArrayList<String> cardTypes = new ArrayList<>(Arrays.asList(cardTypesToString.split(";")));
                 card.setCardTypes(cardTypes);
                 card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
@@ -239,7 +240,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 card.setName((c.getString(c.getColumnIndex(KEY_CARD_NAME))));
                 card.setScryfallID(c.getString(c.getColumnIndex(KEY_CARD_SCRYFALL_ID)));
                 card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
-                String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
+                String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_TYPES));
                 ArrayList<String> cardTypes = new ArrayList<>(Arrays.asList(cardTypesToString.split(";")));
                 card.setCardTypes(cardTypes);
                 card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
@@ -283,7 +284,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 card.setName((c.getString(c.getColumnIndex(KEY_CARD_NAME))));
                 card.setScryfallID(c.getString(c.getColumnIndex(KEY_CARD_SCRYFALL_ID)));
                 card.setCmc((c.getInt(c.getColumnIndex(KEY_CARD_CMC))));
-                String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_NAME));
+                String cardTypesToString = c.getString(c.getColumnIndex(KEY_CARD_TYPES));
                 ArrayList<String> cardTypes = new ArrayList<>(Arrays.asList(cardTypesToString.split(";")));
                 card.setCardTypes(cardTypes);
                 card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));

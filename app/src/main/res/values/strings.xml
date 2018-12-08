@@ -11,4 +11,5 @@
     <string name="search">Search</string>
     <string name="add_">Add...</string>
     <string name="save_deck">Save</string>
+    <string name="filter_colorIdent">filtrer par color identity</string>
 </resources>
