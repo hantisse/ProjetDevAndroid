@@ -14,4 +14,5 @@
     <string name="save_deck">Sauvegarder</string>
     <string name="credits_button">Crédits</string>
     <string name="switch_language">Changer vers l\'Anglais</string>
+    <string name="filter_colorIdent">filtrer par color identity</string>
 </resources>
