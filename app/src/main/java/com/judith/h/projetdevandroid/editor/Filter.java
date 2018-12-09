@@ -56,6 +56,7 @@ public class Filter {
     public void setCardsInAdapter(HashMap<Card, Integer> multiplicities){
         if(lvAdapter != null){
             lvAdapter.clear();
+            filterSize = 0;
             for(Card card : cards){
                 lvAdapter.add(card.getName() + " x " + multiplicities.get(card) );
                 filterSize += multiplicities.get(card);
