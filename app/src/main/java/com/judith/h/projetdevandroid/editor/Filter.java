@@ -13,6 +13,7 @@ public class Filter {
     private String name;
     private ArrayList<Card> cards;
     private ArrayAdapter<String> lvAdapter = null;
+    private int filterSize = 0;
     private boolean isExpanded = true;
 
     public Filter(String name){
@@ -57,6 +58,7 @@ public class Filter {
             lvAdapter.clear();
             for(Card card : cards){
                 lvAdapter.add(card.getName() + " x " + multiplicities.get(card) );
+                filterSize += multiplicities.get(card);
             }
         }
     }
@@ -82,6 +84,14 @@ public class Filter {
         if(lvAdapter != null){
             lvAdapter.clear();
         }
+    }
+
+    public boolean isEmpty(){
+        return cards.isEmpty();
+    }
+
+    public int getFilterSize(){
+        return filterSize;
     }
 
 }

@@ -46,8 +46,6 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
 
             filterListView.setVisibility(isExpanded ? View.VISIBLE: View.GONE);
 
-            filterName.setText(filter.getFilterName());
-
             if(filter.getLvAdapter() == null){
                 filter.setLvAdapter( new ArrayAdapter<String>(
                         filterListView.getContext(), R.layout.card_list_item ));
@@ -133,9 +131,8 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     public void onBindViewHolder(final FilterViewHolder holder, int position) {
         Filter filter = activeFilters.get(position);
         holder.bind(filter);
-        TextView tv = (TextView) holder.mView.findViewById(R.id.filter_name);
-        tv.setText(filter.getFilterName());
-        tv.setOnClickListener(new View.OnClickListener() {
+        holder.filterName.setText(holder.mView.getContext().getString(R.string.filter_text, filter.getFilterName(), filter.getFilterSize()));
+        holder.filterName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean expanded = activeFilters.get(holder.getAdapterPosition()).isExpanded();

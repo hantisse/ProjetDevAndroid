@@ -140,39 +140,15 @@ public class EditorFragment extends Fragment {
             switch(filterType){
                 case "cmc":
                    String cmc = String.valueOf(card.getCmc());
-                   if(deckPart.equals("side")) {
-                       if (deck.getSideMultiplicities().get(card) != 0) {
-                           filterAddCard(cmc, card);
-                       }
-                   }else {
-                       if(deck.getMainMultiplicities().get(card) != 0){
-                           filterAddCard(cmc, card);
-                       }
-                   }
+                   filterAddCard(cmc, card);
                    break;
                 case "colorIdentity" :
                     String colorIdentity = card.getColorIdentity();
-                    if(deckPart.equals("side")) {
-                        if (deck.getSideMultiplicities().get(card) != 0) {
-                            filterAddCard(colorIdentity, card);
-                        }
-                    }else {
-                        if(deck.getMainMultiplicities().get(card) != 0){
-                            filterAddCard(colorIdentity, card);
-                        }
-                    }
+                    filterAddCard(colorIdentity, card);
                     break;
                 case "type" :
                     String type = card.getCardTypes().get(0);
-                    if(deckPart.equals("side")) {
-                        if (deck.getSideMultiplicities().get(card) != 0) {
-                            filterAddCard(type, card);
-                        }
-                    }else {
-                        if(deck.getMainMultiplicities().get(card) != 0){
-                            filterAddCard(type, card);
-                        }
-                    }
+                    filterAddCard(type,card);
                     break;
 
             }
@@ -207,11 +183,31 @@ public class EditorFragment extends Fragment {
             filters.put(filter, true);
             addInOrder(activeFilters, filter);
         }else {
-            filterNames.get(filterName).addCard(card);
-            if(!filters.get(filterNames.get(filterName))){
-                filters.put(filterNames.get(filterName), true);
-                addInOrder(activeFilters, filterNames.get(filterName));
+            if(!filterNames.get(filterName).getCards().contains(card)){
+                filterNames.get(filterName).addCard(card);
+                if(!filters.get(filterNames.get(filterName))){
+                    filters.put(filterNames.get(filterName), true);
+                    addInOrder(activeFilters, filterNames.get(filterName));
+                }
+            } else if (deckPart.equals("side") && deck.getSideMultiplicities().get(card) == 0) {
+                filterNames.get(filterName).getCards().remove(card);
+                if(filters.get(filterNames.get(filterName))){
+                    if(filterNames.get(filterName).isEmpty()){
+                        filters.put(filterNames.get(filterName), false);
+                        activeFilters.remove(filterNames.get(filterName));
+                    }
+                }
+            } else if (deckPart.equals("main") && deck.getMainMultiplicities().get(card) == 0){
+                filterNames.get(filterName).getCards().remove(card);
+                if(filters.get(filterNames.get(filterName))){
+                    if(filterNames.get(filterName).isEmpty()){
+                        filters.put(filterNames.get(filterName), false);
+                        activeFilters.remove(filterNames.get(filterName));
+                    }
+                }
+
             }
+
         }
     }
 
