@@ -54,7 +54,6 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
             type_line = j.getString("type_line");
             cmc = j.getInt("cmc");
             color =  j.getString("color_identity");
-            Log.i("JH", "string : " + color.toString());
             manaCost = j.getString("mana_cost");
             JSONObject imgUris = j.getJSONObject("image_uris");
             imgURL = imgUris.getString("border_crop");
@@ -68,12 +67,18 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
         Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line));
         card.setImgUrl(imgURL);
         handler.createCard(card);
-        if(!activity.getAddedCards().contains(card)){
-            activity.getAddedCards().add(card);
-        };
-
-        //handler.addCardInDeck(activity.getDeck(), card, "main");
-
+        boolean inDeck = false;
+        for(Card card1 : activity.getAddedCards().keySet()){
+            if(card1.getCardId() == card.getCardId()){
+                inDeck = true;
+                int count = activity.getAddedCards().get(card1);
+                activity.getAddedCards().put(card1, count + 1);
+                Log.i("JH", "" + count + 1);
+            }
+        }
+        if(!inDeck){
+            activity.getAddedCards().put(card, 1);
+        }
     }
 
     @Override

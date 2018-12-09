@@ -4,35 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".MainMenuActivity"
+    tools:context=".OptionsActivity"
     android:orientation="vertical"
     android:layout_gravity="center">
 
     <Button
-        android:id="@+id/newdeckbutton"
+        android:id="@+id/switchlanguagebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_deck"
+        android:text="@string/switch_language"
         android:layout_gravity="center"/>
 
     <Button
-        android:id="@+id/decksbutton"
+        android:id="@+id/creditsbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Decks"
+        android:text="@string/credits_button"
         android:layout_gravity="center"/>
-
-    <Button
-        android:id="@+id/optionsbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Options"/>
-
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
 
 

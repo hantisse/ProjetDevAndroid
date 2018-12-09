@@ -2,7 +2,6 @@ package com.judith.h.projetdevandroid.editor;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,35 +15,45 @@ import com.judith.h.projetdevandroid.R;
 public class CardActivity extends Activity {
 
     Card card;
+    int multiplicity;
+    String deckPart;
+    DecksDataBaseHelper handler;
+    TextView cardmultiplicityTv;
+    boolean hasChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
 
-        Intent intent = getIntent();
-        String cardId = intent.getStringExtra("card_id");
-        Log.i("CARIBOU", "****" + cardId);
+        handler = new DecksDataBaseHelper(this);
 
-        DecksDataBaseHelper dataBaseHelper = new DecksDataBaseHelper(this);
-        card = dataBaseHelper.getCard(Long.parseLong(cardId));
+        Intent intent = getIntent();
+        card = (Card) intent.getExtras().get("card");
+        multiplicity = (int) intent.getExtras().get("card_multiplicity");
+
+        deckPart = intent.getStringExtra("deck_part");
 
         String name = card.getName();
         TextView title = findViewById(R.id.cardtitle);
         title.setText(name);
 
-        final TextView cardmultiplicity = findViewById(R.id.cardmultiplicity);
-        cardmultiplicity.setText("0");
+        cardmultiplicityTv = findViewById(R.id.cardmultiplicity);
+        Log.i("JH", "tv : " + cardmultiplicityTv.toString());
+
+        cardmultiplicityTv.setText(String.valueOf(multiplicity));
 
         Button lesscard = findViewById(R.id.lesscard);
         lesscard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int multiplicity = Integer.parseInt(cardmultiplicity.getText().toString());
-                if (multiplicity != 0){
-                    multiplicity = multiplicity - 1;
+                if(!hasChanged){
+                    hasChanged = true;
                 }
-                cardmultiplicity.setText(Integer.toString(multiplicity));
+                if (multiplicity > 0){
+                    multiplicity -= 1;
+                }
+                cardmultiplicityTv.setText(String.valueOf(multiplicity));
             }
         });
 
@@ -52,8 +61,12 @@ public class CardActivity extends Activity {
         morecard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int multiplicity = Integer.parseInt(cardmultiplicity.getText().toString()) + 1;
-                cardmultiplicity.setText(Integer.toString(multiplicity));
+                if(!hasChanged){
+                    hasChanged = true;
+                }
+                multiplicity += 1;
+                cardmultiplicityTv.setText(String.valueOf(multiplicity));
+
             }
         });
 
@@ -61,5 +74,21 @@ public class CardActivity extends Activity {
 
         AsyncBitmapDownloader task = new AsyncBitmapDownloader(this);
         task.execute(url);
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent resultIntent = new Intent();
+        if(hasChanged){
+            resultIntent.putExtra("deck_part", deckPart);
+            resultIntent.putExtra("card", card);
+            resultIntent.putExtra("card_multiplicity", multiplicity);
+            setResult(DeckEditor.CHANGE_CARD_MULT_RESULT_CODE, resultIntent);
+        } else {
+            setResult(DeckEditor.NO_CHANGE_RESULT_CODE, resultIntent);
+        }
+
+        finish();
+        super.onBackPressed();
     }
 }
