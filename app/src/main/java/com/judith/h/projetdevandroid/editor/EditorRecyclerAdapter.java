@@ -115,7 +115,7 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     }
 
 
-    // Create new views (invoked by the layout manager)
+    // appelé par le layout manager (crée les vues)
     @Override
     public EditorRecyclerAdapter.FilterViewHolder onCreateViewHolder(ViewGroup parent,
                                                      int viewType) {

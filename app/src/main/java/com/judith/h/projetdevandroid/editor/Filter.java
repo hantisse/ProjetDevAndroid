@@ -24,12 +24,6 @@ public class Filter {
     public String getFilterName(){
         return name;
     }
-
-    public ArrayList<String> getFilterCardNames(){
-        ArrayList<String> s = new ArrayList<>();
-        return s;
-    }
-
     public boolean isExpanded(){ return isExpanded; }
     public void setExpanded(boolean b){ isExpanded = b ; }
 
@@ -45,10 +39,7 @@ public class Filter {
         return cards;
     }
 
-    /**
-     * Neceite que l'adapteur doit défini
-     * @param cards cartes dans le filtre
-     */
+
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
     }
