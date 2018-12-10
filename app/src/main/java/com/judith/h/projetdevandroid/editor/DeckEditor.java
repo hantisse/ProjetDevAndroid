@@ -134,34 +134,40 @@ public class DeckEditor extends FragmentActivity {
                 addedCards = (HashMap<Card, Integer>) bundle.get("added_cards");
                 if(deckPart.equals("main")){
                     for(Card card : addedCards.keySet()){
-                        Card cardInDeck = null;
                         boolean inDeck = false;
+                        //On vérifie si la carte est déja dans le deck et on récupère l référence de la carte
                         for(Card card1 : deck.getMainMultiplicities().keySet()){
                             if(card1.getCardId() == card.getCardId()){
                                 inDeck = true;
-                                cardInDeck = card1;
+                                addedCards.put(card1, addedCards.get(card));
+                                addedCards.remove(card);
+                                card = card1;
                             }
                         }
+                        //si elle n'est pas dans le deck on l'ajoute
                         if(!inDeck){
                             deck.getMainMultiplicities().put(card,addedCards.get(card));
                             deck.getMain().add(card);
                             cardAddedMain.add(card);
+                            Log.i("JH", "card nor in deck");
+                        //sinon, on incrémente la multiplicité de la carte référencée dans le deck
                         } else {
-                            int count = deck.getMainMultiplicities().get(cardInDeck);
-                            deck.getMainMultiplicities().put(cardInDeck, count + addedCards.get(card));
-                            cardAddedMain.add(cardInDeck);
+                            int count = deck.getMainMultiplicities().get(card);
+                            deck.getMainMultiplicities().put(card, count + addedCards.get(card));
+                            cardAddedMain.add(card);
                         }
                     }
                     updateFilterAfterCardAdded(addedCards, "main");
                     adapter.getMain().getmAdapter().notifyDataSetChanged();
                 } else if(deckPart.equals("side")){
                     for(Card card : addedCards.keySet()){
-                        Card cardInDeck = null;
                         boolean inDeck = false;
                         for(Card card1 : deck.getSideMultiplicities().keySet()){
                             if(card1.getCardId() == card.getCardId()){
                                 inDeck = true;
-                                cardInDeck = card1;
+                                addedCards.put(card1, addedCards.get(card));
+                                addedCards.remove(card);
+                                card = card1;
                             }
                         }
                         if(!inDeck){
@@ -169,9 +175,9 @@ public class DeckEditor extends FragmentActivity {
                             deck.getSide().add(card);
                             cardAddedSide.add(card);
                         } else {
-                            int count = deck.getSideMultiplicities().get(cardInDeck);
-                            deck.getSideMultiplicities().put(cardInDeck, count + addedCards.get(card));
-                            cardAddedSide.add(cardInDeck);
+                            int count = deck.getSideMultiplicities().get(card);
+                            deck.getSideMultiplicities().put(card, count + addedCards.get(card));
+                            cardAddedSide.add(card);
                         }
                     }
                     updateFilterAfterCardAdded(addedCards, "side");
@@ -214,8 +220,8 @@ public class DeckEditor extends FragmentActivity {
 
             HashMap<Card, Integer> hashmap = new HashMap<>();
             hashmap.put(card, multiplicities.get(card));
-            updateFilterAfterCardAdded(hashmap, (String) bundle.get("deck_part"));
-            if(bundle.get("deck_part").equals("side")){
+            updateFilterAfterCardAdded(hashmap, deckPart);
+            if(deckPart.equals("side")){
                 adapter.getSide().getmAdapter().notifyDataSetChanged();
             } else {
                 adapter.getMain().getmAdapter().notifyDataSetChanged();
