@@ -24,7 +24,7 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int i) {
 
         if(i==2){
-            Fragment fragment = new StatsFragment();
+            Fragment fragment = new StatsFragment(deck);
             return fragment;
         }
         else if(i==0){
