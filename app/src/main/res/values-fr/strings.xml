@@ -14,4 +14,7 @@
     <string name="save_deck">Sauvegarder</string>
     <string name="credits_button">Crédits</string>
     <string name="switch_language">Changer vers l\'Anglais</string>
+    <string name="credits1">Cette application a été programmée en Langage Java, et utilise l\'API Scryfall</string>
+    <string name="credits2">Cette application a été créé par Judith Hantisse et Marc Chicourrat</string>
+    <string name="closecredits">Retour vers les Options</string>
 </resources>
