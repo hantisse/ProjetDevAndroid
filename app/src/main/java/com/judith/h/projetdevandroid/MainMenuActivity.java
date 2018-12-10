@@ -108,9 +108,13 @@ public class MainMenuActivity extends Activity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(resultCode == OPT_CHANGE_LANG_RESULT_CODE){
-            Log.i("JH", "changement de langue");
-            recreate();
+        switch(resultCode){
+            case OPT_CHANGE_LANG_RESULT_CODE:
+                Log.i("JH", "changement de langue");
+                recreate();
+                break;
+            case DeckEditor.EDIT_DECK_RESULT:
+                break;
         }
     }
 

@@ -40,6 +40,8 @@ public class DeckEditor extends FragmentActivity {
     public static final int CHANGE_CARD_MULT_REQUEST_CODE = 5;
     public static final int CHANGE_CARD_MULT_RESULT_CODE = 2;
     public static final int NO_CHANGE_RESULT_CODE = 3;
+    public static final int EDIT_DECK_REQUEST = 20;
+    public static final int EDIT_DECK_RESULT = 21;
 
 
     EditorAdapter adapter;
@@ -83,6 +85,7 @@ public class DeckEditor extends FragmentActivity {
                 for (Card card : cardAddedSide){
                     handler.addCardInDeck(deck, card, deck.getSideMultiplicities().get(card), "side");
                 }
+                setResult(EDIT_DECK_RESULT);
             }
         });
 
@@ -320,6 +323,7 @@ public class DeckEditor extends FragmentActivity {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
+                finish();
                 DeckEditor.super.onBackPressed();
             }
         });

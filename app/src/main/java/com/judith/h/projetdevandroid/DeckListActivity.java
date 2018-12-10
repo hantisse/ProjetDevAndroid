@@ -43,7 +43,7 @@ public class DeckListActivity extends Activity {
         DecksDataBaseHelper handler = new DecksDataBaseHelper(this);
         decks = (ArrayList<Deck>) handler.getAllDecks();
 
-        deckAdapter = new DeckRecyclerAdapter(decks);
+        deckAdapter = new DeckRecyclerAdapter(decks, this);
         deckList.setAdapter(deckAdapter);
 
         Button newDeck_button = (Button)findViewById(R.id.newDeckButton2);
@@ -70,8 +70,7 @@ public class DeckListActivity extends Activity {
                         String deckName = input.getText().toString();
                         Intent intent = new Intent(v.getContext(),DeckEditor.class);
                         intent.putExtra("deck_name", deckName);
-                        startActivity(intent);
-
+                        startActivityForResult(intent, DeckEditor.EDIT_DECK_REQUEST);
 
 
                     }
@@ -90,5 +89,14 @@ public class DeckListActivity extends Activity {
             }
         });
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        switch(resultCode){
+            case DeckEditor.EDIT_DECK_RESULT:
+                recreate();
+                break;
+        }
     }
 }

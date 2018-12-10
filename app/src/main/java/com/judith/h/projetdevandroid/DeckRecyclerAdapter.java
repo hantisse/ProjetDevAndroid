@@ -1,6 +1,7 @@
 package com.judith.h.projetdevandroid;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapter.MyViewHolder> {
     private ArrayList<Deck> deckDataset;
     private View lastClickedDeck;
+    private Context context;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -31,7 +33,8 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public DeckRecyclerAdapter(ArrayList<Deck> Dataset) {
+    public DeckRecyclerAdapter(ArrayList<Deck> Dataset, Context context) {
+        this.context = context;
         deckDataset = Dataset;
     }
 
@@ -57,7 +60,8 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
                 }
                 Intent intent = new Intent(v.getContext(),DeckEditor.class);
                 intent.putExtra("deck", deckDataset.get(holder.getAdapterPosition()));
-                v.getContext().startActivity(intent);
+                DeckListActivity activity = (DeckListActivity)context;
+                activity.startActivityForResult(intent, DeckEditor.EDIT_DECK_REQUEST);
 
             }
         });
@@ -96,9 +100,6 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
 
     }
 
-    public View getLastClickedDeck(){
-        return this.lastClickedDeck;
-    }
 
     public void setLastClickedDeck(View lastClickedDeck){
         this.lastClickedDeck = lastClickedDeck;
@@ -110,7 +111,4 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
         return deckDataset.size();
     }
 
-    public ArrayList<Deck> getDeckDataset() {
-        return deckDataset;
-    }
 }
