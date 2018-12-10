@@ -1,7 +1,11 @@
 package com.judith.h.projetdevandroid.editor;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,16 +14,21 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.judith.h.projetdevandroid.Card;
 import com.judith.h.projetdevandroid.Deck;
 import com.judith.h.projetdevandroid.DecksDataBaseHelper;
 import com.judith.h.projetdevandroid.R;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,10 +86,16 @@ public class DeckEditor extends FragmentActivity {
             }
         });
 
+        Button exportButton = findViewById(R.id.export_deck_button);
+        exportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exportDeck();
+            }
+        });
+
         deckName.setText(deck_name);
 
-        for(Card c : deck.getMain()){
-        }
 
         filter_drawer = findViewById(R.id.drawer_layout);
 
@@ -255,6 +270,70 @@ public class DeckEditor extends FragmentActivity {
                 fragment.setDefaultFilter();
                 break;
         }
+    }
+
+    public void exportDeck(){
+        String filename = deck.getDeckName() + ".txt";
+        ArrayList<Card> main = deck.getMain();
+        ArrayList<Card> side = deck.getSide();
+        try {
+            File file = new File(Environment.getExternalStorageDirectory() + "/" + filename);
+            Log.i("CARIBOU", Environment.getExternalStorageDirectory() + "/" + filename);
+            FileWriter fileWriter = new FileWriter(file, true);
+            for (Card card:main) {
+                fileWriter.write("" + deck.getMainMultiplicities().get(card) + " " + card.getName());
+            }
+            fileWriter.write("Sideboard");
+            for (Card card:side) {
+                fileWriter.write("" + deck.getSideMultiplicities().get(card) + " " + card.getName());
+            }
+            fileWriter.flush();
+            fileWriter.close();
+            Context context = getApplicationContext();
+            CharSequence text = "Deck exporté !";
+            int duration = Toast.LENGTH_LONG;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        } catch (java.io.IOException e){
+            Log.d("CARIBOU", Log.getStackTraceString(e));
+            Context context = getApplicationContext();
+            CharSequence text = "Le deck ne peut pas être exporté, veuillez accorder les droits correspondants à l'application";
+            int duration = Toast.LENGTH_LONG;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+
+    }
+
+    @Override
+    public void onBackPressed(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View promptView = layoutInflater.inflate(R.layout.quit_alert, null);
+        builder.setView(promptView);
+
+        // Set up the buttons
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                DeckEditor.super.onBackPressed();
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
 

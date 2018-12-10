@@ -36,6 +36,7 @@ public class OptionsActivity extends Activity implements AdapterView.OnItemSelec
     private LinearLayout mRelativeLayout;
     private Button mButton;
     private PopupWindow mPopupWindow;
+    private Spinner spinner;
 
 
     @Override
@@ -90,7 +91,7 @@ public class OptionsActivity extends Activity implements AdapterView.OnItemSelec
             }
         });
 
-        Spinner spinner = (Spinner) findViewById(R.id.lang_spinner);
+        spinner = (Spinner) findViewById(R.id.lang_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.languages, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -99,20 +100,27 @@ public class OptionsActivity extends Activity implements AdapterView.OnItemSelec
     }
 
     public void setLocale(String lang) {
-        Locale myLocale = new Locale(lang);
         Resources res = getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
-        conf.locale = myLocale;
-        res.updateConfiguration(conf, dm);
-        this.recreate();
+        if (!conf.locale.getLanguage().equals(lang)) {
+            conf.locale = new Locale(lang);
+            res.updateConfiguration(conf, dm);
+            Intent intent = new Intent(this, OptionsActivity.class);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+            finish();
+        }
+
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(position == ENG_LANG){
+            setResult(MainMenuActivity.OPT_CHANGE_LANG_RESULT_CODE);
             setLocale("en");
         } else if(position == FR_LANG){
+            setResult(MainMenuActivity.OPT_CHANGE_LANG_RESULT_CODE);
             setLocale("fr");
         }
     }
@@ -120,4 +128,5 @@ public class OptionsActivity extends Activity implements AdapterView.OnItemSelec
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
+
 }

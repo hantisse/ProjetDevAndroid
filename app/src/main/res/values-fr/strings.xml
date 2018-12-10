@@ -23,4 +23,7 @@
         <item>Anglais</item>
         <item>Français</item>
     </string-array>
+    <string name="export_deck">Exporter</string>
+    <string name="alert_quit">Êtes vous sûr de vouloir quitter?</string>
+
 </resources>

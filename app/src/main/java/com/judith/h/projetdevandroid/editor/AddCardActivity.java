@@ -38,10 +38,6 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
 
         addedCards = new HashMap<>();
 
-        if ( ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
-                != PackageManager.PERMISSION_GRANTED ){
-                ActivityCompat.requestPermissions( this, new String[] {  Manifest.permission.INTERNET  }, 48 );
-        }
 
         Button addButton = findViewById(R.id.add_card_button_ac);
         addButton.setOnClickListener(this);

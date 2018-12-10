@@ -14,36 +14,50 @@
         android:orientation="vertical">
 
 
-    <TextView
-        android:id="@+id/deckName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#33b5e5"
-        android:textColor="#fff"
-        android:gravity="center"
-        android:text="TEXT"/>
 
-    <Button
-        android:id="@+id/save_deck_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/save_deck"/>
-
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/sliding_tabs"
+        <TextView
+            android:id="@+id/deckName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMode="fixed" />
+            android:background="#33b5e5"
+            android:textColor="#fff"
+            android:gravity="center"
+            android:text="TEXT"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/save_deck_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save_deck"/>
+
+            <Button
+                android:id="@+id/export_deck_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/export_deck"/>
+        </LinearLayout>
 
 
-    </android.support.v4.view.ViewPager>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/sliding_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabMode="fixed" />
+
+
+
+        </android.support.v4.view.ViewPager>
     </LinearLayout>
 
     <!-- Drawer -->
