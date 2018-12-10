@@ -14,6 +14,7 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
 
     private EditorFragment main;
     private EditorFragment side;
+    private StatsFragment statFragment;
 
     public EditorAdapter(FragmentManager fm, Deck deck) {
         super(fm);
@@ -24,8 +25,8 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int i) {
 
         if(i==2){
-            Fragment fragment = new StatsFragment(deck);
-            return fragment;
+            statFragment = new StatsFragment(deck);
+            return statFragment;
         }
         else if(i==0){
             main = new EditorFragment(deck, "main");
@@ -90,6 +91,10 @@ public class EditorAdapter extends FragmentStatePagerAdapter {
 
     public EditorFragment getSide() {
         return side;
+    }
+
+    public StatsFragment getStatFragment(){
+        return statFragment;
     }
 
 }

@@ -273,6 +273,7 @@ public class DeckEditor extends FragmentActivity {
                 fragment.setDefaultFilter();
                 break;
         }
+        adapter.getStatFragment().updateManaCurveTv();
     }
 
     public void exportDeck(){

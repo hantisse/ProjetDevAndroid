@@ -21,6 +21,7 @@ public class StatsFragment extends Fragment {
 
     public static final String ARG_OBJECT = "object";
     private Deck deck;
+    private TextView manaCurveTv;
 
     public StatsFragment (Deck deck){
         this.deck = deck;
@@ -32,8 +33,8 @@ public class StatsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.deck_stats, container, false);
 
         String manacurvevalue = getManaCurve();
-        TextView mc = rootView.findViewById(R.id.manacurve);
-        mc.setText(manacurvevalue);
+        manaCurveTv = rootView.findViewById(R.id.manacurve);
+        manaCurveTv.setText(manacurvevalue);
         return rootView;
     }
     public String getManaCurve(){
@@ -65,5 +66,9 @@ public class StatsFragment extends Fragment {
             i += 1;
         }
         return manacurvevalue;
+    }
+
+    public void updateManaCurveTv(){
+        manaCurveTv.setText(getManaCurve());
     }
 }
