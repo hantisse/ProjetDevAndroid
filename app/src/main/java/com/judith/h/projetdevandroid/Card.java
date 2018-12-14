@@ -17,13 +17,14 @@ public class Card implements Serializable {
 
     public Card(){cardId = -1;}
 
-    public Card(String name, String scryfallID, int cmc, String manaCost, String color, ArrayList<String> cardTypes ){
+    public Card(String name, String scryfallID, int cmc, String manaCost, String color, ArrayList<String> cardTypes, float price ){
         this.name = name;
         this.scryfallID = scryfallID;
         this.cmc = cmc;
         this.manaCost = manaCost;
         this.colorIdentity = color;
         this.cardTypes = cardTypes;
+        this.price = price;
     }
 
     public int getCardId() {

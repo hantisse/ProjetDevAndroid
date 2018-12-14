@@ -19,9 +19,9 @@ import java.util.List;
 @SuppressLint("ValidFragment")
 public class StatsFragment extends Fragment {
 
-    public static final String ARG_OBJECT = "object";
     private Deck deck;
     private TextView manaCurveTv;
+    private TextView deckCostTv;
 
     public StatsFragment (Deck deck){
         this.deck = deck;
@@ -35,6 +35,9 @@ public class StatsFragment extends Fragment {
         String manacurvevalue = getManaCurve();
         manaCurveTv = rootView.findViewById(R.id.manacurve);
         manaCurveTv.setText(manacurvevalue);
+
+        deckCostTv = rootView.findViewById(R.id.deckcost);
+        deckCostTv.setText(getContext().getString(R.string.deckcost, deck.getDeckPrice()));
         return rootView;
     }
     public String getManaCurve(){
@@ -71,4 +74,9 @@ public class StatsFragment extends Fragment {
     public void updateManaCurveTv(){
         manaCurveTv.setText(getManaCurve());
     }
+
+    public void updateDeckPriceTv(){
+        deckCostTv.setText(getContext().getString(R.string.deckcost, deck.getDeckPrice()));
+    }
+
 }

@@ -47,7 +47,7 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
         String manaCost = "";
         String imgURL = "";
         String color = "";
-        Log.i("JH", "json : " + j);
+        float price = -1;
         try {
             name = j.getString("name");
             scryfallID = j.getString("id");
@@ -57,6 +57,7 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
             manaCost = j.getString("mana_cost");
             JSONObject imgUris = j.getJSONObject("image_uris");
             imgURL = imgUris.getString("border_crop");
+            price = Float.parseFloat(j.getString("eur"));
 
         } catch(NullPointerException e){
             Log.i("JH", "Null pointer");
@@ -64,7 +65,7 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
         catch (JSONException e) {
             e.printStackTrace();
         }
-        Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line));
+        Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line), price);
         card.setImgUrl(imgURL);
         handler.createCard(card);
         boolean inDeck = false;
@@ -73,7 +74,6 @@ public class AsyncScryfallJSONData extends AsyncScryfall implements View.OnClick
                 inDeck = true;
                 int count = activity.getAddedCards().get(card1);
                 activity.getAddedCards().put(card1, count + 1);
-                Log.i("JH", "" + count + 1);
             }
         }
         if(!inDeck){

@@ -38,6 +38,15 @@ public class CardActivity extends Activity {
         TextView title = findViewById(R.id.cardtitle);
         title.setText(name);
 
+        float price = card.getPrice();
+        TextView priceTv = findViewById(R.id.card_price);
+        if(price >= 0){
+            priceTv.setText(getString(R.string.card_price, price));
+        } else {
+            priceTv.setText(R.string.no_price);
+
+        }
+
         cardmultiplicityTv = findViewById(R.id.cardmultiplicity);
         Log.i("JH", "tv : " + cardmultiplicityTv.toString());
 

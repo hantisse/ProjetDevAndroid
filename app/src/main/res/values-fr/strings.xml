@@ -25,5 +25,7 @@
     </string-array>
     <string name="export_deck">Exporter</string>
     <string name="alert_quit">Êtes vous sûr de vouloir quitter?</string>
-    <string name="deckcost">Coût du deck : </string>
+    <string name="deckcost">Coût du deck : %1$.2f €</string>
+    <string name="card_price">Prix : %1$.2f</string>
+    <string name="no_price">Aucun prix trouvé</string>
 </resources>

@@ -85,4 +85,16 @@ public class Deck implements Serializable {
     public void setSideMultiplicities(HashMap<Card, Integer> sideMultiplicities) {
         this.sideMultiplicities = sideMultiplicities;
     }
+
+    public float getDeckPrice(){
+        float price = 0;
+        for(Card card : mainMultiplicities.keySet()){
+            if(card.getPrice()>=0) price += card.getPrice()*mainMultiplicities.get(card);
+        }
+        for(Card card : sideMultiplicities.keySet()){
+            if(card.getPrice() >= 0) price += card.getPrice()*sideMultiplicities.get(card);
+        }
+        return price;
+
+    }
 }
