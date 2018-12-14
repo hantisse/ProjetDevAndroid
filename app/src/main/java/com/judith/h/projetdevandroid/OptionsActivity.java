@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -33,6 +34,7 @@ public class OptionsActivity extends Activity implements AdapterView.OnItemSelec
     private static final int ENG_LANG = 1;
     private static final int FR_LANG = 2;
 
+    private SharedPreferences preferences;
     private LinearLayout mRelativeLayout;
     private Button mButton;
     private PopupWindow mPopupWindow;
@@ -43,6 +45,8 @@ public class OptionsActivity extends Activity implements AdapterView.OnItemSelec
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options);
+
+        preferences = getApplication().getSharedPreferences(MainMenuActivity.PREF_NAME, MODE_PRIVATE);
 
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -118,9 +122,15 @@ public class OptionsActivity extends Activity implements AdapterView.OnItemSelec
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(position == ENG_LANG){
             setResult(MainMenuActivity.OPT_CHANGE_LANG_RESULT_CODE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("language","en");
+            editor.apply();
             setLocale("en");
         } else if(position == FR_LANG){
             setResult(MainMenuActivity.OPT_CHANGE_LANG_RESULT_CODE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("language","fr");
+            editor.apply();
             setLocale("fr");
         }
     }

@@ -6,10 +6,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +23,10 @@ import android.widget.EditText;
 
 import com.judith.h.projetdevandroid.editor.DeckEditor;
 
+import java.util.Locale;
+
 public class MainMenuActivity extends Activity {
+    public static final String PREF_NAME = "MTBbuilderPrefs";
     public static final int OPT_CHANGE_LANG_REQUEST_CODE = 10;
     public static final int OPT_CHANGE_LANG_RESULT_CODE = 11;
     public static final int NO_LANG_CHANGE = 12;
@@ -29,6 +35,13 @@ public class MainMenuActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = new Locale(getApplication().getSharedPreferences(PREF_NAME,MODE_PRIVATE).getString("language", conf.locale.getLanguage()));
+        res.updateConfiguration(conf, dm);
+
 
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
                 != PackageManager.PERMISSION_GRANTED ){
