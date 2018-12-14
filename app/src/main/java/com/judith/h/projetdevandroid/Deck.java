@@ -2,12 +2,14 @@ package com.judith.h.projetdevandroid;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Deck implements Serializable {
     //TODO supprimer les arraylists:  inutile;
     private int DeckId;
     private String deckName;
+    private String creationDate;
     private ArrayList<Card> main;
     private ArrayList<Card> side;
     private HashMap<Card,Integer> mainMultiplicities;
@@ -96,5 +98,13 @@ public class Deck implements Serializable {
         }
         return price;
 
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
     }
 }

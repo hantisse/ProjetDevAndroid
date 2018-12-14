@@ -64,6 +64,7 @@ public class DeckEditor extends FragmentActivity {
             } catch (NullPointerException e){
                 deck = new Deck(deck_name);
                 handler.createDeck(deck);
+                setResult(EDIT_DECK_RESULT);
             }
         }
 
@@ -81,6 +82,7 @@ public class DeckEditor extends FragmentActivity {
                 for (Card card : cardAddedSide){
                     handler.addCardInDeck(deck, card, deck.getSideMultiplicities().get(card), "side");
                 }
+                handler.updateModificationDate(deck);
                 setResult(EDIT_DECK_RESULT);
             }
         });

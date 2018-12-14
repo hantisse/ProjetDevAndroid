@@ -15,8 +15,10 @@ import android.widget.EditText;
 import com.judith.h.projetdevandroid.editor.DeckEditor;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
-public class DeckListActivity extends Activity {
+public class DeckListActivity extends Activity implements View.OnClickListener {
 
     private RecyclerView deckList;
     private RecyclerView.Adapter deckAdapter;
@@ -42,53 +44,61 @@ public class DeckListActivity extends Activity {
 
         DecksDataBaseHelper handler = new DecksDataBaseHelper(this);
         decks = (ArrayList<Deck>) handler.getAllDecks();
+        // Sorting
+        Collections.sort(decks, new Comparator<Deck>() {
+            @Override
+            public int compare(Deck deck2, Deck deck1)
+            {
+                return  deck1.getCreationDate().compareTo(deck2.getCreationDate());
+            }
+        });
 
         deckAdapter = new DeckRecyclerAdapter(decks, this);
         deckList.setAdapter(deckAdapter);
 
         Button newDeck_button = (Button)findViewById(R.id.newDeckButton2);
 
-        newDeck_button.setOnClickListener(new View.OnClickListener() {
+        newDeck_button.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(final View v) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+        LayoutInflater layoutInflater = LayoutInflater.from(v.getContext());
+        View promptView = layoutInflater.inflate(R.layout.text_input, null);
+
+        builder.setView(promptView);
+
+        final EditText input = (EditText)promptView.findViewById(R.id.decknameinput);
+
+        // Set up the buttons
+        builder.setCancelable(false).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(final View v) {
+            public void onClick(DialogInterface dialog, int id) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-
-                LayoutInflater layoutInflater = LayoutInflater.from(v.getContext());
-                View promptView = layoutInflater.inflate(R.layout.text_input, null);
-
-                builder.setView(promptView);
-
-                final EditText input = (EditText)promptView.findViewById(R.id.decknameinput);
-
-                // Set up the buttons
-                builder.setCancelable(false).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        dialog.dismiss();
-                        String deckName = input.getText().toString();
-                        Intent intent = new Intent(v.getContext(),DeckEditor.class);
-                        intent.putExtra("deck_name", deckName);
-                        startActivityForResult(intent, DeckEditor.EDIT_DECK_REQUEST);
+                dialog.dismiss();
+                String deckName = input.getText().toString();
+                Intent intent = new Intent(v.getContext(),DeckEditor.class);
+                intent.putExtra("deck_name", deckName);
+                startActivityForResult(intent, DeckEditor.EDIT_DECK_REQUEST);
 
 
-                    }
-                });
-
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-
-                });
-
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
             }
         });
 
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     @Override

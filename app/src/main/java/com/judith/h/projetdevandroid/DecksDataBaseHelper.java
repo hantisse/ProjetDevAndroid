@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -358,8 +359,10 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_DECK_NAME, deck.getDeckName());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
         Date currentTime = Calendar.getInstance().getTime();
-        values.put(KEY_DECK_CREATED_AT, currentTime.getTime());
+        String currentTimeFormatted = format.format(currentTime);
+        values.put(KEY_DECK_CREATED_AT, "" + currentTimeFormatted);
 
         // insert row
         long deck_id = db.insert(TABLE_DECKS, null, values);
@@ -388,6 +391,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 Deck deck = new Deck();
                 deck.setDeckId(c.getInt(c.getColumnIndex(KEY_DECK_ID)));
                 deck.setDeckName(c.getString(c.getColumnIndex(KEY_DECK_NAME)));
+                deck.setCreationDate(c.getString(c.getColumnIndex(KEY_DECK_CREATED_AT)));
                 this.deckUpdateContent(deck);
                 decks.add(deck);
             } while (c.moveToNext());
@@ -517,4 +521,26 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     *
+     * @param deck deck quelconque
+     * @return 0 si pb;
+     */
+    public int updateModificationDate(Deck deck){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+        Date currentTime = Calendar.getInstance().getTime();
+        String currentTimeFormatted = format.format(currentTime);
+        values.put(KEY_DECK_CREATED_AT, "" + currentTimeFormatted);
+
+        // updating row
+        int result = db.update(TABLE_DECKS, values, KEY_DECK_ID + " = ?",
+                new String[] { String.valueOf(deck.getDeckId()) });
+
+        db.close();
+        return result;
+    }
 }
