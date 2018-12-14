@@ -13,6 +13,7 @@ public class Card implements Serializable {
     private String imgUrl;
     private String manaCost;
     private String colorIdentity;
+    private float price;
 
     public Card(){cardId = -1;}
 
@@ -88,4 +89,10 @@ public class Card implements Serializable {
     public void setColorIdentity(String color) {
         this.colorIdentity = color;
     }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) { this.price = price; }
 }

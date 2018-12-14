@@ -41,6 +41,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
     private static final String KEY_CARD_IMAGE_URL = "card_img_url";
     private static final String KEY_CARD_MANA_COST = "card_mana_cost";
     private static final String KEY_CARD_COLOR_IDENTITY = "card_color_identity";
+    private static final String KEY_CARD_PRICE = "card_price";
 
     // DECKS Table - Column Names
     private static final String KEY_DECK_NAME = "deck_name";
@@ -61,7 +62,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
             + TABLE_CARDS + "(" + KEY_CARD_ID + " INTEGER PRIMARY KEY," + KEY_CARD_NAME
             + " TEXT," + KEY_CARD_SCRYFALL_ID + " TEXT, " + KEY_CARD_CMC + " INTEGER,"
             + KEY_CARD_TYPES + " TEXT, " + KEY_CARD_IMAGE_URL + " TEXT, "
-            + KEY_CARD_MANA_COST + " TEXT, " + KEY_CARD_COLOR_IDENTITY + " TEXT " + ")";
+            + KEY_CARD_MANA_COST + " TEXT, " + KEY_CARD_COLOR_IDENTITY + " TEXT, " + KEY_CARD_PRICE + " REAL " + ")";
 
     // DECKS Table Create Statement
     private static final String CREATE_TABLE_DECKS = "CREATE TABLE "
@@ -129,6 +130,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
             values.put(KEY_CARD_IMAGE_URL, card.getImgUrl());
             values.put(KEY_CARD_MANA_COST, card.getManaCost());
             values.put(KEY_CARD_COLOR_IDENTITY, card.getColorIdentity());
+            values.put(KEY_CARD_PRICE, card.getPrice());
 
             // insert row
             card_id = db.insert(TABLE_CARDS, null, values);
@@ -169,6 +171,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
             card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
             card.setManaCost((c.getString(c.getColumnIndex(KEY_CARD_MANA_COST))));
             card.setColorIdentity((c.getString(c.getColumnIndex(KEY_CARD_COLOR_IDENTITY))));
+            card.setPrice(c.getFloat(c.getColumnIndex(KEY_CARD_PRICE)));
         }
         c.close();
         db.close();
@@ -202,6 +205,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
                 card.setManaCost((c.getString(c.getColumnIndex(KEY_CARD_MANA_COST))));
                 card.setColorIdentity((c.getString(c.getColumnIndex(KEY_CARD_COLOR_IDENTITY))));
+                card.setPrice(c.getFloat(c.getColumnIndex(KEY_CARD_PRICE)));
 
                 // adding to card list
                 cards.add(card);
@@ -245,6 +249,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
                 card.setManaCost((c.getString(c.getColumnIndex(KEY_CARD_MANA_COST))));
                 card.setColorIdentity((c.getString(c.getColumnIndex(KEY_CARD_COLOR_IDENTITY))));
+                card.setPrice(c.getFloat(c.getColumnIndex(KEY_CARD_PRICE)));
 
                 // adding to card list
                 cards.add(card);
@@ -289,6 +294,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
                 card.setImgUrl((c.getString(c.getColumnIndex(KEY_CARD_IMAGE_URL))));
                 card.setManaCost((c.getString(c.getColumnIndex(KEY_CARD_MANA_COST))));
                 card.setColorIdentity((c.getString(c.getColumnIndex(KEY_CARD_COLOR_IDENTITY))));
+                card.setPrice(c.getFloat(c.getColumnIndex(KEY_CARD_PRICE)));
 
                 // adding to card list
                 cards.add(card);
@@ -321,6 +327,7 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
         values.put(KEY_CARD_IMAGE_URL, card.getImgUrl());
         values.put(KEY_CARD_MANA_COST, card.getManaCost());
         values.put(KEY_CARD_COLOR_IDENTITY, card.getColorIdentity());
+        values.put(KEY_CARD_PRICE, card.getPrice());
 
         // updating row
         int result = db.update(TABLE_CARDS, values, KEY_CARD_ID + " = ?",
