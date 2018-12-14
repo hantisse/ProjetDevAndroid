@@ -54,8 +54,6 @@ public class OptionsActivity extends Activity implements AdapterView.OnItemSelec
 
         mButton = (Button) findViewById(R.id.creditsbutton);
 
-        Log.i("CARIBOU","relative layout : " + mRelativeLayout);
-
         // Set a click listener for the text view
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override

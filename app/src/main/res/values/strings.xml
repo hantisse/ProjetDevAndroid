@@ -28,4 +28,7 @@
     <string name="deckcost">Deck cost : %1$.2f</string>
     <string name="card_price">Price : %1$.2f €</string>
     <string name="no_price">No price found</string>
+    <string name="card_search_add_card">Add</string>
+    <string name="card_search_more">Details</string>
+    <string name="card_added_msg">Card added !</string>
 </resources>

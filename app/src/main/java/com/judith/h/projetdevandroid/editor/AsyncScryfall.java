@@ -37,7 +37,6 @@ public abstract class AsyncScryfall extends AsyncTask<String, Void, JSONObject> 
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
-                Log.i("JH", "result : " + result);
             }
             try {
                 json = new JSONObject(result);

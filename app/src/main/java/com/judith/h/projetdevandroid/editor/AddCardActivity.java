@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.judith.h.projetdevandroid.Card;
 import com.judith.h.projetdevandroid.Deck;
@@ -19,11 +20,13 @@ import com.judith.h.projetdevandroid.R;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class AddCardActivity extends Activity implements View.OnClickListener {
     private HashMap<Card, Integer> addedCards;
     private Deck deck;
     private String deckPart;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,4 +79,11 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
         return deck;
     }
 
+    public ListView getListView() {
+        return listView;
+    }
+
+    public void setListView(ListView lv){
+        listView = lv;
+    }
 }

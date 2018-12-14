@@ -28,4 +28,9 @@
     <string name="deckcost">Coût du deck : %1$.2f €</string>
     <string name="card_price">Prix : %1$.2f</string>
     <string name="no_price">Aucun prix trouvé</string>
+    <string name="card_search_add_card">Ajouter</string>
+    <string name="card_search_more">Détails</string>
+    <string name="card_added_msg">Carte ajoutée !</string>
+
+
 </resources>
