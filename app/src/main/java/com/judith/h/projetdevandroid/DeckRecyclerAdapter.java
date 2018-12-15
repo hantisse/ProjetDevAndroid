@@ -72,8 +72,12 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
                 int deckId = deckDataset.get(holder.getAdapterPosition()).getDeckId();
                 DecksDataBaseHelper decksDataBaseHelper = new DecksDataBaseHelper(v.getContext());
                 decksDataBaseHelper.deleteDeck(deckId);
+                lastClickedDeck.findViewById(R.id.deckDeleteButton).setVisibility(View.GONE);
+                lastClickedDeck.findViewById(R.id.deckUpdateButton).setVisibility(View.GONE);
                 deckDataset.remove(holder.getAdapterPosition());
                 notifyDataSetChanged();
+
+
             }
         });
 
