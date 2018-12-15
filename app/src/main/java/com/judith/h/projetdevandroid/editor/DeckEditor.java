@@ -280,15 +280,25 @@ public class DeckEditor extends FragmentActivity {
         ArrayList<Card> main = deck.getMain();
         ArrayList<Card> side = deck.getSide();
         try {
-            File file = new File(Environment.getExternalStorageDirectory() + "/" + filename);
-            Log.i("CARIBOU", Environment.getExternalStorageDirectory() + "/" + filename);
+            String dirName = "MTG DeckBuilder";
+            File directory = new File(Environment.getExternalStorageDirectory(), dirName);
+
+            /*if directory doesn't exist, create it*/
+            if(!directory.exists())
+                directory.mkdirs();
+
+            File file = new File(directory , filename);
+            Log.i("CARIBOU", directory.getAbsolutePath());
             FileWriter fileWriter = new FileWriter(file, true);
             for (Card card:main) {
                 fileWriter.write("" + deck.getMainMultiplicities().get(card) + " " + card.getName());
+                fileWriter.write( "\n");
             }
             fileWriter.write("Sideboard");
+            fileWriter.write( "\n");
             for (Card card:side) {
                 fileWriter.write("" + deck.getSideMultiplicities().get(card) + " " + card.getName());
+                fileWriter.write( "\n");
             }
             fileWriter.flush();
             fileWriter.close();
