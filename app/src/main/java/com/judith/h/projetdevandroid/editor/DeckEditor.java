@@ -148,6 +148,7 @@ public class DeckEditor extends FragmentActivity {
             if((bundle != null)){
                 String deckPart = data.getStringExtra("deck_part");
                 addedCards = (HashMap<Card, Integer>) bundle.get("added_cards");
+                ArrayList<Card> toRemoveFromAddedCards = new ArrayList<>();
                 if(deckPart.equals("main")){
                     for(Card card : addedCards.keySet()){
                         boolean inDeck = false;
@@ -156,7 +157,7 @@ public class DeckEditor extends FragmentActivity {
                             if(card1.getCardId() == card.getCardId()){
                                 inDeck = true;
                                 addedCards.put(card1, addedCards.get(card));
-                                addedCards.remove(card);
+                                toRemoveFromAddedCards.add(card);
                                 card = card1;
                             }
                         }
@@ -173,6 +174,7 @@ public class DeckEditor extends FragmentActivity {
                             cardAddedMain.add(card);
                         }
                     }
+                    addedCards.keySet().removeAll(toRemoveFromAddedCards);
                     updateFilterAfterCardAdded(addedCards, "main");
                     adapter.getMain().getmAdapter().notifyDataSetChanged();
                 } else if(deckPart.equals("side")){
@@ -182,7 +184,7 @@ public class DeckEditor extends FragmentActivity {
                             if(card1.getCardId() == card.getCardId()){
                                 inDeck = true;
                                 addedCards.put(card1, addedCards.get(card));
-                                addedCards.remove(card);
+                                toRemoveFromAddedCards.add(card);
                                 card = card1;
                             }
                         }
@@ -196,6 +198,7 @@ public class DeckEditor extends FragmentActivity {
                             cardAddedSide.add(card);
                         }
                     }
+                    addedCards.keySet().removeAll(toRemoveFromAddedCards);
                     updateFilterAfterCardAdded(addedCards, "side");
                     adapter.getSide().getmAdapter().notifyDataSetChanged();
                 }

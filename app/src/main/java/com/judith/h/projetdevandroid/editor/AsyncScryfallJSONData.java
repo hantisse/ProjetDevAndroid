@@ -21,13 +21,13 @@ import java.util.ArrayList;
 public class AsyncScryfallJSONData extends AsyncScryfall{
     private AddCardActivity activity;
     private DecksDataBaseHelper handler;
-    private CardSearchAdapter.CardSearchHolder holder;
+    private CardSearchRecyclerAdapter.CardSearchHolder holder;
     private ProgressDialog progDailog;
 
     //savois si le bouton add a été pressé
     private boolean add;
 
-    public AsyncScryfallJSONData(AddCardActivity activity, CardSearchAdapter.CardSearchHolder holder, boolean add){
+    public AsyncScryfallJSONData(AddCardActivity activity, CardSearchRecyclerAdapter.CardSearchHolder holder, boolean add){
         this.activity = activity;
         handler = new DecksDataBaseHelper(activity);
         this.holder = holder;
@@ -61,40 +61,38 @@ public class AsyncScryfallJSONData extends AsyncScryfall{
             type_line = j.getString("type_line");
             cmc = j.getInt("cmc");
             description = j.getString("oracle_text");
-            color =  j.getString("color_identity");
+            color = j.getString("color_identity");
             manaCost = j.getString("mana_cost");
             JSONObject imgUris = j.getJSONObject("image_uris");
             imgURL = imgUris.getString("border_crop");
             price = Float.parseFloat(j.getString("eur"));
 
 
-        } catch(NullPointerException e){
+        } catch (NullPointerException e) {
             Log.i("JH", "Null pointer");
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
-            Log.e("JSONExcetoption",e.toString());
+            Log.e("JSONExcetoption", e.toString());
 
         }
         holder.setDescriptionText(description);
-        progDailog.dismiss();
 
         final Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line), price);
         card.setImgUrl(imgURL);
 
-        LinearLayout.LayoutParams mParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
-        activity.getListView().setLayoutParams(mParam);
         holder.getAddButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 addCardToDeck(card);
             }
         });
-        if(add){
+        if (add) {
             addCardToDeck(card);
         }
+        progDailog.dismiss();
+
     }
+
 
     public void addCardToDeck(Card card){
         Log.i("JH", "ajout API");
@@ -109,11 +107,10 @@ public class AsyncScryfallJSONData extends AsyncScryfall{
             }
         }
         if(!inDeck){
+            Log.i("JH", "put card");
             activity.getAddedCards().put(card, 1);
         }
-
         Toast.makeText(activity, R.string.card_added_msg + card.getName(), Toast.LENGTH_SHORT).show();
-
     }
 
     private ArrayList<String> readTypeLine(String typeLine){

@@ -1,17 +1,15 @@
 package com.judith.h.projetdevandroid.editor;
 
 
-import android.text.Layout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.judith.h.projetdevandroid.R;
 
@@ -33,7 +31,7 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
     protected void onPostExecute(JSONObject j) {
 //        final ListView lv = activity.findViewById(R.id.cards_found);
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>(lv.getContext(),
-//                R.layout.card_search_list_element);
+//                R.layout.card_list_item);
 //        lv.setAdapter(adapter);
 //        try {
 //            JSONArray ja = j.getJSONArray("data");
@@ -68,6 +66,7 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
 //            }
 //        });
 
+
         ArrayList<String> cardNames = new ArrayList<>();
         try {
             JSONArray ja = j.getJSONArray("data");
@@ -80,23 +79,12 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
         catch (JSONException e) {
             e.printStackTrace();
         }
-        ListView lv = activity.findViewById(R.id.cards_found);
-        activity.setListView(lv);
-        CardSearchAdapter adapter = new CardSearchAdapter(activity, R.layout.card_search_item, cardNames);
-        lv.setAdapter(adapter);
 
-
-        Button search_button = activity.findViewById(R.id.add_card_button_ac);
-        final EditText search_bar = activity.findViewById(R.id.search_bar);
-
-        search_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = "https://api.scryfall.com/cards/autocomplete?q=" + search_bar.getText();
-                new AsyncScryfallJSONSearch(activity).execute(url);
-            }
-        });
-
+        RecyclerView recyclerView = activity.findViewById(R.id.cards_found);
+        CardSearchRecyclerAdapter adapter = new CardSearchRecyclerAdapter(activity, cardNames);
+        recyclerView.setAdapter(adapter);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
+        recyclerView.setLayoutManager(layoutManager);
 
     }
 

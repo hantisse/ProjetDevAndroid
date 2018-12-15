@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -41,10 +42,8 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
 
         addedCards = new HashMap<>();
 
-
         Button addButton = findViewById(R.id.add_card_button_ac);
         addButton.setOnClickListener(this);
-
 
     }
 
@@ -54,11 +53,13 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
         EditText cardSearched = findViewById(R.id.search_bar);
         String url = "https://api.scryfall.com/cards/autocomplete?q=" + cardSearched.getText();
         task.execute(url);
+        hideKeyboard(this);
     }
 
     @Override
     public void onBackPressed(){
 
+        Log.i("JH", "Back pressed");
         Intent intent = new Intent();
         if(!addedCards.isEmpty()) {
             intent.putExtra("added_cards", addedCards);
@@ -85,5 +86,16 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
 
     public void setListView(ListView lv){
         listView = lv;
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
