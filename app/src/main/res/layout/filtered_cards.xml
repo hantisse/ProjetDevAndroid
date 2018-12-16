@@ -10,11 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="FILTER"
-        android:background="#FF0080"/>
+        android:background="#79b8f4"
+        android:textSize="18sp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10sp"/>
 
     <ListView
         android:id="@+id/filtered_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

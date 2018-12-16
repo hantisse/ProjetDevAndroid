@@ -7,9 +7,11 @@
 
     <TextView
         android:id="@+id/deckTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Deck Name"/>
+        android:textSize="18sp"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"

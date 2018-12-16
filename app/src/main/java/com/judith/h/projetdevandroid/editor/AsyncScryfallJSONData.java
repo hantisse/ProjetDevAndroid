@@ -46,15 +46,17 @@ public class AsyncScryfallJSONData extends AsyncScryfall{
 
     @Override
     protected void onPostExecute(JSONObject j) {
+        //TODO mettre string not found dans string.xml
         String scryfallID = "Not Found";
         String name = "Not Found";
-        String type_line = "";
+        String type_line = "Not found";
         int cmc = -1;
-        String manaCost = "";
-        String imgURL = "";
-        String color = "";
+        String manaCost = "Not found";
+        String imgURL = "Not found";
+        String color = "Not found";
         float price = -1;
-        String description = "";
+        String description = "Not found";
+        String stats = "";
         try {
             name = j.getString("name");
             scryfallID = j.getString("id");
@@ -66,6 +68,7 @@ public class AsyncScryfallJSONData extends AsyncScryfall{
             JSONObject imgUris = j.getJSONObject("image_uris");
             imgURL = imgUris.getString("border_crop");
             price = Float.parseFloat(j.getString("eur"));
+            stats = j.getString("power") + "/" + j.getString("toughness");
 
 
         } catch (NullPointerException e) {
@@ -75,7 +78,7 @@ public class AsyncScryfallJSONData extends AsyncScryfall{
             Log.e("JSONExcetoption", e.toString());
 
         }
-        holder.setDescriptionText(description);
+        holder.setDescriptionText(activity.getString(R.string.description, manaCost, type_line + " " + stats, description));
 
         final Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line), price);
         card.setImgUrl(imgURL);
@@ -110,7 +113,7 @@ public class AsyncScryfallJSONData extends AsyncScryfall{
             Log.i("JH", "put card");
             activity.getAddedCards().put(card, 1);
         }
-        Toast.makeText(activity, R.string.card_added_msg + card.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, activity.getString(R.string.card_added_msg) + card.getName(), Toast.LENGTH_SHORT).show();
     }
 
     private ArrayList<String> readTypeLine(String typeLine){
@@ -119,7 +122,6 @@ public class AsyncScryfallJSONData extends AsyncScryfall{
         StringBuilder sb = new StringBuilder();
 
         String[] stringSplit = typesArray[0].split(" ");
-        //TODO traiter les cartes à deux cotés
         if (stringSplit[0].equals("Legendary")){
             for(int k = 1; k <stringSplit.length; k++){
                 sb.append(stringSplit[k]);

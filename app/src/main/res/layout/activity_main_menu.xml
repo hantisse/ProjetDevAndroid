@@ -2,37 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".MainMenuActivity"
     android:orientation="vertical"
-    android:layout_gravity="center">
+    android:layout_gravity="center_vertical"
+    android:paddingBottom="30dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:layout_gravity="center"
+        android:paddingBottom="50dp"
+        android:textSize="35sp"
+        android:textColor="#162750"
+        android:textStyle="bold"/>
 
     <Button
         android:id="@+id/newdeckbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_deck"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:text="@string/new_deck" />
 
     <Button
         android:id="@+id/decksbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Decks"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:text="Decks" />
 
     <Button
         android:id="@+id/optionsbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Options"/>
-
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:text="Options" />
 
 
 

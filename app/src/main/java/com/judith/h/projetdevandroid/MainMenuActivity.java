@@ -24,6 +24,7 @@ import android.widget.EditText;
 import com.judith.h.projetdevandroid.editor.DeckEditor;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainMenuActivity extends Activity {
     public static final String PREF_NAME = "MTBbuilderPrefs";
@@ -56,7 +57,6 @@ public class MainMenuActivity extends Activity {
             ActivityCompat.requestPermissions( this, new String[] {  Manifest.permission.READ_EXTERNAL_STORAGE  }, 48 );
         }
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main_menu);
@@ -96,6 +96,7 @@ public class MainMenuActivity extends Activity {
                 });
 
                 AlertDialog alertDialog = builder.create();
+                Objects.requireNonNull(alertDialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 alertDialog.show();
             }
         });

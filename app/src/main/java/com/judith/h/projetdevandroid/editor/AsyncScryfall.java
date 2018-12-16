@@ -3,7 +3,6 @@ package com.judith.h.projetdevandroid.editor;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,10 +28,10 @@ public abstract class AsyncScryfall extends AsyncTask<String, Void, JSONObject> 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream()); // Stream
             result = readStream(in); // Read stream
         } catch (MalformedURLException e) {
-            Log.i("JH", "exception1");
+            Log.i("JH", "Malformed URL");
             e.printStackTrace();
         } catch (IOException e) {
-            Log.i("JH", "exception2");
+            Log.i("JH", "IOE exception");
             e.printStackTrace();
         } finally {
             if (urlConnection != null) {
@@ -47,13 +46,11 @@ public abstract class AsyncScryfall extends AsyncTask<String, Void, JSONObject> 
                 e.printStackTrace();
             }
 
-
-            return json; // returns the result
-
         }
+        return json;
     }
 
-    protected String readStream(InputStream is) throws IOException {
+    private String readStream(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
         BufferedReader r = new BufferedReader(new InputStreamReader(is),1000);
         for (String line = r.readLine(); line != null; line =r.readLine()){

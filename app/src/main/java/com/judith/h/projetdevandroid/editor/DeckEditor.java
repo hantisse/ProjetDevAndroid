@@ -11,11 +11,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +32,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 
 public class DeckEditor extends FragmentActivity {
@@ -40,19 +45,22 @@ public class DeckEditor extends FragmentActivity {
     public static final int EDIT_DECK_RESULT = 21;
 
 
-    EditorAdapter adapter;
-    ViewPager pager;
-    Deck deck;
-    DecksDataBaseHelper handler;
-    ArrayList<Card> cardAddedMain;
-    ArrayList<Card> cardAddedSide;
+    private EditorAdapter adapter;
+    private Deck deck;
+    private DecksDataBaseHelper handler;
+    private ArrayList<Card> cardAddedMain;
+    private ArrayList<Card> cardAddedSide;
     private DrawerLayout filter_drawer;
-    NavigationView navView;
+    private NavigationView navView;
+    private boolean deckSaved = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deck_editor);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         Intent intent = getIntent();
         String deck_name = intent.getStringExtra("deck_name");
         handler = new DecksDataBaseHelper(this);
@@ -71,7 +79,6 @@ public class DeckEditor extends FragmentActivity {
         cardAddedMain = new ArrayList<>();
         cardAddedSide = new ArrayList<>();
 
-        TextView deckName = findViewById(R.id.deckName);
         Button saveButton = findViewById(R.id.save_deck_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,8 +89,11 @@ public class DeckEditor extends FragmentActivity {
                 for (Card card : cardAddedSide){
                     handler.addCardInDeck(deck, card, deck.getSideMultiplicities().get(card), "side");
                 }
+                Toast.makeText(v.getContext(), getString(R.string.deck_saved), Toast.LENGTH_SHORT).show();
+                handler.updateDeckName(deck);
                 handler.updateModificationDate(deck);
                 setResult(EDIT_DECK_RESULT);
+                deckSaved = true;
             }
         });
 
@@ -95,11 +105,54 @@ public class DeckEditor extends FragmentActivity {
             }
         });
 
+        final TextView deckName = findViewById(R.id.deckName);
         deckName.setText(deck_name);
+        deckName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                LayoutInflater layoutInflater = LayoutInflater.from(v.getContext());
+                View promptView = layoutInflater.inflate(R.layout.text_input, null);
+
+                builder.setView(promptView);
+
+                final EditText input = (EditText)promptView.findViewById(R.id.decknameinput);
+                input.setText(deck.getDeckName());
+                input.setSelection(input.getText().length());
+
+                // Set up the buttons
+                builder.setCancelable(false).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                      if(!deck.getDeckName().contentEquals(input.getText())){
+                          deck.setDeckName(String.valueOf(input.getText()));
+                          deckName.setText(deck.getDeckName());
+                          deckSaved = false;
+                      }
+                      dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+
+                });
+
+                AlertDialog alertDialog = builder.create();
+                Objects.requireNonNull(alertDialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                alertDialog.show();
+            }
+        });
+
 
 
         filter_drawer = findViewById(R.id.drawer_layout);
 
+        //mise à jour de ma vue lors dde la séléection d'un filtre
         navView = (NavigationView)findViewById(R.id.nav_filter);
         navView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -131,7 +184,7 @@ public class DeckEditor extends FragmentActivity {
                 });
 
         adapter = new EditorAdapter(getSupportFragmentManager(), deck);
-        pager = (ViewPager)findViewById(R.id.pager);
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
         //pour que le pager cache les 2 fragments non visibles
         pager.setOffscreenPageLimit(2);
         pager.setAdapter(adapter);
@@ -146,13 +199,15 @@ public class DeckEditor extends FragmentActivity {
             Bundle bundle = data.getExtras();
             HashMap<Card, Integer> addedCards;
             if((bundle != null)){
+                boolean deckModified = false;
                 String deckPart = data.getStringExtra("deck_part");
                 addedCards = (HashMap<Card, Integer>) bundle.get("added_cards");
                 ArrayList<Card> toRemoveFromAddedCards = new ArrayList<>();
                 if(deckPart.equals("main")){
                     for(Card card : addedCards.keySet()){
                         boolean inDeck = false;
-                        //On vérifie si la carte est déja dans le deck et on récupère l référence de la carte
+                        int baseMult = 0;
+                        //On vérifie si la carte est déja dans le deck et on récupère la référence de la carte
                         for(Card card1 : deck.getMainMultiplicities().keySet()){
                             if(card1.getCardId() == card.getCardId()){
                                 inDeck = true;
@@ -160,26 +215,35 @@ public class DeckEditor extends FragmentActivity {
                                 toRemoveFromAddedCards.add(card);
                                 card = card1;
                             }
+                            baseMult = addedCards.get(card);
                         }
                         //si elle n'est pas dans le deck on l'ajoute
-                        if(!inDeck){
-                            deck.getMainMultiplicities().put(card,addedCards.get(card));
+                        if (!inDeck) {
+                            deckModified = true;
+                            deck.getMainMultiplicities().put(card, addedCards.get(card));
                             deck.getMain().add(card);
                             cardAddedMain.add(card);
                             Log.i("JH", "card nor in deck");
-                        //sinon, on incrémente la multiplicité de la carte référencée dans le deck
-                        } else {
+                            //sinon, on incrémente la multiplicité de la carte référencée dans le deck
+                        } else if(baseMult != 0){
+                            deckModified = true;
                             int count = deck.getMainMultiplicities().get(card);
                             deck.getMainMultiplicities().put(card, count + addedCards.get(card));
                             cardAddedMain.add(card);
                         }
+
                     }
-                    addedCards.keySet().removeAll(toRemoveFromAddedCards);
-                    updateFilterAfterCardAdded(addedCards, "main");
-                    adapter.getMain().getmAdapter().notifyDataSetChanged();
+                    if(deckModified) {
+                        addedCards.keySet().removeAll(toRemoveFromAddedCards);
+                        updateFilterAfterCardAdded(addedCards, "main");
+                        adapter.getMain().getmAdapter().notifyDataSetChanged();
+                        deckSaved = false;
+                    }
+
                 } else if(deckPart.equals("side")){
                     for(Card card : addedCards.keySet()){
                         boolean inDeck = false;
+                        int baseMult = 0;
                         for(Card card1 : deck.getSideMultiplicities().keySet()){
                             if(card1.getCardId() == card.getCardId()){
                                 inDeck = true;
@@ -187,20 +251,27 @@ public class DeckEditor extends FragmentActivity {
                                 toRemoveFromAddedCards.add(card);
                                 card = card1;
                             }
+                            baseMult = addedCards.get(card);
                         }
-                        if(!inDeck){
-                            deck.getSideMultiplicities().put(card,addedCards.get(card));
+                        if (!inDeck) {
+                            deckModified = true;
+                            deck.getSideMultiplicities().put(card, addedCards.get(card));
                             deck.getSide().add(card);
                             cardAddedSide.add(card);
-                        } else {
+                        } else if(baseMult != 0){
+                            deckModified = true;
                             int count = deck.getSideMultiplicities().get(card);
                             deck.getSideMultiplicities().put(card, count + addedCards.get(card));
                             cardAddedSide.add(card);
                         }
+
                     }
-                    addedCards.keySet().removeAll(toRemoveFromAddedCards);
-                    updateFilterAfterCardAdded(addedCards, "side");
-                    adapter.getSide().getmAdapter().notifyDataSetChanged();
+                    if(deckModified) {
+                        deckSaved = false;
+                        addedCards.keySet().removeAll(toRemoveFromAddedCards);
+                        updateFilterAfterCardAdded(addedCards, "side");
+                        adapter.getSide().getmAdapter().notifyDataSetChanged();
+                    }
                 }
 
             }
@@ -209,47 +280,56 @@ public class DeckEditor extends FragmentActivity {
             Card card = (Card) bundle.get("card");
             String deckPart = (String) bundle.get("deck_part");
             int multiplicity = (int) bundle.get("card_multiplicity");
-            Log.i("JH", "nouvelle mult : " + multiplicity);
-            boolean inDeck = false;
 
             HashMap<Card, Integer> multiplicities;
             ArrayList<Card> deckCards;
-            if(bundle.get("deck_part").equals("side")){
-                multiplicities = deck.getSideMultiplicities();
-                deckCards = deck.getSide();
-            } else {
-                multiplicities = deck.getMainMultiplicities();
-                deckCards = deck.getMain();
-            }
-            for(Card card1 : multiplicities.keySet()){
-                if(card1.getCardId() == card.getCardId()){
-                    inDeck = true;
-                    card = card1;
-                }
-            }
-            if(!inDeck){
-                deckCards.add(card);
-            }
-            multiplicities.put(card, multiplicity);
-            if(deckPart.equals("main")){
-                cardAddedMain.add(card);
-            } else if(deckPart.equals("side")){
-                cardAddedSide.add(card);
-            }
 
-            HashMap<Card, Integer> hashmap = new HashMap<>();
-            hashmap.put(card, multiplicities.get(card));
-            updateFilterAfterCardAdded(hashmap, deckPart);
-            if(deckPart.equals("side")){
-                adapter.getSide().getmAdapter().notifyDataSetChanged();
-            } else {
-                adapter.getMain().getmAdapter().notifyDataSetChanged();
+            //ajoute / supprime des exemplaires de la carte dans le deck
+            if(deckPart != null && card != null) {
+                if (deckPart.equals("side")) {
+                    multiplicities = deck.getSideMultiplicities();
+                    deckCards = deck.getSide();
+                } else {
+                    multiplicities = deck.getMainMultiplicities();
+                    deckCards = deck.getMain();
+                }
+
+                for (Card card1 : multiplicities.keySet()) {
+                    if (card1.getCardId() == card.getCardId()) {
+                        card = card1;
+                    }
+                }
+
+                if(multiplicity <= 0){
+                    deckCards.remove(card);
+                }
+                if(multiplicities.get(card) != null && multiplicities.get(card) != multiplicity) {
+
+                    multiplicities.put(card, multiplicity);
+                    if (deckPart.equals("main")) {
+                        cardAddedMain.add(card);
+                    } else if (deckPart.equals("side")) {
+                        cardAddedSide.add(card);
+                    }
+                    deckSaved = false;
+
+                    HashMap<Card, Integer> hashmap = new HashMap<>();
+                    hashmap.put(card, multiplicities.get(card));
+
+                    updateFilterAfterCardAdded(hashmap, deckPart);
+
+                    if (deckPart.equals("side")) {
+                        adapter.getSide().getmAdapter().notifyDataSetChanged();
+                    } else {
+                        adapter.getMain().getmAdapter().notifyDataSetChanged();
+                    }
+                }
             }
 
         }
     }
 
-    private void updateFilterAfterCardAdded(HashMap addedMult, String deckPart){
+    private void updateFilterAfterCardAdded(HashMap<Card, Integer> addedMult, String deckPart){
         EditorFragment fragment;
         if(deckPart.equals("side")){
             fragment = adapter.getSide();
@@ -325,32 +405,36 @@ public class DeckEditor extends FragmentActivity {
 
     @Override
     public void onBackPressed(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if(!deckSaved) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View promptView = layoutInflater.inflate(R.layout.quit_alert, null);
-        builder.setView(promptView);
+            LayoutInflater layoutInflater = LayoutInflater.from(this);
+            View promptView = layoutInflater.inflate(R.layout.quit_alert, null);
+            builder.setView(promptView);
 
-        // Set up the buttons
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-                finish();
-                DeckEditor.super.onBackPressed();
-            }
-        });
+            // Set up the buttons
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                    finish();
+                    DeckEditor.super.onBackPressed();
+                }
+            });
 
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
 
-        });
+            });
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
 

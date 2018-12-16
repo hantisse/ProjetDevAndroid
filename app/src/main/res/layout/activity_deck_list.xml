@@ -14,6 +14,18 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/deck_actitivty_title"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:background="#68c72d"
+            android:textColor="#fff"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"/>
+
         <Button
             android:id="@+id/newDeckButton2"
             android:layout_width="match_parent"
@@ -24,6 +36,7 @@
             android:id="@+id/deckList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+            />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

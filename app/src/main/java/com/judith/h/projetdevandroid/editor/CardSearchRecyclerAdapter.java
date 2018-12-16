@@ -17,7 +17,7 @@ public class CardSearchRecyclerAdapter extends RecyclerView.Adapter<CardSearchRe
 
     private AddCardActivity activity;
     private ArrayList<String> cardNames;
-    boolean[] isClicked;
+    private boolean[] isClicked;
 
     public CardSearchRecyclerAdapter(AddCardActivity activity, ArrayList<String> cardNames){
         this.activity = activity;

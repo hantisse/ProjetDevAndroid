@@ -24,13 +24,17 @@
         <item>Français</item>
     </string-array>
     <string name="export_deck">Exporter</string>
-    <string name="alert_quit">Êtes vous sûr de vouloir quitter?</string>
+    <string name="alert_quit">Êtes vous sûr de vouloir quitter? Tous les changements faits depuis la dernière sauvegarde seront perdus</string>
     <string name="deckcost">Coût du deck : %1$.2f €</string>
     <string name="card_price">Prix : %1$.2f</string>
     <string name="no_price">Aucun prix trouvé</string>
     <string name="card_search_add_card">Ajouter</string>
     <string name="card_search_more">Détails</string>
     <string name="card_added_msg">Carte ajoutée !</string>
+    <string name="deck_saved">Deck sauvegardé !</string>
+    <string name="no_cards_found">Aucune cartes trouvées</string>
+    <string name="description">Coût en mana : %1$s\n%2$s\n\n%3$s </string>
+    <string name="deck_actitivty_title">Decks</string>
 
 
 </resources>
