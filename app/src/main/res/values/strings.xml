@@ -30,7 +30,7 @@
     <string name="no_price">No price found</string>
     <string name="card_search_add_card">Add</string>
     <string name="card_search_more">Details</string>
-    <string name="card_added_msg">Card added !</string>
+    <string name="card_added_msg">Card added : </string>
     <string name="deck_saved">Deck saved !</string>
     <string name="no_cards_found">No cards found</string>
     <string name="description">Mana cost : %1$s\n%2$s\n\n%3$s </string>

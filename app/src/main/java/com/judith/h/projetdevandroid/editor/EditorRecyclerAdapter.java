@@ -59,12 +59,10 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
             filterListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(view.getContext(),"Pressed " + filterListView.getAdapter().getItem(position),Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(view.getContext(), CardActivity.class);
                     intent.putExtra("card",filter.getCardByCardName((String)filterListView.getAdapter().getItem(position)));
                     if(deckPart.equals("side")){
-                        //recupère la multiplicité de la carte
-                        Log.i("JH", "mult : " + deck.getSideMultiplicities().get(filter.getCardByCardName((String)filterListView.getAdapter().getItem(position))));
+                        //transmet la multiplicité de la carte
                         intent.putExtra("card_multiplicity", deck.getSideMultiplicities().get(filter.getCardByCardName((String)filterListView.getAdapter().getItem(position))));
                     } else {
                         Card card = filter.getCardByCardName((String)filterListView.getAdapter().getItem(position));

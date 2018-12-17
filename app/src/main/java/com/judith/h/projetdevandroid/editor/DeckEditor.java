@@ -34,7 +34,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
+/*
+NB: La base de données n'est utilisée que pour charger les cartes à l'ouverture de l'éditeur et
+lors de la sauvegarde du deck.
+Les changements se font dynamiquement.
 
+ */
 public class DeckEditor extends FragmentActivity {
     public static final int ADD_CARD_REQUEST_CODE = 4;
     public static final int ADD_CARD_RESULT_CODE = 1;
@@ -228,7 +233,6 @@ public class DeckEditor extends FragmentActivity {
                             deck.getMainMultiplicities().put(card, addedCards.get(card));
                             deck.getMain().add(card);
                             cardAddedMain.add(card);
-                            Log.i("JH", "card nor in deck");
                             //sinon, on incrémente la multiplicité de la carte référencée dans le deck
                         } else if(baseMult != 0){
                             deckModified = true;
