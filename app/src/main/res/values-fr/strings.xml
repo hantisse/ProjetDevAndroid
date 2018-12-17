@@ -32,7 +32,7 @@
     <string name="card_search_more">Détails</string>
     <string name="card_added_msg">Carte ajoutée !</string>
     <string name="deck_saved">Deck sauvegardé !</string>
-    <string name="no_cards_found">Aucune cartes trouvées</string>
+    <string name="no_cards_found">Aucune carte trouvée</string>
     <string name="description">Coût en mana : %1$s\n%2$s\n\n%3$s </string>
     <string name="deck_actitivty_title">Decks</string>
 
