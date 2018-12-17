@@ -124,6 +124,10 @@ public class CardSearchRecyclerAdapter extends RecyclerView.Adapter<CardSearchRe
             return moreButton;
         }
 
+        public boolean[] getClicked(){
+            return isClicked;
+        }
+
     }
 
 }

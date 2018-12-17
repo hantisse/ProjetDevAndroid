@@ -1,6 +1,7 @@
 package com.judith.h.projetdevandroid.editor;
 
 
+import android.app.ProgressDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,6 +27,7 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
 
     public AsyncScryfallJSONSearch(AddCardActivity activity){
         this.activity = activity;
+        progDailog = new ProgressDialog(activity);
     }
 
     @Override
@@ -59,6 +61,8 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
             tv.setVisibility(View.VISIBLE);
 
         }
+
+        progDailog.dismiss();
 
     }
 

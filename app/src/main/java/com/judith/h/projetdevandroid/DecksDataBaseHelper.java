@@ -46,10 +46,6 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
 
     // DECKS Table - Column Names
     private static final String KEY_DECK_NAME = "deck_name";
-    /*
-    private static final String KEY_DECK_MAIN = "deck_main";
-    private static final String KEY_DECK_SIDE = "deck_side";
-    */
     private static final String KEY_DECK_CREATED_AT = "deck_creation_date";
 
     // CARD_DECKS Table - Column Names
@@ -92,11 +88,13 @@ public class DecksDataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        //Ajouter les modifications à chaque changement de version selon les lodifications faites
+        // en faisant un if(oldVersion < [prochaine version]
+        //permet le fait que l'utilisateur peut sauter des versions
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE " + TABLE_CARDS + " ADD COLUMN " + KEY_CARD_PRICE + " REAL");
+        }
 
-        // On Upgrade Drop Older Tables
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARDS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DECKS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD_DECK);
 
         // Create New Tables
         onCreate(db);

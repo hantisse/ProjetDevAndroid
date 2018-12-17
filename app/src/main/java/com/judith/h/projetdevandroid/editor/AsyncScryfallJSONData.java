@@ -22,7 +22,6 @@ public class AsyncScryfallJSONData extends AsyncScryfall{
     private AddCardActivity activity;
     private DecksDataBaseHelper handler;
     private CardSearchRecyclerAdapter.CardSearchHolder holder;
-    private ProgressDialog progDailog;
 
     //savois si le bouton add a été pressé
     private boolean add;
@@ -33,15 +32,6 @@ public class AsyncScryfallJSONData extends AsyncScryfall{
         this.holder = holder;
         this.add = add;
         progDailog = new ProgressDialog(activity);
-    }
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        progDailog.setMessage("Loading...");
-        progDailog.setIndeterminate(false);
-        progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progDailog.setCancelable(true);
-        progDailog.show();
     }
 
     @Override
@@ -82,6 +72,14 @@ public class AsyncScryfallJSONData extends AsyncScryfall{
 
         final Card card = new Card(name, scryfallID, cmc, manaCost, color, readTypeLine(type_line), price);
         card.setImgUrl(imgURL);
+
+        holder.getMoreButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.getClicked()[holder.getAdapterPosition()] = holder.getDescription().getVisibility() == View.GONE;
+                holder.getDescription().setVisibility(holder.getDescription().getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            }
+        });
 
         holder.getAddButton().setOnClickListener(new View.OnClickListener() {
             @Override

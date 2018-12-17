@@ -34,13 +34,15 @@
                 android:id="@+id/save_deck_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/save_deck"/>
+                android:text="@string/save_deck"
+                android:layout_weight="1"/>
 
             <Button
                 android:id="@+id/export_deck_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/export_deck"/>
+                android:text="@string/export_deck"
+                android:layout_weight="1"/>
         </LinearLayout>
 
 

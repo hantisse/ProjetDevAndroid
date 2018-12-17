@@ -1,5 +1,6 @@
 package com.judith.h.projetdevandroid.editor;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -16,6 +17,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public abstract class AsyncScryfall extends AsyncTask<String, Void, JSONObject> {
+
+    ProgressDialog progDailog;
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progDailog.setMessage("Loading...");
+        progDailog.setIndeterminate(false);
+        progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progDailog.setCancelable(true);
+        progDailog.show();
+    }
+
     @Override
     protected JSONObject doInBackground(String... strings) {
         JSONObject json = null;

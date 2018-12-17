@@ -19,6 +19,7 @@ import com.judith.h.projetdevandroid.editor.DeckEditor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Objects;
 
 public class DeckListActivity extends Activity implements View.OnClickListener {
 
@@ -101,6 +102,7 @@ public class DeckListActivity extends Activity implements View.OnClickListener {
         });
 
         AlertDialog alertDialog = builder.create();
+        Objects.requireNonNull(alertDialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
     }
 
