@@ -35,4 +35,5 @@
     <string name="no_cards_found">No cards found</string>
     <string name="description">Mana cost : %1$s\n%2$s\n\n%3$s </string>
     <string name="deck_actitivty_title">Decks</string>
+    <string name="options_actitivty_title">Options</string>
 </resources>

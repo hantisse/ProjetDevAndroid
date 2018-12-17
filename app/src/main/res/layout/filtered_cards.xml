@@ -9,9 +9,8 @@
         android:id="@+id/filter_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="FILTER"
         android:background="#79b8f4"
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:paddingLeft="10dp"
         android:paddingRight="10sp"/>
 
