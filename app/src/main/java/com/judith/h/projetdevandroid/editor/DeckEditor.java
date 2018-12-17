@@ -64,6 +64,8 @@ public class DeckEditor extends FragmentActivity {
         Intent intent = getIntent();
         String deck_name = intent.getStringExtra("deck_name");
         handler = new DecksDataBaseHelper(this);
+
+        //Soit créé un nouveau deck avec le nom entré, soit charge le eck depuis la base de données
         if(intent.getExtras() != null){
             try{
                 deck = (Deck)intent.getExtras().get("deck");
@@ -79,6 +81,7 @@ public class DeckEditor extends FragmentActivity {
         cardAddedMain = new ArrayList<>();
         cardAddedSide = new ArrayList<>();
 
+        //sauvegarde dans la database
         Button saveButton = findViewById(R.id.save_deck_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +108,7 @@ public class DeckEditor extends FragmentActivity {
             }
         });
 
+        //Poour changer le nom du deck
         final TextView deckName = findViewById(R.id.deckName);
         deckName.setText(deck_name);
         deckName.setOnClickListener(new View.OnClickListener() {
@@ -193,6 +197,7 @@ public class DeckEditor extends FragmentActivity {
 
     }
 
+    //Récupère les cartes ajoutées soit par l'Ajout depuis une requête API, soit par ajout depuis le détail d'une carte
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(resultCode == ADD_CARD_RESULT_CODE){
@@ -329,6 +334,7 @@ public class DeckEditor extends FragmentActivity {
         }
     }
 
+    //Update le recycler view
     private void updateFilterAfterCardAdded(HashMap<Card, Integer> addedMult, String deckPart){
         EditorFragment fragment;
         if(deckPart.equals("side")){
@@ -358,6 +364,7 @@ public class DeckEditor extends FragmentActivity {
         adapter.getStatFragment().updateDeckPriceTv();
     }
 
+    //export du deck dans un Dossier "MTG DeckBuilder"
     public void exportDeck(){
         String filename = deck.getDeckName() + ".txt";
         ArrayList<Card> main = deck.getMain();
@@ -392,7 +399,6 @@ public class DeckEditor extends FragmentActivity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } catch (java.io.IOException e){
-            Log.d("CARIBOU", Log.getStackTraceString(e));
             Context context = getApplicationContext();
             CharSequence text = "Le deck ne peut pas être exporté, veuillez accorder les droits correspondants à l'application";
             int duration = Toast.LENGTH_LONG;
@@ -403,6 +409,7 @@ public class DeckEditor extends FragmentActivity {
 
     }
 
+    //Affiche un message de confirmation si le deck a été modifié et non sauvegardé
     @Override
     public void onBackPressed(){
         if(!deckSaved) {

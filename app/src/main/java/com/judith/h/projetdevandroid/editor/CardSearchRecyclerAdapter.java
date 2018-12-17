@@ -2,7 +2,6 @@ package com.judith.h.projetdevandroid.editor;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +41,8 @@ public class CardSearchRecyclerAdapter extends RecyclerView.Adapter<CardSearchRe
         }else{
             holder.getDescription().setVisibility(View.GONE);
         }
+
+        // Listener des boutons qui font les requêtes API
         holder.setCardNameTvText(cardNames.get(i));
         holder.getAddButton().setOnClickListener(new View.OnClickListener() {
             @Override

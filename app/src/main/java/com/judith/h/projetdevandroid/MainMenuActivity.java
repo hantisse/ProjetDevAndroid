@@ -37,6 +37,7 @@ public class MainMenuActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //La langue est celle enregistrée dans les shared preferences
         Resources res = getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
@@ -63,6 +64,7 @@ public class MainMenuActivity extends Activity {
 
         Button newDeck_button = (Button)findViewById(R.id.newdeckbutton);
 
+        //Ouvre une alerte demandant le nom du deck à créer et encoir un nouvel intent vers l'activité DeckEditor
         newDeck_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -75,7 +77,6 @@ public class MainMenuActivity extends Activity {
 
                 final EditText input = (EditText)promptView.findViewById(R.id.decknameinput);
 
-                // Set up the buttons
                 builder.setCancelable(false).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -120,6 +121,7 @@ public class MainMenuActivity extends Activity {
         });
     }
 
+    //Pour le changement de lanque, recrée l'activité
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         switch(resultCode){

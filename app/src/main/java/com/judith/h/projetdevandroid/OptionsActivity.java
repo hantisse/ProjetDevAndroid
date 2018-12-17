@@ -50,22 +50,17 @@ public class OptionsActivity extends Activity implements AdapterView.OnItemSelec
 
         preferences = getApplication().getSharedPreferences(MainMenuActivity.PREF_NAME, MODE_PRIVATE);
 
-        // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         mRelativeLayout = (LinearLayout) inflater.inflate(R.layout.credits_display, null);
 
         mButton = (Button) findViewById(R.id.creditsbutton);
 
-        // Set a click listener for the text view
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Initialize a new instance of LayoutInflater service
                 LayoutInflater inflater = (LayoutInflater) LayoutInflater.from(view.getContext());
-                // Inflate the custom layout/view
                 LinearLayout customView = (LinearLayout) inflater.inflate(R.layout.credits_display,null);
 
-                // Initialize a new instance of popup window
                 mPopupWindow = new PopupWindow(
                         customView,
                         RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -73,16 +68,12 @@ public class OptionsActivity extends Activity implements AdapterView.OnItemSelec
                 );
 
 
-                // Set an elevation value for popup window
-                // Call requires API level 21
                 if(Build.VERSION.SDK_INT>=21){
                     mPopupWindow.setElevation(5.0f);
                 }
 
-                // Get a reference for the custom view close button
                 Button closeButton = (Button) customView.findViewById(R.id.closecredits);
 
-                // Set a click listener for the popup window close button
                 closeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -118,6 +109,7 @@ public class OptionsActivity extends Activity implements AdapterView.OnItemSelec
 
     }
 
+    //Change la langue selon la langue choisie avec le spinner
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(position == ENG_LANG){

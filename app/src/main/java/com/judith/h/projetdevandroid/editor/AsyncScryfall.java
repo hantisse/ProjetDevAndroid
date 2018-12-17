@@ -17,7 +17,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public abstract class AsyncScryfall extends AsyncTask<String, Void, JSONObject> {
-
     ProgressDialog progDailog;
 
     @Override

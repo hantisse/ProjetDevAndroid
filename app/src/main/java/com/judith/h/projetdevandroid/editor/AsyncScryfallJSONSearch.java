@@ -46,7 +46,7 @@ public class AsyncScryfallJSONSearch extends AsyncScryfall {
         catch (JSONException e) {
             e.printStackTrace();
         }
-
+        //Affiche un message d'erreur si aucune cartes, sinon affiche le recycler view
         RecyclerView recyclerView = activity.findViewById(R.id.cards_found);
         TextView tv = activity.findViewById(R.id.no_cards_found);
         if(!cardNames.isEmpty()){

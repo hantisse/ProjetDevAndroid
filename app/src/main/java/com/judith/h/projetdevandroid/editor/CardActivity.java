@@ -50,8 +50,6 @@ public class CardActivity extends Activity {
         }
 
         cardmultiplicityTv = findViewById(R.id.cardmultiplicity);
-        Log.i("JH", "tv : " + cardmultiplicityTv.toString());
-
         cardmultiplicityTv.setText(String.valueOf(multiplicity));
 
         Button lesscard = findViewById(R.id.lesscard);

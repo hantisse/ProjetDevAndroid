@@ -32,7 +32,6 @@ public class AsyncBitmapDownloader extends AsyncTask<String, Void, Bitmap> {
         Bitmap bm = null;
         try {
             url = new URL(strings[0]);
-            Log.i("CIO", "Downloading " + url);
             urlConnection = (HttpURLConnection) url.openConnection(); // Open
             InputStream in = new BufferedInputStream(urlConnection.getInputStream()); // Stream
             bm = BitmapFactory.decodeStream(in);

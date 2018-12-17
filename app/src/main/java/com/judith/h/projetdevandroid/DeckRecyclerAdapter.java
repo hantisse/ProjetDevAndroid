@@ -20,9 +20,7 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
     private View lastClickedDeck;
     private Context context;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public View mView;
@@ -38,7 +36,6 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
         deckDataset = Dataset;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public DeckRecyclerAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
@@ -47,7 +44,6 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
@@ -65,6 +61,8 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
 
             }
         });
+
+        //Bouton qui supprime le deck séléctionné
         final Button deleteDeckButton = holder.mView.findViewById(R.id.deckDeleteButton);
         deleteDeckButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +107,6 @@ public class DeckRecyclerAdapter extends RecyclerView.Adapter<DeckRecyclerAdapte
         this.lastClickedDeck = lastClickedDeck;
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return deckDataset.size();

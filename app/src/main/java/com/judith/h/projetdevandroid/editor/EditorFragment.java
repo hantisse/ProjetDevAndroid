@@ -95,6 +95,9 @@ public class EditorFragment extends Fragment {
         }
     }
 
+    //On calcule les cartes à mettre dans les différents filtres
+
+
     public void calculateCMCFilters(Deck deck){
         ArrayList<Card> cards;
         HashMap<Card, Integer> multiplicities;
@@ -114,6 +117,7 @@ public class EditorFragment extends Fragment {
         }
 
     }
+
 
     public void calculateColorIdentityFilters(Deck deck){
         ArrayList<Card> cards;
@@ -135,6 +139,7 @@ public class EditorFragment extends Fragment {
 
     }
 
+    //Ajoute une carte au filtre
     public void updateFilterAfterCardsAdded(Set<Card> cards, String filterType){
         for(Card card : cards){
             switch(filterType){
@@ -223,6 +228,7 @@ public class EditorFragment extends Fragment {
         activeFilters.clear();
     }
 
+    //tri les filtres selon l'ordre alphabétique
     private void addInOrder(ArrayList<Filter> activeFilters, Filter filter){
         int k =0;
         while(k<activeFilters.size() && filter.getFilterName().compareTo(activeFilters.get(k).getFilterName())>0){ //>0 car filtres rangés dans l'ordre inverse dans l'adapter

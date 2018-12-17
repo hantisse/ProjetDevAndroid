@@ -36,7 +36,6 @@ public class AsyncScryfallJSONData extends AsyncScryfall{
 
     @Override
     protected void onPostExecute(JSONObject j) {
-        //TODO mettre string not found dans string.xml
         String scryfallID = "Not Found";
         String name = "Not Found";
         String type_line = "Not found";

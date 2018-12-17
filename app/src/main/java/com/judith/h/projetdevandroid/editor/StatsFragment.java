@@ -40,6 +40,8 @@ public class StatsFragment extends Fragment {
         deckCostTv.setText(getContext().getString(R.string.deckcost, deck.getDeckPrice()));
         return rootView;
     }
+
+    //Récupère le nombre de cartes dans chaque coût
     public String getManaCurve(){
         ArrayList<Integer> manacurve = new ArrayList<>();
         for (Card card:deck.getMain()){
@@ -64,7 +66,6 @@ public class StatsFragment extends Fragment {
                 manacurvevalue += "| ";
                 j += 1;
             }
-            //manacurvevalue += "(" + j + ")";
             manacurvevalue += "\n";
             i += 1;
         }

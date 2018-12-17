@@ -62,7 +62,7 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
     @Override
     public void onBackPressed(){
 
-        Log.i("JH", "Back pressed");
+        //Envoie le résultat à l'activité DeckEditor
         Intent intent = new Intent();
         if(!addedCards.isEmpty()) {
             intent.putExtra("added_cards", addedCards);

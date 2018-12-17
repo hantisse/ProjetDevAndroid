@@ -25,10 +25,6 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
     private String deckPart;
     private EditorFragment fragment;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-
      class FilterViewHolder extends RecyclerView.ViewHolder {
         private View mView;
         private TextView filterName;
@@ -81,6 +77,7 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
             });
         }
 
+        //Calcule la taille de la liste de carte dans un filtre pour l'afficher
         private void updateListElementsTotalHeight(ArrayAdapter tableau, ListView lv){
             int totalHeight = 0;
             for (int i = 0; i < tableau.getCount(); i++) {
@@ -104,7 +101,6 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
         }
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     EditorRecyclerAdapter(EditorFragment fragment, Deck deck,String deckPart, ArrayList<Filter> activeFilters) {
 
          this.fragment = fragment;
@@ -126,7 +122,6 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final FilterViewHolder holder, int position) {
         Filter filter = activeFilters.get(position);
@@ -145,8 +140,6 @@ public class EditorRecyclerAdapter extends RecyclerView.Adapter<EditorRecyclerAd
 
     }
 
-
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return activeFilters.size();
